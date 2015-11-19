@@ -5,42 +5,58 @@ div(ng-include='"components/navbar/navbar.html"')
     .col-lg-12
       h2(ng-bind='tournamentName')
   .row
-    .col-md-7
-      h3 Add Game
+    .col-md-5
+      h3.mbot Add Game
       form.form-horizontal
         .form-group
           label.col-sm-2.control-label(for='game', required='') Game
-          .col-sm-8
+          .col-sm-10
             selectize(config='selectizeConfig', options='gameOptions', ng-model='game')
         .form-group(ng-repeat='result in newGameResult')
-          label(for='playerNameInput#{i}', class='col-sm-2 control-label') Player {{i}}
-          .col-sm-5
+          label.col-sm-2.control-label(for='playerNameInput#{i}') Player {{i}}
+          .col-sm-7
             select.form-control.input-sm(type='hidden', id='playerNameInput#{i}', name='players[#{i}][name]', class='auto-select auto-select-player', placeholder='Add Player')
-          label(for='playerScoreInput#{i}', class='col-sm-1 control-label') Score
+          label.col-sm-1.control-label(for='playerScoreInput#{i}') Score
           .col-sm-2
             input.form-control.input-sm(type='text', id='playerScoreInput1' name='players[#{i}][score]', placeholder='Score')
         .form-group
           .col-sm-offset-2.col-sm-10
             input(type='submit', value='Save', class="btn btn-primary")
-    .col-md-5(ng-show='selectedGame')
-      h3 BoardgameGeek Info
-      .media.bgg-info
-        .media-left.pull-left
-          a(href='#')
-            img.media-object.game-thumbnail(src='{{selectedGame.thumbnail}}', alt='todo')
-        .media-body
-          h4.media-heading {{selectedGame.name}} #[span.year ({{selectedGame.yearPublished}})]
-          table.info-table
-            tbody
-              tr
-                td Average Rating:
-                td.value {{selectedGame.statistics.average.value}}
-                td.num-votes ({{selectedGame.statistics.usersrated.value}} votes)
-              tr
-                td Average Weight:
-                td.value {{selectedGame.statistics.averageweight.value}}
-                td.num-votes ({{selectedGame.statistics.numweights.value}} votes)
-              tr
-                td Owned By:
-                td.value {{selectedGame.statistics.owned.value}}
-                td.num-votes ({{selectedGame.statistics.numweights.value}} votes)
+    .col-md-6.col-md-offset-1
+      h3.mbot BoardgameGeek Info
+      .please-select(ng-show='!selectedGame && !gameInfoLoading')
+        p Please select a game
+      .loading(ng-show='gameInfoLoading')
+        p Loading game information from Boardgame Geek...
+      .info(ng-show='selectedGame && !gameInfoLoading')
+        .media.bgg-info.mbot
+          .media-left.pull-left
+            a(href='https://boardgamegeek.com/boardgame/{{selectedGame.id}}', target='_blank')
+              img.media-object.game-thumbnail(src='{{selectedGame.thumbnail}}', alt='{{selectedGame.name}}')
+          .media-body
+            h4.media-heading {{selectedGame.name}} #[span.year ({{selectedGame.yearPublished}})]
+            table.info-table
+              tbody
+                tr
+                  td Rating:
+                  td.value {{selectedGame.statistics.average.value}}
+                  td.num-votes ({{selectedGame.statistics.usersrated.value}} votes)
+                tr
+                  td Weight:
+                  td.value {{selectedGame.statistics.averageweight.value}}
+                  td.num-votes ({{selectedGame.statistics.numweights.value}} votes)
+                tr
+                  td Owned By:
+                  td.value {{selectedGame.statistics.owned.value}}
+                  td.num-votes
+                tr
+                  td Play Time:
+                  td.value {{selectedGame.playTime}}min
+                  td.num-votes
+                tr
+                  td Rank:
+                  td.value {{selectedGame.rank}}
+                  td.num-votes
+        h4 Tags
+        a(href='{{"https://boardgamegeek.com/boardgamecategory/" + tag.id}}', ng-repeat='tag in selectedGame.tags', target='_blank')
+          span.label.label-info.game-tag(ng-bind='tag.value')
