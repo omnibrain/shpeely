@@ -1,10 +1,9 @@
 'use strict'
 
-angular.module 'boardgametournementApp'
+angular.module 'boardgametournamentApp'
 .controller 'NavbarCtrl', ($scope, $location, Auth) ->
   $scope.menu = [
-    title: 'Home'
-    link: '/'
+    {title: 'Tournaments', state: 'tournaments'},
   ]
   $scope.isCollapsed = true
   $scope.isLoggedIn = Auth.isLoggedIn

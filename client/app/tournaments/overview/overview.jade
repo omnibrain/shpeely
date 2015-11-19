@@ -1,0 +1,46 @@
+div(ng-include='"components/navbar/navbar.html"')
+
+.container
+  .row
+    .col-lg-12
+      h2(ng-bind='tournamentName')
+  .row
+    .col-md-7
+      h3 Add Game
+      form.form-horizontal
+        .form-group
+          label.col-sm-2.control-label(for='game', required='') Game
+          .col-sm-8
+            selectize(config='selectizeConfig', options='gameOptions', ng-model='game')
+        .form-group(ng-repeat='result in newGameResult')
+          label(for='playerNameInput#{i}', class='col-sm-2 control-label') Player {{i}}
+          .col-sm-5
+            select.form-control.input-sm(type='hidden', id='playerNameInput#{i}', name='players[#{i}][name]', class='auto-select auto-select-player', placeholder='Add Player')
+          label(for='playerScoreInput#{i}', class='col-sm-1 control-label') Score
+          .col-sm-2
+            input.form-control.input-sm(type='text', id='playerScoreInput1' name='players[#{i}][score]', placeholder='Score')
+        .form-group
+          .col-sm-offset-2.col-sm-10
+            input(type='submit', value='Save', class="btn btn-primary")
+    .col-md-5(ng-show='selectedGame')
+      h3 BoardgameGeek Info
+      .media.bgg-info
+        .media-left.pull-left
+          a(href='#')
+            img.media-object.game-thumbnail(src='{{selectedGame.thumbnail}}', alt='todo')
+        .media-body
+          h4.media-heading {{selectedGame.name}} #[span.year ({{selectedGame.yearPublished}})]
+          table.info-table
+            tbody
+              tr
+                td Average Rating:
+                td.value {{selectedGame.statistics.average.value}}
+                td.num-votes ({{selectedGame.statistics.usersrated.value}} votes)
+              tr
+                td Average Weight:
+                td.value {{selectedGame.statistics.averageweight.value}}
+                td.num-votes ({{selectedGame.statistics.numweights.value}} votes)
+              tr
+                td Owned By:
+                td.value {{selectedGame.statistics.owned.value}}
+                td.num-votes ({{selectedGame.statistics.numweights.value}} votes)

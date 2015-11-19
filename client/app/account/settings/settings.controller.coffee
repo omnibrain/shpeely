@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournementApp'
+angular.module 'boardgametournamentApp'
 .controller 'SettingsCtrl', ($scope, User, Auth) ->
   $scope.errors = {}
   $scope.changePassword = (form) ->

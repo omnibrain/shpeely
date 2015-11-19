@@ -1,0 +1,19 @@
+div(ng-include='"components/navbar/navbar.html"')
+
+.container
+  .row
+    .col-md-6
+      h3 Create New Tournament
+      form(ng-submit='createTournament()')
+        .form-group
+          label(for='newTournament') Tournament Name
+          input.form-control(type='text', id='newTournament', ng-model='newTournament', required='')
+        button.btn.btn-primary(type='submit') Create Tournament
+  hr
+  .row
+    .col-md-4(ng-repeat='tournament in tournaments', ui-sref='tournamentoverview({name:tournament.name})')
+      .bs-callout(ng-class='{"bs-callout-info": !isAdmin(tournament), "bs-callout-warning": isAdmin(tournament)}')
+        h4(ng-bind='tournament.name')
+        p {{tournament.members.length}} Members
+        p Created on {{tournament.created | date:"MMMM d, y"}}
+        p is admin: {{isAdmin(tournament)}}

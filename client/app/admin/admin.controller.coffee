@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournementApp'
+angular.module 'boardgametournamentApp'
 .controller 'AdminCtrl', ($scope, $http, Auth, User) ->
 
   $http.get '/api/users'

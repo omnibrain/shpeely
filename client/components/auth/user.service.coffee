@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournementApp'
+angular.module 'boardgametournamentApp'
 .factory 'User', ($resource) ->
   $resource '/api/users/:id/:controller',
     id: '@_id'

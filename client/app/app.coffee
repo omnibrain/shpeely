@@ -1,11 +1,12 @@
 'use strict'
 
-angular.module 'boardgametournementApp', [
+angular.module 'boardgametournamentApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
   'ui.router',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'selectize',
 ]
 .config ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) ->
   $urlRouterProvider

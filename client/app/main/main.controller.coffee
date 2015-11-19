@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournementApp'
+angular.module 'boardgametournamentApp'
 .controller 'MainCtrl', ($scope, $http) ->
   $scope.awesomeThings = []
 

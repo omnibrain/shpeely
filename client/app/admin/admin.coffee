@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournementApp'
+angular.module 'boardgametournamentApp'
 .config ($stateProvider) ->
   $stateProvider
   .state 'admin',
