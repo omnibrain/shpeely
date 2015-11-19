@@ -3,13 +3,12 @@
 angular.module 'boardgametournamentApp'
 .controller 'OverviewCtrl', ($scope, $stateParams, BggApi, $timeout) ->
 
-  BGG_SEARCH_URL = 'https://boardgamegeek.com/xmlapi2/search'
   DEFAUL_NUM_PLAYERS = 4
 
-  $scope.newGameResult = []
   $scope.tournamentName = $stateParams.name
 
-  $scope.newGameResult.push {} for i in _.range(DEFAUL_NUM_PLAYERS)
+  $scope.newGameResult = {}
+  $scope.newGameResult.scores = ({} for i in _.range(DEFAUL_NUM_PLAYERS))
 
   $scope.gameOptions = []
   $scope.selectedGame = null
@@ -35,18 +34,25 @@ angular.module 'boardgametournamentApp'
         tags: info.link
 
       # add or remove score rows
-      numPlayersDelta = $scope.newGameResult.length - info.maxplayers.value
+      numPlayersDelta = $scope.newGameResult.scores.length - info.maxplayers.value
       if numPlayersDelta < 0
-        $scope.newGameResult.push {} for i in _.range(0, -numPlayersDelta)
+        $scope.newGameResult.scores.push {} for i in _.range(0, -numPlayersDelta)
       else if numPlayersDelta > 0
-        $scope.newGameResult = $scope.newGameResult[0...info.maxplayers.value]
+        $scope.newGameResult.scores = $scope.newGameResult.scores[0...info.maxplayers.value]
 
       $scope.gameInfoLoading = false
 
   render = (data, escape)->
     "<div>#{escape data.name}<span class='year'>(#{escape data.year})</span></div>"
 
-  $scope.selectizeConfig =
+  $scope.saveGame = (form)->
+    console.log form
+
+  $scope.playerSelectizeConfig =
+    maxItems: 1
+    create: true
+
+  $scope.gameSelectizeConfig =
     maxItems: 1
     valueField: 'id'
     labelField: 'name'
