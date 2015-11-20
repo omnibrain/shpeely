@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
 
 var PlayerSchema = new Schema({
   name: {type: String, required: true},
-  role: {type: String, required: true}, // member/editor/admin
+  role: {type: String, required: true, default: 'member'}, // member/editor/admin
   _user: {type : mongoose.Schema.ObjectId, ref : 'User'}
 });
 

@@ -5,9 +5,11 @@ angular.module 'boardgametournamentApp'
 
   DEFAUL_NUM_PLAYERS = 4
 
-  $scope.tournamentName = $stateParams.name
+  # load the tournament from the server
+  $http.get('/api/tournaments/mine', {name: $stateParams.name}).then (res)->
+    console.log "tournament: ", res.data
+    $scope.newGameResult.tournament = res.data[0]
 
-  $scope.newGameResult = {}
   $scope.newGameResult.scores = ({} for i in _.range(DEFAUL_NUM_PLAYERS))
 
   $scope.gameOptions = []
@@ -49,7 +51,8 @@ angular.module 'boardgametournamentApp'
     "<div>#{escape data.name}<span class='year'>(#{escape data.year})</span></div>"
 
   $scope.saveGame = (form)->
-    console.log form
+    $http.post('/api/gameresult', $scope.newGameResult).then (res)->
+      console.log "Game result saved!"
 
   $scope.playerSelectizeConfig =
     maxItems: 1

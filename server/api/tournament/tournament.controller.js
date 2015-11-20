@@ -23,34 +23,61 @@ exports.show = function(req, res) {
   });
 };
 
+// Returns tournaments of the logged in user. Optional with a query
+exports.mine = function(req, res) {
+
+  // find players of this user
+  console.log('find players of user ', req.user);
+  Player.find({'_user': req.user._id}, function(err, players) {
+
+    console.log('Find tournaments of players ', players);
+    var query = _.merge(req.query, {
+      members: {
+        '$elemMatch': {'$in': _.pluck(players, '_id')}
+        }
+    });
+    
+    // find all tournaments of all players of this user
+    console.log('Query: ', JSON.stringify(query));
+    Tournament.find(query)
+      .populate('members')
+      .exec(function(err, tournaments) {
+        if(!tournaments) {return res.send(404)}
+        console.log('Found tournaments: ', tournaments);
+
+        res.send(tournaments);
+    });
+    
+  });
+
+  
+}
+
 // Creates a new tournament in the DB.
 exports.create = function(req, res) {
 
-  var creatorId = mongoose.Types.ObjectId(req.body.creator);
+  // create new player of the user that created the tournament
+  var player = {
+    name: req.user.name,
+    role: 'admin',
+    _user: req.user,
+  };
 
-  User.findById(creatorId, function(err, user) {
+  Player.create(player, function(err, player) {
     if(err) {return handleError(err)}
 
-    // create new player of the user that created the tournament
-    var player = {
-      name: user.name,
-      role: 'admin',
-      _user: user,
-    };
+    console.log('Created player: ', player);
 
-    Player.create(player, function(err, player) {
-      if(err) {return handleError(err)}
+    var tournament = {
+      name: req.body.name,
+      members: [player],
+    }
 
-      var tournament = {
-        name: req.body.name,
-        members: [player],
-      }
+    Tournament.create(tournament, function(err, tournament) {
+      if(err) { return handleError(res, err); }
 
-      Tournament.create(tournament, function(err, tournament) {
-        if(err) { return handleError(res, err); }
-
-        return res.json(201, tournament);
-      });
+      console.log('Created tournament: ', tournament);
+      return res.json(201, tournament);
     });
   });
 };

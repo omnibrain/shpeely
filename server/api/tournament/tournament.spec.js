@@ -4,6 +4,8 @@ var should = require('should');
 var app = require('../../app');
 var request = require('supertest');
 var User = require('../user/user.model.js');
+var Player = require('../player/player.model.js');
+var Tournament = require('../tournament/tournament.model.js');
 
 var user = new User({
   provider: 'local',
@@ -12,11 +14,90 @@ var user = new User({
   password: 'password'
 });
 
+var player = new Player({
+  name: 'Fake Player',
+  _user: user._id,
+})
+
+var tournament = new Tournament({
+  name: 'Fake Tournament',
+  members: [player._id],
+});
+
+var token = null;
+
+describe('GET /api/tournaments/mine', function() {
+
+  before(function(done) {
+    user.save(function() {
+      player.save( function() {
+        tournament.save( function() {
+          // authenticate user
+          request(app)
+            .post('/auth/local')
+            .send({email:'test@test.com', password:'password'})
+            .expect(302)
+            .end(function(err, res){
+              token = res.body.token;
+              done();
+            });
+        });
+      });
+    });
+  });
+
+  after(function(done) {
+    User.remove().exec().then(function() {
+      Player.remove().exec().then(function() {
+        Tournament.remove().exec().then(function() {
+          done();
+        });
+      });
+    });
+  });
+
+  it('should return all tournements of the user', function(done) {
+    request(app)
+      .get('/api/tournaments/mine')
+      .expect(200)
+      .set('Authorization', 'Bearer '  + token)
+      .end(function(err, res) {
+        if (err) return done(err);
+        console.log(res.body);
+        res.body.should.be.instanceof(Array).and.have.lengthOf(1);
+        done();
+      });
+  });
+
+  it('should return all tournements of the user that match the query', function(done) {
+    request(app)
+      .get('/api/tournaments/mine')
+      .query({name: 'Fake Tournament'})
+      .expect(200)
+      .set('Authorization', 'Bearer '  + token)
+      .end(function(err, res) {
+        if (err) return done(err);
+        console.log(res.body);
+        res.body.should.be.instanceof(Array).and.have.lengthOf(1);
+        done();
+      });
+  });
+
+});
+
 describe('POST /api/tournaments', function() {
 
   before(function(done) {
     user.save(function() {
-      done();
+      // authenticate user
+      request(app)
+        .post('/auth/local')
+        .send({email:'test@test.com', password:'password'})
+        .expect(302)
+        .end(function(err, res){
+          token = res.body.token;
+          done();
+        });
     });
   });
 
@@ -28,26 +109,20 @@ describe('POST /api/tournaments', function() {
 
   it('should respond with the created tournament object', function(done) {
 
-    // find a user
-    User.find({}, function(err, users) {
-      var user = users[0];
+    var tournament = {
+      name: 'Test Tournament',
+    }
 
-      var tournament = {
-        creator: user._id,
-        name: 'Test Tournament',
-      }
-
-      request(app)
-        .post('/api/tournaments')
-        .send(tournament)
-        .expect(201)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          if (err) return done(err);
-          res.body.name.should.be.equal(tournament.name)
-          done();
-        });
-
-    });
+    request(app)
+      .post('/api/tournaments')
+      .set('Authorization', 'Bearer '  + token)
+      .send(tournament)
+      .expect(201)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        res.body.name.should.be.equal(tournament.name)
+        done();
+      });
   });
 });

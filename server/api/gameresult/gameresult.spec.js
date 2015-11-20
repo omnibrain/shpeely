@@ -41,7 +41,8 @@ describe('GET /api/gameresults', function() {
       bggid: 777,
       tournament: tournament._id,
       scores: [
-        {score: 7, player: player._id}
+        {score: 7, player: player._id},
+        {score: 8, player: 'New Player'}
       ] 
     }
 

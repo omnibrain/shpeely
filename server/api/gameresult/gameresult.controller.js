@@ -2,6 +2,10 @@
 
 var _ = require('lodash');
 var Gameresult = require('./gameresult.model');
+var Player = require('../player/player.model.js');
+
+var async = require('async');
+var _ = require('lodash');
 
 // Get list of gameresults
 exports.index = function(req, res) {
@@ -22,10 +26,40 @@ exports.show = function(req, res) {
 
 // Creates a new gameresult in the DB.
 exports.create = function(req, res) {
-  Gameresult.create(req.body, function(err, gameresult) {
+
+  async.map(req.body.scores, function(score, callback) {
+    Player.findById(score.player, function(err, player) {
+
+      // create new player objects for players that 
+      // don't exists yet
+      if(!player) {
+
+        // create new player
+        Player.create({
+          name: score.player,
+        }, function(err, player) {
+          score.player = player._id;
+          callback(null, score);
+        });
+
+      } else {
+        // player already exists...
+        callback(null, score);
+      }
+
+    });
+  }, function(err, scores) {
     if(err) { return handleError(res, err); }
-    return res.json(201, gameresult);
+
+    var gameresult = req.body;
+    gameresult.scores = scores;
+
+    Gameresult.create(gameresult, function(err, gameresult) {
+      if(err) { return handleError(res, err); }
+      return res.json(201, gameresult);
+    });
   });
+
 };
 
 // Updates an existing gameresult in the DB.
