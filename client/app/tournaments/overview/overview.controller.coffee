@@ -18,7 +18,7 @@ angular.module 'boardgametournamentApp'
   $http.get('/api/tournaments/mine', {name: $stateParams.name}).then (res)->
     tournament = res.data[0]
     $scope.tournament = tournament
-    $scope.players = tournament.members
+    $scope.players = _.sortBy tournament.members, 'name'
 
 
   # is called when a game was selected in the dropdown
@@ -67,6 +67,7 @@ angular.module 'boardgametournamentApp'
     console.log "sending game result", gameResult
     $http.post('/api/gameresults', gameResult).then (res)->
       console.log "saved!", res
+      $scope.resetForm()
 
   $scope.playerSelectizeConfig =
     maxItems: 1
@@ -95,7 +96,7 @@ angular.module 'boardgametournamentApp'
             id: game.id
             year: game.yearpublished?.value || 'unknown'
             name: game.name.value
-        callback options
+        callback _.sortBy options, 'name'
 
 
 

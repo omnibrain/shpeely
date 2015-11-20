@@ -56,7 +56,13 @@ describe('GET /api/gameresults', function() {
         res.body.bggid.should.be.equal(gameresult.bggid);
         res.body.tournament.should.be.equal(String(tournament._id));
         res.body.scores.should.be.instanceof(Array);
-        done();
+
+        // check that newly created player is in tournament
+        Tournament.findOne({_id: tournament._id}, function(err, tournament) {
+          tournament.members.should.be.instanceof(Array).and.have.lengthOf(2);
+          done();
+        });
+
       });
   });
 });

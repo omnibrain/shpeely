@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var Gameresult = require('./gameresult.model');
+var Tournament = require('../tournament/tournament.model.js');
 var Player = require('../player/player.model.js');
 
 var async = require('async');
@@ -38,8 +39,19 @@ exports.create = function(req, res) {
         Player.create({
           name: score.player,
         }, function(err, player) {
+
+          // add the id of the newly created player
           score.player = player._id;
-          callback(null, score);
+
+          // add new player to the tournament
+          Tournament.update({_id: req.body.tournament}, {
+            '$push': {
+              'members': player._id,
+            }
+          }, function(err, nrUpdated) {
+            callback(null, score);
+          });
+
         });
 
       } else {

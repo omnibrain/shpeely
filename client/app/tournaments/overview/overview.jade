@@ -15,7 +15,7 @@ div(ng-include='"components/navbar/navbar.html"')
         .form-group
           label.col-sm-2.control-label(for='game') Game
           .col-sm-10
-            selectize(config='gameSelectizeConfig', options='gameOptions', ng-model='newGameResult.bggid', placeholder='Search Game...', required='')
+            selectize.game-selectize(config='gameSelectizeConfig', options='gameOptions', ng-model='newGameResult.bggid', placeholder='Search Game...', required='')
         .form-group(ng-repeat='result in newGameResult.scores')
           label.col-sm-2.control-label(for='player{{$index}}') Player {{i}}
           .col-sm-7
@@ -32,7 +32,8 @@ div(ng-include='"components/navbar/navbar.html"')
       .please-select(ng-show='!selectedGame && !gameInfoLoading')
         p Please select a game
       .loading(ng-show='gameInfoLoading')
-        p Loading game information from Boardgame Geek...
+        span.loading-spinner
+        p.loading-text Loading BoardgameGeek Infos...
       .info(ng-show='selectedGame && !gameInfoLoading')
         .media.bgg-info.mbot
           .media-left.pull-left

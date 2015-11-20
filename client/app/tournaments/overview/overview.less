@@ -37,3 +37,23 @@ span.year {
 	margin-right: 5px;
 	display: inline-block;
 }
+
+.loading {
+	.loading-spinner {
+		float: left;
+	}
+	.loading-text {
+		margin-left: 6px;
+		float: left;
+	}
+}
+
+// loading spinner
+.game-selectize.loading:after {
+	.loading-spinner;
+	content: '';
+	position: absolute;
+	margin-left: -55px;
+	margin-top: 9px;
+	z-index: 999;
+}
