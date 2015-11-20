@@ -5,7 +5,10 @@ div(ng-include='"components/navbar/navbar.html"')
     .col-lg-12
       h2(ng-bind='tournamentName')
   .row
-    .col-md-5
+    .col-lg-12
+      {{newGameResult}}
+  .row
+    .col-md-6
       h3.mbot Add Game
       form.form-horizontal(ng-submit='saveGame()', name='newGameResultForm')
         .form-group
@@ -15,7 +18,7 @@ div(ng-include='"components/navbar/navbar.html"')
         .form-group(ng-repeat='result in newGameResult.scores')
           label.col-sm-2.control-label(for='player{{$index}}') Player {{i}}
           .col-sm-7
-            selectize(type='hidden', id='player{{$index}}', name='player{{$index}}', config='playerSelectizeConfig', ng-model='newGameResult.scores[$index].player', placeholder='Add Player', ng-required='$first')
+            selectize(type='hidden', id='player{{$index}}', name='player{{$index}}', config='playerSelectizeConfig', ng-model='newGameResult.scores[$index].player', placeholder='Add Player', ng-required='$first', options='players')
           label.col-sm-1.control-label(for='score{{$index}}') Score
           .col-sm-2
             input.form-control.input-sm(type='text', id='score{{$index}}', name='score{{$index}}' ng-model='newGameResult.scores[$index].score', placeholder='Score', ng-required='$first || newGameResult.scores[$index].player')
@@ -23,7 +26,7 @@ div(ng-include='"components/navbar/navbar.html"')
           .col-sm-offset-2.col-sm-10
             input.btn.btn-primary(type='submit', value='Save Game', ng-disabled='newGameResultForm.$invalid')
 
-    .col-md-6.col-md-offset-1
+    .col-md-5.col-md-offset-1
       h3.mbot BoardgameGeek Info
       .please-select(ng-show='!selectedGame && !gameInfoLoading')
         p Please select a game

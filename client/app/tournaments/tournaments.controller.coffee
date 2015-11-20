@@ -19,8 +19,7 @@ angular.module 'boardgametournamentApp'
     return if $scope.newTournament is ''
     $http.post '/api/tournaments',
       name: $scope.newTournament
-      admins: [$scope.user._id]
-      members: [$scope.user._id]
+      creator: $scope.user._id
     .then (res)->
       $scope.tournaments.push res.data
 

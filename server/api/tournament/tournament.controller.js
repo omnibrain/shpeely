@@ -2,6 +2,8 @@
 
 var _ = require('lodash');
 var Tournament = require('./tournament.model');
+var User = require('../user/user.model.js');
+var Player = require('../player/player.model.js');
 var mongoose = require('mongoose');
 
 // Get list of tournaments
@@ -23,20 +25,33 @@ exports.show = function(req, res) {
 
 // Creates a new tournament in the DB.
 exports.create = function(req, res) {
-  console.log(req.body);
 
-  // convert id strings to ObjectId
-  var tournament = req.body;
-  tournament.admins = _.map(tournament.admins, function(admin) {
-    return mongoose.Types.ObjectId(admin);
-  });
-  tournament.members = _.map(tournament.admins, function(admin) {
-    return mongoose.Types.ObjectId(admin);
-  });
+  var creatorId = mongoose.Types.ObjectId(req.body.creator);
 
-  Tournament.create(req.body, function(err, tournament) {
-    if(err) { return handleError(res, err); }
-    return res.json(201, tournament);
+  User.findById(creatorId, function(err, user) {
+    if(err) {return handleError(err)}
+
+    // create new player of the user that created the tournament
+    var player = {
+      name: user.name,
+      role: 'admin',
+      _user: user,
+    };
+
+    Player.create(player, function(err, player) {
+      if(err) {return handleError(err)}
+
+      var tournament = {
+        name: req.body.name,
+        members: [player],
+      }
+
+      Tournament.create(tournament, function(err, tournament) {
+        if(err) { return handleError(res, err); }
+
+        return res.json(201, tournament);
+      });
+    });
   });
 };
 

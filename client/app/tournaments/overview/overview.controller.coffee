@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'OverviewCtrl', ($scope, $stateParams, BggApi, $timeout) ->
+.controller 'OverviewCtrl', ($scope, $stateParams, BggApi, $timeout, Auth) ->
 
   DEFAUL_NUM_PLAYERS = 4
 
@@ -13,6 +13,9 @@ angular.module 'boardgametournamentApp'
   $scope.gameOptions = []
   $scope.selectedGame = null
   $scope.gameInfoLoading = false
+
+  $scope.players = [Auth.getCurrentUser()]
+  console.log $scope.players
 
   # is called when a game was selected in the dropdown
   getBggInfo = (bggid)->
@@ -51,6 +54,9 @@ angular.module 'boardgametournamentApp'
   $scope.playerSelectizeConfig =
     maxItems: 1
     create: true
+    labelField: 'name'
+    searchField: 'name'
+    valueField: '_id'
 
   $scope.gameSelectizeConfig =
     maxItems: 1
