@@ -1,23 +1,25 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'OverviewCtrl', ($scope, $stateParams, BggApi, $timeout, Auth) ->
+.controller 'OverviewCtrl', ($scope, $stateParams, BggApi, $timeout, Auth, $http) ->
 
   DEFAUL_NUM_PLAYERS = 4
 
-  # load the tournament from the server
-  $http.get('/api/tournaments/mine', {name: $stateParams.name}).then (res)->
-    console.log "tournament: ", res.data
-    $scope.newGameResult.tournament = res.data[0]
-
+  $scope.newGameResult = {}
   $scope.newGameResult.scores = ({} for i in _.range(DEFAUL_NUM_PLAYERS))
 
   $scope.gameOptions = []
   $scope.selectedGame = null
   $scope.gameInfoLoading = false
 
-  $scope.players = [Auth.getCurrentUser()]
-  console.log $scope.players
+  $scope.players = []
+
+  # load the tournament from the server
+  $http.get('/api/tournaments/mine', {name: $stateParams.name}).then (res)->
+    tournament = res.data[0]
+    $scope.tournament = tournament
+    $scope.players = tournament.members
+
 
   # is called when a game was selected in the dropdown
   getBggInfo = (bggid)->
@@ -26,7 +28,6 @@ angular.module 'boardgametournamentApp'
       return
     BggApi.info(bggid).then (res)->
       info = res.data
-      console.log info
       $scope.selectedGame =
         id: info.id
         thumbnail: info.thumbnail
@@ -50,9 +51,22 @@ angular.module 'boardgametournamentApp'
   render = (data, escape)->
     "<div>#{escape data.name}<span class='year'>(#{escape data.year})</span></div>"
 
+  $scope.resetForm = ()->
+    $scope.newGameResult.scores = _.map($scope.newGameResult.scores, ->{})
+    $scope.newGameResult.bggid = null
+
   $scope.saveGame = (form)->
-    $http.post('/api/gameresult', $scope.newGameResult).then (res)->
-      console.log "Game result saved!"
+    gameResult = angular.copy($scope.newGameResult)
+
+    # remove "empty" scores
+    _.remove(gameResult.scores, (score)-> !score.player)
+
+    # add tournament id
+    gameResult.tournament = $scope.tournament._id
+
+    console.log "sending game result", gameResult
+    $http.post('/api/gameresults', gameResult).then (res)->
+      console.log "saved!", res
 
   $scope.playerSelectizeConfig =
     maxItems: 1

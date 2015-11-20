@@ -76,8 +76,11 @@ exports.create = function(req, res) {
     Tournament.create(tournament, function(err, tournament) {
       if(err) { return handleError(res, err); }
 
-      console.log('Created tournament: ', tournament);
-      return res.json(201, tournament);
+      // populate the member
+      tournament.populate('members', function(err, tournament) {
+        console.log('Created tournament: ', tournament);
+        return res.json(201, tournament);
+      });
     });
   });
 };
