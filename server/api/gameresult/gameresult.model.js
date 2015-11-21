@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
 
 var GameresultSchema = new Schema({
   bggid: {type: Number, required: true},
-  tournament: {type : mongoose.Schema.ObjectId, ref : 'Tournament'},
+  tournament: {type : mongoose.Schema.ObjectId, ref : 'Tournament', required: true},
   scores: [{
     score: Number,
     player: {type : mongoose.Schema.ObjectId, ref : 'Player'}

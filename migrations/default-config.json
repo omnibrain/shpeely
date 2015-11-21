@@ -1,0 +1,10 @@
+{
+	"dev": {
+	    "host": "localhost",
+	    "db": "boardgametournament-dev"
+	},
+	"prod": {
+	    "host": "localhost",
+	    "db": "boardgametournament"
+	}
+}

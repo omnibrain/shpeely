@@ -17,6 +17,9 @@ mongoose.connect(config.mongo.uri, config.mongo.options);
 // Populate DB with sample data
 if(config.seedDB) { require('./config/seed'); }
 
+// migrate data from old website
+if(process.env.MIGRATE_SPILI) { require('./config/spilimigration'); }
+
 // Setup server
 var app = express();
 var server = require('http').createServer(app);
