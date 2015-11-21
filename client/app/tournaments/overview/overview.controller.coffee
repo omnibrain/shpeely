@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'OverviewCtrl', ($scope, $stateParams, BggApi, $timeout, Auth, $http) ->
+.controller 'OverviewCtrl', ($scope, $stateParams, BggApi, $timeout, Auth, $http, Tournament) ->
 
   DEFAUL_NUM_PLAYERS = 4
 
@@ -14,10 +14,12 @@ angular.module 'boardgametournamentApp'
 
   $scope.players = []
 
+
   # load the tournament from the server
-  $http.get('/api/tournaments/mine', {name: $stateParams.name}).then (res)->
+  $http.get('/api/tournaments/mine', {params: {name: $stateParams.name}}).then (res)->
     tournament = res.data[0]
     $scope.tournament = tournament
+    Tournament.setActive tournament
     $scope.players = _.sortBy tournament.members, 'name'
 
 
@@ -64,9 +66,7 @@ angular.module 'boardgametournamentApp'
     # add tournament id
     gameResult.tournament = $scope.tournament._id
 
-    console.log "sending game result", gameResult
     $http.post('/api/gameresults', gameResult).then (res)->
-      console.log "saved!", res
       $scope.resetForm()
 
   $scope.playerSelectizeConfig =

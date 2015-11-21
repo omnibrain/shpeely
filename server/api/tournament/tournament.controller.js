@@ -26,6 +26,8 @@ exports.show = function(req, res) {
 // Returns tournaments of the logged in user. Optional with a query
 exports.mine = function(req, res) {
 
+  console.log('input: ', req.query);
+
   // find players of this user
   console.log('find players of user ', req.user);
   Player.find({'_user': req.user._id}, function(err, players) {

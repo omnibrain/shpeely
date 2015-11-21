@@ -1,9 +1,9 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'NavbarCtrl', ($scope, $location, Auth) ->
+.controller 'NavbarCtrl', ($scope, $location, Auth, Tournament) ->
   $scope.menu = [
-    {title: 'Tournaments', state: 'tournaments'},
+    #{title: 'Tournaments', state: 'tournaments'},
   ]
   $scope.isCollapsed = true
   $scope.isLoggedIn = Auth.isLoggedIn
@@ -16,3 +16,5 @@ angular.module 'boardgametournamentApp'
 
   $scope.isActive = (route) ->
     route is $location.path()
+
+  $scope.tournaments = Tournament
