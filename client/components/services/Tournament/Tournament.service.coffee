@@ -6,7 +6,7 @@ angular.module 'boardgametournamentApp'
   listeners = []
   activeTournament = {}
 
-  tournaments = [{name: 'LOL'}]
+  tournaments = []
 
   $http.get('/api/tournaments/mine').success (res) ->
     tournaments = res

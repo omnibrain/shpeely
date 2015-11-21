@@ -8,7 +8,10 @@ var Cacheman = require('cacheman');
 // Simple wrapper for BGG api
 var BGGData = function () {};
 
-var cache = new Cacheman({ttl: TTL})
+var cache = new Cacheman({
+  ttl: TTL,
+  engine: 'redis',
+});
 
 BGGData.prototype.search = function (query, cb) {
 
@@ -47,7 +50,9 @@ BGGData.prototype.info = function (bggid, cb) {
   cache.get(cacheKey, function(err, val) {
 
     // found in cache
-    if(val) { return cb(null, val)}
+    if(val && typeof val === 'object') {
+      return cb(null, val);
+    }
 
 		//load from BBG
 		bgg('thing', {id:bggid, stats:true}).then(function(data){
@@ -60,6 +65,14 @@ BGGData.prototype.info = function (bggid, cb) {
 					console.log(error);
 					cb(new Error(error));
 				} else {
+          if(typeof data.items.item === 'string') {
+            // this is a bug of BGG
+            try {
+              data.items.item = JSON.parse(data.items.item);
+            } catch (e) {
+              cb(e);
+            }
+          }
 					// everything as expected
           cache.set(cacheKey, data.items.item, cb)
 				}

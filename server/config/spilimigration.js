@@ -57,6 +57,11 @@ MongoClient.connect("mongodb://localhost:27017/spili", function(err, db) {
                     if(err) {return callback(err)}
 
                     players[player.name] = newPlayer;
+
+                    // add player to the tournament
+                    tournament.members.push(newPlayer);
+                    tournament.save();
+
                     callback();
                   });
                 } else {

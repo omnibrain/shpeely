@@ -26,13 +26,9 @@ exports.show = function(req, res) {
 // Returns tournaments of the logged in user. Optional with a query
 exports.mine = function(req, res) {
 
-  console.log('input: ', req.query);
-
   // find players of this user
-  console.log('find players of user ', req.user);
   Player.find({'_user': req.user._id}, function(err, players) {
 
-    console.log('Find tournaments of players ', players);
     var query = _.merge(req.query, {
       members: {
         '$elemMatch': {'$in': _.pluck(players, '_id')}
@@ -40,13 +36,10 @@ exports.mine = function(req, res) {
     });
     
     // find all tournaments of all players of this user
-    console.log('Query: ', JSON.stringify(query));
     Tournament.find(query)
       .populate('members')
       .exec(function(err, tournaments) {
         if(!tournaments) {return res.send(404)}
-        console.log('Found tournaments: ', tournaments);
-
         res.send(tournaments);
     });
     
