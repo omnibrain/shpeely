@@ -7,6 +7,7 @@ angular.module 'boardgametournamentApp', [
   'ui.router',
   'ui.bootstrap',
   'selectize',
+  'highcharts-ng',
 ]
 .config ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) ->
   $urlRouterProvider

@@ -22,6 +22,7 @@
     "method-override": "~1.0.0",
     "mongodb": "^2.0.49",
     "mongoose": "~3.8.8",
+    "mongoose-url-slugs": "^0.1.4",
     "morgan": "~1.0.0",
     "passport": "~0.2.0",
     "passport-facebook": "latest",

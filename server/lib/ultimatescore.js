@@ -172,15 +172,15 @@ UltimateScore.prototype.computeScores = function (gameResults, allResults, cb) {
 };
 
 function computeScore(score, mean, sd, weight) {
-  console.log('////////////////////');
-  console.log('score: ', score);
-  console.log('mean: ', mean);
-  console.log('weight: ', weight);
-  console.log('sd: ', sd);
 
 	var weightFactor = 3;
 	var result = ((score - mean) / sd) * weight * weightFactor;
-  console.log('result:', result);
+  //console.log('////////////////////');
+  //console.log('score: ', score);
+  //console.log('mean: ', mean);
+  //console.log('weight: ', weight);
+  //console.log('sd: ', sd);
+  //console.log('result:', result);
   return result
 }
 

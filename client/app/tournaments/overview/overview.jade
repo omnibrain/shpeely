@@ -62,3 +62,8 @@ div(ng-include='"components/navbar/navbar.html"')
         h4 Tags
         a(href='{{"https://boardgamegeek.com/boardgamecategory/" + tag.id}}', ng-repeat='tag in selectedGame.tags', target='_blank')
           span.label.label-info.game-tag(ng-bind='tag.value')
+  .row
+    .col-md-12
+      h3 Scores
+    .col-md-12
+      scorechart
