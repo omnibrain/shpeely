@@ -63,7 +63,7 @@ UltimateScore.prototype.timeSeries = function (allResults, cb) {
 		// put the data in highcharts conform format
 		var series = _.map(players, function (data, player) {
 			return {
-				name: player,
+				player: player,
 				data: data,
 			};
 		});

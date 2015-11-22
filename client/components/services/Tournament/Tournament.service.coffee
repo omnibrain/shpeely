@@ -29,6 +29,9 @@ angular.module 'boardgametournamentApp'
   isReady: -> ready
   promise: deferred.promise
 
+  add: (tournament)->
+    tournaments.push tournament
+
   setActive: (tournament)->
     activeTournament = tournament
     listener(tournament) for listener in listeners
@@ -54,7 +57,13 @@ angular.module 'boardgametournamentApp'
       $http.get("/api/scores/#{activeTournament._id}").then (res)->
         resolve res.data
       , reject
-       
+
+  getTimeSeries: ->
+    $q (resolve, reject)->
+      $http.get("/api/scores/timeseries/#{activeTournament._id}").then (res)->
+        console.log res
+        resolve res.data
+      , reject
 
   getOwnActivePlayer: (callback)->
     if not activeTournament

@@ -4,7 +4,34 @@ var _ = require('lodash');
 var Tournament = require('./tournament.model');
 var User = require('../user/user.model.js');
 var Player = require('../player/player.model.js');
+var Gameresults = require('../gameresult/gameresult.model.js');
 var mongoose = require('mongoose');
+
+// find tournament by slug or id and polulate
+// the players
+function findTournament(id, callback) {
+  Tournament.findOne({slug: id}, function (err, tournament) {
+    if(err) { return callback(err); }
+
+    if(tournament) {
+      // found by slug
+      tournament.populate('members', function(err, tournament) {
+        callback(null, tournament);
+      });
+
+    } else {
+      // now try to find by id
+      Tournament.findById(req.params.id, function (err, tournament) {
+        if(err) { return callback(err); }
+        if(!tournament) {return callback(null, tournament)}
+
+        tournament.populate('members', function(err, tournament) {
+          return callback(null, tournament);
+        });
+      });
+    }
+  });
+}
 
 // Get list of tournaments
 exports.index = function(req, res) {
@@ -16,24 +43,11 @@ exports.index = function(req, res) {
 
 // Get a single tournament
 exports.show = function(req, res) {
-  // try to find by slug first
-  Tournament.findOne({slug: req.params.id}, function (err, tournament) {
-    if(err) { return handleError(res, err); }
-    if(tournament) {
-      tournament.populate('members', function(err, tournament) {
-        return res.json(tournament);
-      });
-    } else {
-      // now try to find by id
-      Tournament.findById(req.params.id, function (err, tournament) {
-        if(err) { return handleError(res, err); }
-        if(!tournament) { return res.send(404); }
 
-        tournament.populate('members', function(err, tournament) {
-          return res.json(tournament);
-        });
-      });
-    }
+  findTournament(req.params.id, function(err, tournament) {
+    if(err) { return handleError(res, err); }
+    if(!tournament) { return res.send(404); }
+    return res.json(tournament);
   });
 
 };
@@ -95,31 +109,36 @@ exports.create = function(req, res) {
   });
 };
 
-// Updates an existing tournament in the DB.
-exports.update = function(req, res) {
-  if(req.body._id) { delete req.body._id; }
-  Tournament.findById(req.params.id, function (err, tournament) {
-    if (err) { return handleError(res, err); }
-    if(!tournament) { return res.send(404); }
-    var updated = _.merge(tournament, req.body);
-    updated.save(function (err) {
-      if (err) { return handleError(res, err); }
-      return res.json(200, tournament);
-    });
-  });
-};
 
-// Deletes a tournament from the DB.
-exports.destroy = function(req, res) {
-  Tournament.findById(req.params.id, function (err, tournament) {
+
+// UNFINISHED....
+exports.gameresults = function(req, res) {
+  findTournament(req.params.id, function(err, tournament) {
     if(err) { return handleError(res, err); }
     if(!tournament) { return res.send(404); }
-    tournament.remove(function(err) {
-      if(err) { return handleError(res, err); }
-      return res.send(204);
-    });
+
+    var query = _.defaults({tournament: tournament._id});
+    Gameresults
+      .find(query) 
+      .sort('time', -1)
+      .limit(req.query.limit || 3000) // limit to 3000 by default
+      .exec(function(err, res) {
+           
+      });
+    
   });
 };
+exports.games = function(req, res) {
+  // TODO
+  res.json({});
+};
+exports.players = function(req, res) {
+  // TODO
+  res.json({});
+};
+
+
+
 
 function handleError(res, err) {
   console.error(err);

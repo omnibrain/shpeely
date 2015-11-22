@@ -1,0 +1,11 @@
+.chart-container(ng-hide='chartLoading')
+  highchart#timechart(config='timechartConfig')
+  .row
+    .col-md-12.chart-controls
+      button.btn.btn-sm.btn-primary(ng-click='hideAll()') Hide All
+      button.btn.btn-sm.btn-primary(ng-click='showAll()') Show All
+.loading-container(ng-show='chartLoading')
+  .loading
+    span.loading-spinner
+    p.loading-text Loading Loading Chart...
+

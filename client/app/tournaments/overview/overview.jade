@@ -6,7 +6,7 @@ div(ng-include='"components/navbar/navbar.html"')
       h2(ng-bind='tournament.name')
   .row(ng-show='canEdit')
     .col-md-6
-      h3.mbot Add Game (loading: {{gameSearchLoading}})
+      h3.mbot Add Game
       form.form-horizontal(ng-submit='saveGame()', name='newGameResultForm')
         .form-group
           label.col-sm-2.control-label(for='game') Game
@@ -68,3 +68,7 @@ div(ng-include='"components/navbar/navbar.html"')
       h3 Scores
     .col-md-12
       scorechart
+    .col-md-12
+      h3 Performance over Time
+    .col-md-12
+      timechart

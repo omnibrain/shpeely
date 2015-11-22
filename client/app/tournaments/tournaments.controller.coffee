@@ -16,9 +16,7 @@ angular.module 'boardgametournamentApp'
     $http.post '/api/tournaments',
       name: $scope.newTournament
     .then (res)->
-      $scope.tournaments.push res.data
+      Tournament.add res.data
+      $scope.myTournaments.push res.data
 
     $scope.newTournament = ''
-
-  $scope.isAdmin = (tournament)->
-    _.find(tournament.members, (member)-> member._user == $scope.user._id)?.role == 'admin'
