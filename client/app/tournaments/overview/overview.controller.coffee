@@ -11,6 +11,7 @@ angular.module 'boardgametournamentApp'
   $scope.gameOptions = []
   $scope.selectedGame = null
   $scope.gameInfoLoading = false
+  $scope.gameSearchLoading = false
 
   $scope.players = []
   $scope.canEdit = false
@@ -28,15 +29,19 @@ angular.module 'boardgametournamentApp'
 
   # is called when a game was selected in the dropdown
   getBggInfo = (bggid)->
+
     $scope.gameInfoLoading = true
     if not bggid or bggid == ''
       return
+
+
     BggApi.info(bggid).then (res)->
       info = res.data
+
       $scope.selectedGame =
         id: info.id
         thumbnail: info.thumbnail
-        name: _.find([].concat(info.name), (name)-> name.type == 'primary').value
+        name: _.find([].concat(info.name), (name)-> name?.type == 'primary').value
         yearPublished: info.yearpublished.value
         statistics: info.statistics.ratings
         maxPlayers: info.maxplayers.value
@@ -80,6 +85,7 @@ angular.module 'boardgametournamentApp'
     valueField: '_id'
 
   $scope.gameSelectizeConfig =
+    selectOnTab: true
     maxItems: 1
     valueField: 'id'
     labelField: 'name'
@@ -89,8 +95,16 @@ angular.module 'boardgametournamentApp'
       option: render
       item: render
     load: (query, callback)->
+
+      $scope.gameSearchLoading = true
+
       self = @
       BggApi.search(query).then (res)->
+
+        # there's a bug in selectize where the loading class is not removed. 
+        # This will remove it for sure
+        $scope.gameSearchLoading = false
+
         if not res.data.length
           return
         options = []

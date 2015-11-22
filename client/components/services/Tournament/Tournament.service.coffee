@@ -6,9 +6,8 @@ angular.module 'boardgametournamentApp'
   activeTournament = {}
   listeners = []
 
-  # is resolved as soon as the 
-  # active tournament is set
   deferred = $q.defer()
+  ready = true
 
   tournaments = []
 
@@ -17,17 +16,22 @@ angular.module 'boardgametournamentApp'
       if loggedIn
         $http.get('/api/tournaments/mine').success (res) ->
           tournaments = res
+          deferred.resolve tournaments
+      else
+        $http.get('/api/tournaments').success (res) ->
+          tournaments = res
+          deferred.resolve tournaments
 
   loadTournaments()
 
   reload: loadTournaments
 
+  isReady: -> ready
+  promise: deferred.promise
+
   setActive: (tournament)->
-    console.log "tournament set"
-    console.log tournament
     activeTournament = tournament
     listener(tournament) for listener in listeners
-    deferred.resolve tournament
 
   getActive: ()->
     if Auth.isLoggedIn()
@@ -35,9 +39,10 @@ angular.module 'boardgametournamentApp'
     else
       activeTournament = {}
 
-  getActiveAsync: ()-> deferred.promise
+  getAll: -> tournaments
 
-  getAll: ()-> tournaments
+  getAllAsync: (callback)->
+    if ready then callback(tournaments) else deferred.promise.then(callback)
 
   # goes to the home of the active tournament
   goToHome: ()-> $state.go 'tournamentoverview', {name: activeTournament.name}
@@ -45,25 +50,30 @@ angular.module 'boardgametournamentApp'
   onChange: (listener)-> listeners.push listener
 
   getScores: ->
-    self = @
     $q (resolve, reject)->
-      self.getActiveAsync().then (tournament)->
-        $http.get("/api/scores/#{tournament._id}").then (res)->
-          resolve res.data
-        , reject
+      $http.get("/api/scores/#{activeTournament._id}").then (res)->
+        resolve res.data
+      , reject
        
-  getOwnPlayer: (callback)->
-    self = @
-    Auth.isLoggedInAsync (loggedIn)->
+
+  getOwnActivePlayer: (callback)->
+    if not activeTournament
+      console.error "No active tournament"
+    else
+      @getOwnPlayer activeTournament._id, callback
+
+  # returns the own player of the currently logged in user
+  getOwnPlayer: (tournamentId, callback)->
+    Auth.isLoggedInAsync (loggedIn)=>
       if loggedIn
-        console.log Auth.getCurrentUser()
-        player = _.find(self.getActive().members, (member)-> member._user == Auth.getCurrentUser()._id)
+        tournament = _.find(tournaments, (tournament)-> tournament._id == tournamentId)
+        player = _.find(tournament.members, (member)-> member._user == Auth.getCurrentUser()._id)
         callback player
       else
         callback()
 
   canEdit: (callback)->
-    @getOwnPlayer (player)->
+    @getOwnActivePlayer (player)->
       if player then callback player.role in ['editor', 'admin'] else callback(false)
 
 

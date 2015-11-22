@@ -7,3 +7,5 @@ angular.module 'boardgametournamentApp'
     url: '/'
     templateUrl: 'app/main/main.html'
     controller: 'MainCtrl'
+    resolve:
+      tournaments: (Tournament)-> Tournament.promise

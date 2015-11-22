@@ -6,3 +6,5 @@ angular.module 'boardgametournamentApp'
     url: '/tournaments/:slug'
     templateUrl: 'app/tournaments/overview/overview.html'
     controller: 'OverviewCtrl'
+    resolve:
+      tournaments: (Tournament)-> Tournament.promise

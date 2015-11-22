@@ -1,19 +1,15 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'MainCtrl', ($scope, $http) ->
-  $scope.awesomeThings = []
+.controller 'MainCtrl', ($scope, $http, Tournament) ->
 
-  $http.get('/api/things').success (awesomeThings) ->
-    $scope.awesomeThings = awesomeThings
-    
+  $scope.allTournaments = []
 
-  $scope.addThing = ->
-    return if $scope.newThing is ''
-    $http.post '/api/things',
-      name: $scope.newThing
-
-    $scope.newThing = ''
-
-  $scope.deleteThing = (thing) ->
-    $http.delete '/api/things/' + thing._id
+  $scope.lead = _.sample [
+    'Forget everything you thought was important. This is what counts now.',
+    'Boardgaming just became serious.',
+    'Statistics don\'t lie',
+  ]
+  
+  Tournament.getAllAsync (tournaments)->
+    $scope.allTournaments = tournaments

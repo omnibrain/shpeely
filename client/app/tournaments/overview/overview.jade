@@ -6,12 +6,13 @@ div(ng-include='"components/navbar/navbar.html"')
       h2(ng-bind='tournament.name')
   .row(ng-show='canEdit')
     .col-md-6
-      h3.mbot Add Game
+      h3.mbot Add Game (loading: {{gameSearchLoading}})
       form.form-horizontal(ng-submit='saveGame()', name='newGameResultForm')
         .form-group
           label.col-sm-2.control-label(for='game') Game
           .col-sm-10
-            selectize.game-selectize(config='gameSelectizeConfig', options='gameOptions', ng-model='newGameResult.bggid', placeholder='Search Game...', required='')
+            .selectize-wrapper(ng-class='{loading: gameSearchLoading}')
+              selectize.game-selectize(config='gameSelectizeConfig', options='gameOptions', ng-model='newGameResult.bggid', placeholder='Search Game...', required='')
         .form-group(ng-repeat='result in newGameResult.scores')
           label.col-sm-2.control-label(for='player{{$index}}') Player {{i}}
           .col-sm-7

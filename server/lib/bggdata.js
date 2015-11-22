@@ -13,6 +13,20 @@ var cache = new Cacheman({
   engine: 'redis',
 });
 
+function toObject(item, callback) {
+  if(typeof item === 'string') {
+    try {
+      callback(null, JSON.parse(item));
+    } catch (e) {
+      callback(e);
+    }
+  } else {
+    callback(null, item);
+  }
+}
+
+BGGData.prototype.cache = cache;
+
 BGGData.prototype.search = function (query, cb) {
 
   var cacheKey = 'search:' + query;
@@ -26,16 +40,23 @@ BGGData.prototype.search = function (query, cb) {
     } else {
       // try exact query first
       bgg('search', {query:query, exact:1, type: 'boardgame'}).then(function(res){
+
           if(res.items.total > 0) {
             var items = res.items.total == 1 ? [res.items.item] : res.items.item;
-            cache.set(cacheKey, items, cb);
+
+            cache.set(cacheKey, items, function(err, res) {
+              toObject(res, cb);
+            });
           } else {
             // try the fuzzy search
             bgg('search', {query:query, type: 'boardgame'}).then(function(res){
                 var items = (res.items.total != 0) ? res.items.item : [];
-                cache.set(cacheKey, items, cb);
+                cache.set(cacheKey, items, function(err, res) {
+                  toObject(res, cb);
+                });
             });
           }
+          
       });
     }
   });
@@ -74,13 +95,14 @@ BGGData.prototype.info = function (bggid, cb) {
             }
           }
 					// everything as expected
-          cache.set(cacheKey, data.items.item, cb)
+          cache.set(cacheKey, data.items.item, function(err, res) {
+            toObject(res, cb);
+          });
 				}
 			});
 
   });
 
 };
-
 
 module.exports = new BGGData();
