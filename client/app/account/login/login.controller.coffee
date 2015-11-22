@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'LoginCtrl', ($scope, Auth, $location, $window) ->
+.controller 'LoginCtrl', ($scope, Auth, $location, $window, Tournament) ->
   $scope.user = {}
   $scope.errors = {}
   $scope.login = (form) ->
@@ -14,6 +14,7 @@ angular.module 'boardgametournamentApp'
         password: $scope.user.password
 
       .then ->
+        Tournament.reload()
         $location.path '/'
 
       .catch (err) ->

@@ -13,7 +13,7 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
         //-li(ng-repeat='item in menu', ng-class='{active: isActive(item.link)}')
           //-a(ui-sref='{{item.state}}') {{item.title}}
 
-        li.dropdown.open
+        li.dropdown.open(ng-show='isLoggedIn()')
           a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='true') Tournaments #[span.caret]
           ul.dropdown-menu
             li
@@ -42,7 +42,7 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
       ul.nav.navbar-nav.navbar-right
 
         // active tournament
-        li
+        li(ng-show='tournaments.getActive()._id')
           a(href='#', ng-click='goToTournament()')
             span.label.label-danger.active-tournament-label {{tournaments.getActive().name}}
 

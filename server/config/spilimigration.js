@@ -35,7 +35,8 @@ MongoClient.connect("mongodb://localhost:27017/spili", function(err, db) {
         // create tournament
         Tournament.create({
           name: 'Spililove 2015',
-          members: [player._id]
+          members: [player._id],
+          created: new Date('2015/1/1')
         }, function(err, tournament) {
 
           // add the game results of the spili database
@@ -45,7 +46,6 @@ MongoClient.connect("mongodb://localhost:27017/spili", function(err, db) {
             // create dict of players and add default player
             var players = {}
             players[player.name] = player;
-
 
             async.eachSeries(gameresults, function(result, callback) {
 
@@ -79,6 +79,7 @@ MongoClient.connect("mongodb://localhost:27017/spili", function(err, db) {
 
                   bggid: result.bggid,
                   tournament: tournament._id,
+                  time: result.time,
                   scores: _.map(result.players, function(score) {
                     return { name: score.name, score: score.score, player: players[score.name]._id } 
                   }),

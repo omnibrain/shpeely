@@ -12,7 +12,6 @@ exports.index = function(req, res) {
     if(!gameResults) { return res.json([]); }
 
     ultimatescore.computeScores(gameResults, gameResults, function(err, result) {
-      console.log('@@@@@@@');
       return res.json(result);
     });
 

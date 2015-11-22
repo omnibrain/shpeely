@@ -2,9 +2,11 @@
 
 angular.module 'boardgametournamentApp'
 .controller 'NavbarCtrl', ($scope, $location, Auth, Tournament) ->
+
   $scope.menu = [
     #{title: 'Tournaments', state: 'tournaments'},
   ]
+
   $scope.isCollapsed = true
   $scope.isLoggedIn = Auth.isLoggedIn
   $scope.isAdmin = Auth.isAdmin

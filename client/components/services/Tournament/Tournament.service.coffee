@@ -1,21 +1,31 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.service 'Tournament', ($state, $http)->
+.service 'Tournament', ($state, $http, Auth)->
 
   listeners = []
   activeTournament = {}
 
   tournaments = []
 
-  $http.get('/api/tournaments/mine').success (res) ->
-    tournaments = res
+  loadTournaments = ->
+    Auth.isLoggedInAsync()?.then ->
+      $http.get('/api/tournaments/mine').success (res) ->
+        tournaments = res
+
+  loadTournaments()
+
+  reload: loadTournaments
 
   setActive: (tournament)->
     activeTournament = tournament
     listener(tournament) for listener in listeners
 
-  getActive: ()-> activeTournament
+  getActive: ()->
+    if Auth.isLoggedIn()
+      activeTournament
+    else
+      activeTournament = {}
 
   getAll: ()-> tournaments
 
