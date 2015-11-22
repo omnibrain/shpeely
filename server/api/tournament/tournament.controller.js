@@ -16,11 +16,26 @@ exports.index = function(req, res) {
 
 // Get a single tournament
 exports.show = function(req, res) {
-  Tournament.findById(req.params.id, function (err, tournament) {
+  // try to find by slug first
+  Tournament.findOne({slug: req.params.id}, function (err, tournament) {
     if(err) { return handleError(res, err); }
-    if(!tournament) { return res.send(404); }
-    return res.json(tournament);
+    if(tournament) {
+      tournament.populate('members', function(err, tournament) {
+        return res.json(tournament);
+      });
+    } else {
+      // now try to find by id
+      Tournament.findById(req.params.id, function (err, tournament) {
+        if(err) { return handleError(res, err); }
+        if(!tournament) { return res.send(404); }
+
+        tournament.populate('members', function(err, tournament) {
+          return res.json(tournament);
+        });
+      });
+    }
   });
+
 };
 
 // Returns tournaments of the logged in user. Optional with a query

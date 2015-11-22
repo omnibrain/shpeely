@@ -121,8 +121,27 @@ describe('POST /api/tournaments', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.name.should.be.equal(tournament.name)
-        done();
+        var tournament1 = res.body;
+        tournament1.name.should.be.equal(tournament.name)
+
+        // Create another tourament with the same name
+        request(app)
+          .post('/api/tournaments')
+          .set('Authorization', 'Bearer '  + token)
+          .send(tournament)
+          .expect(201)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            if (err) return done(err);
+            var tournament2 = res.body;
+            tournament2.name.should.be.equal(tournament.name)
+
+            // check slugs
+            tournament2.slug.should.be.not.equal(tournament1.slug);
+
+            done();
+          });
+
       });
   });
 });

@@ -13,15 +13,18 @@ angular.module 'boardgametournamentApp'
   tournaments = []
 
   loadTournaments = ->
-    Auth.isLoggedInAsync()?.then ->
-      $http.get('/api/tournaments/mine').success (res) ->
-        tournaments = res
+    Auth.isLoggedInAsync (loggedIn)->
+      if loggedIn
+        $http.get('/api/tournaments/mine').success (res) ->
+          tournaments = res
 
   loadTournaments()
 
   reload: loadTournaments
 
   setActive: (tournament)->
+    console.log "tournament set"
+    console.log tournament
     activeTournament = tournament
     listener(tournament) for listener in listeners
     deferred.resolve tournament
@@ -49,5 +52,18 @@ angular.module 'boardgametournamentApp'
           resolve res.data
         , reject
        
-    
+  getOwnPlayer: (callback)->
+    self = @
+    Auth.isLoggedInAsync (loggedIn)->
+      if loggedIn
+        console.log Auth.getCurrentUser()
+        player = _.find(self.getActive().members, (member)-> member._user == Auth.getCurrentUser()._id)
+        callback player
+      else
+        callback()
+
+  canEdit: (callback)->
+    @getOwnPlayer (player)->
+      if player then callback player.role in ['editor', 'admin'] else callback(false)
+
 

@@ -13,14 +13,17 @@ angular.module 'boardgametournamentApp'
   $scope.gameInfoLoading = false
 
   $scope.players = []
-
+  $scope.canEdit = false
 
   # load the tournament from the server
-  $http.get('/api/tournaments/mine', {params: {name: $stateParams.name}}).then (res)->
-    tournament = res.data[0]
+  $http.get("/api/tournaments/#{$stateParams.slug}").then (res)->
+    tournament = res.data
     $scope.tournament = tournament
     Tournament.setActive tournament
     $scope.players = _.sortBy tournament.members, 'name'
+
+    Tournament.canEdit (canEdit)->
+      $scope.canEdit = canEdit
 
 
   # is called when a game was selected in the dropdown
