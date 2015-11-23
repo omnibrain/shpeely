@@ -28,17 +28,20 @@ var tournament = new Tournament({
 });
 
 var gameResults = _.map(_.range(10), function(i) {
+  var playersPerGame = 3
+  var selectedPlayers = _.sample(players, playersPerGame);
   return new Gameresult({
     bggid: zhanguoId,
     tournament: tournament._id,
-    scores: _.map(_.range(3), function(j) {
+    scores: _.map(_.range(playersPerGame), function(j) {
       return {
-        player: players[i % players.length],
+        player: selectedPlayers[j],
         score: Math.round(Math.random() * 100),
       };
     }),
   });
 });
+
 
 describe('MODEL tests', function() {
 
@@ -63,6 +66,30 @@ describe('MODEL tests', function() {
           done();
         });
       });
+    });
+  });
+
+  it('#winner (Should return the winner of a game result)', function(done) {
+    Gameresult.findOne({}, function(err, gameresult) {
+
+      var winnerScore = _.max(gameresult.scores, function(score) {
+        return score.score; 
+      }).score;
+
+      winnerScore.should.be.equal(gameresult.winner.score);
+      done();
+    });
+  });
+
+  it('#loser (Should return the loser of a game result)', function(done) {
+    Gameresult.findOne({}, function(err, gameresult) {
+
+      var loserScore = _.min(gameresult.scores, function(score) {
+        return score.score; 
+      }).score;
+
+      loserScore.should.be.equal(gameresult.loser.score);
+      done();
     });
   });
 
@@ -105,6 +132,23 @@ describe('MODEL tests', function() {
         res.should.be.instanceof(Array).and.have.lengthOf(1);
         done();
       });
+    });
+  });
+
+  it('#playerStats (Should return stats for each player)', function(done) {
+    Gameresult.playerStats({}, function(err, res) {
+      res.should.be.instanceof(Array).and.have.lengthOf(players.length);
+      res[0].player.should.be.ok;
+      res[0].loseRatio.should.be.ok;
+      res[0].wins.should.be.ok;
+      done()
+    });
+  });
+
+  it('#gameStats (Should return stats for each game)', function(done) {
+    Gameresult.gameStats({}, function(err, res) {
+      res.should.be.instanceof(Array).and.have.lengthOf(1);
+      done();
     });
   });
 

@@ -102,7 +102,19 @@ BGGData.prototype.info = function (bggid, cb) {
 			});
 
   });
-
 };
+
+BGGData.prototype.shortInfo = function (bggid, cb) {
+  this.info(bggid, function(err, info) {
+    if(err) {return cb(err)}
+
+    var shortInfo = {
+      id: bggid,
+      name: _.find([].concat(info.name), function(name) { return name.type == 'primary'; }).value,
+    }
+
+    cb(null, shortInfo);
+  });
+}
 
 module.exports = new BGGData();
