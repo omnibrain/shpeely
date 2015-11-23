@@ -12,6 +12,7 @@ var GameresultSchema = new Schema({
   bggid: {type: Number, required: true},
   tournament: {type : mongoose.Schema.ObjectId, ref : 'Tournament', required: true},
   time: {type: Date, default: Date.now},
+  lastEdit: {type: Date, default: Date.now},
   scores: [{
     score: Number,
     player: {type : mongoose.Schema.ObjectId, ref : 'Player'}

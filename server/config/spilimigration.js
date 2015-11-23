@@ -81,6 +81,7 @@ MongoClient.connect("mongodb://localhost:27017/spili", function(err, db) {
                     bggid: result.bggid,
                     tournament: tournament._id,
                     time: result.time,
+                    lastEdit: result.time,
                     scores: _.map(result.players, function(score) {
                       return { name: score.name, score: score.score, player: players[score.name]._id } 
                     }),

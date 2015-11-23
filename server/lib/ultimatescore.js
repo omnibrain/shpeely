@@ -2,10 +2,24 @@ var async = require('async');
 var _ = require('lodash');
 var stdev = require('compute-stdev');
 var util = require('util');
+var config = require('../config/environment');
+
+// Cache for the computed scores
+var TTL = 3600 * 24 * 3 // cache for 7 days
+var CachemanMongo = require('cacheman-mongo');
+
+// Simple wrapper for BGG api
+var BGGData = function () {};
+
+var cache = new CachemanMongo(config.mongo.uri, {
+  ttl: TTL,
+});
 
 var bggdata = require('./bggdata.js');
 
 var UltimateScore = function () {};
+
+UltimateScore.prototype.cache = cache;
 
 UltimateScore.prototype.timeSeries = function (allResults, cb) {
 	var self = this;
@@ -75,100 +89,125 @@ UltimateScore.prototype.timeSeries = function (allResults, cb) {
 
 UltimateScore.prototype.computeScores = function (gameResults, allResults, cb) {
 
-	async.waterfall([
-			function(cb){
-				// get bggstats for the games
-				var bggids = _.pluck(gameResults, 'bggid');
-				async.map(bggids, bggdata.info, cb);
-			},
-			function (bggstats, cb) {
-				// add the bgg stats to the game results
-				gameResults = _.map(gameResults, function (gameResult, i) {
+  // try to load from cache
+  var key = _.chain(allResults.concat(gameResults))
+      .map(function(gameResult) {
+        return gameResult._id + '_' + gameResult.lastEdit.getTime();
+      })
+      .sort()
+      .flatten()
+      .value()
+      .join(':');
 
-          if(!bggstats[i].statistics && typeof bggstats[i] === 'string') {
-            // for some reason, the data returned by BGG is a string 
-            // instead of an object
-            bggstats[i] = JSON.parse(bggstats[i]);
-            console.log(bggstats[i].statistics.ratings);
-          }
+  cache.get(key, function(err, value) {
 
-					gameResult.weight = bggstats[i].statistics.ratings.averageweight.value;
-					return gameResult;
-				});
+    if(err) {return cb(err); }
+    if(value) {
+      cb(null, value)
+    } else {
 
-				// Filter the games in question from all games
-				var games = _.pluck(gameResults, 'bggid');
-				var relevantGames = _.filter(allResults, function (gameResult) {
-					return _.contains(games, gameResult.bggid);
-				});
+      async.waterfall([
+          function(cb){
+            // get bggstats for the games
+            var bggids = _.pluck(gameResults, 'bggid');
+            async.map(bggids, bggdata.info, cb);
+          },
+          function (bggstats, cb) {
 
-				// group all games by num players and game
-				var sameGames = _.groupBy(relevantGames, function (gameResult) {
-					return sameGameKey(gameResult.scores.length, gameResult.bggid);
-				});
+            // add the bgg stats to the game results
+            gameResults = _.map(gameResults, function (gameResult, i) {
 
-				// add the scores of all games to the game results
-				gameResults = _.map(gameResults, function (gameResult) {
-					var games = sameGames[sameGameKey(gameResult.scores.length, gameResult.bggid)];
+              if(!bggstats[i].statistics && typeof bggstats[i] === 'string') {
+                // for some reason, the data returned by BGG is a string 
+                // instead of an object
+                bggstats[i] = JSON.parse(bggstats[i]);
+              }
 
-					var allScores = _.reduce(games, function (memo, gameResult) {
-						var scores = _.pluck(gameResult.scores, 'score');
-						return memo.concat(scores);
-					}, []);
+              gameResult.weight = bggstats[i].statistics.ratings.averageweight.value;
+              return gameResult;
+            });
 
-          gameResult.allScores = allScores;
+            // Filter the games in question from all games
+            var games = _.pluck(gameResults, 'bggid');
+            var relevantGames = _.filter(allResults, function (gameResult) {
+              return _.contains(games, gameResult.bggid);
+            });
 
-					return gameResult;
-				});
+            // group all games by num players and game
+            var sameGames = _.groupBy(relevantGames, function (gameResult) {
+              return sameGameKey(gameResult.scores.length, gameResult.bggid);
+            });
 
-				// add sd and avg to the game results
-				gameResults = _.map(gameResults, function(gameResult) {
-					gameResult.avg = _.reduce(gameResult.allScores, function(memo, score) { return memo + score}, 0) / gameResult.allScores.length;
-					gameResult.std = stdev(gameResult.allScores);
-					return gameResult;
-				});
+            // add the scores of all games to the game results
+            gameResults = _.map(gameResults, function (gameResult) {
+              var games = sameGames[sameGameKey(gameResult.scores.length, gameResult.bggid)];
 
-				// add ultimate scores to the player's scores
-				gameResults = _.map(gameResults, function (gameResult) {
+              var allScores = _.reduce(games, function (memo, gameResult) {
+                var scores = _.pluck(gameResult.scores, 'score');
+                return memo.concat(scores);
+              }, []);
 
-					gameResult.scores = _.map(gameResult.scores, function (score) {
-						score.ultimateScore = computeScore(score.score, gameResult.avg, gameResult.std, gameResult.weight);
-						return score;
-					});
+              gameResult.allScores = allScores;
 
-					return gameResult;
-				});
+              return gameResult;
+            });
 
-				// extract the player scores and merge them
-				var playerScores = _.chain(gameResults)
-					.pluck('scores')
-					.flatten()
-					.value();
-				
-				var scores = _.reduce(playerScores, function (memo, score) {
-						var player = score.player;
-						memo[player] = memo[player] || 0;
-						memo[player] += score.ultimateScore;
-						return memo;
-					}, {});
 
-				// create array of key/value (player/score) objects instead of a single object
-				// multiply them by 100 (arbitrary factor to make scores more readable) and sort
-				scores = _.chain(scores)
-					.map(function(score, player){
-						return {player: player, score: Math.round(score * 100) };
-					})
-					.sortBy(function(playerScore) { return -playerScore.score; })
-					.value();
+            // add sd and avg to the game results
+            gameResults = _.map(gameResults, function(gameResult) {
+              gameResult.avg = _.reduce(gameResult.allScores, function(memo, score) { return memo + score}, 0) / gameResult.allScores.length;
+              gameResult.std = stdev(gameResult.allScores);
+              return gameResult;
+            });
 
-				cb(null, scores);
-			},
-	], function(err, scores) {
-		if(err) return cb(err);
-		return cb(null, scores);
-	});
+            // add ultimate scores to the player's scores
+            gameResults = _.map(gameResults, function (gameResult) {
 
-	return null;
+              gameResult.scores = _.map(gameResult.scores, function (score) {
+                score.ultimateScore = computeScore(score.score, gameResult.avg, gameResult.std, gameResult.weight);
+                return score;
+              });
+
+              return gameResult;
+            });
+
+            // extract the player scores and merge them
+            var playerScores = _.chain(gameResults)
+              .pluck('scores')
+              .flatten()
+              .value();
+            
+            var scores = _.reduce(playerScores, function (memo, score) {
+                var player = score.player;
+                memo[player] = memo[player] || 0;
+                memo[player] += score.ultimateScore;
+                return memo;
+              }, {});
+
+            // create array of key/value (player/score) objects instead of a single object
+            // multiply them by 100 (arbitrary factor to make scores more readable) and sort
+            scores = _.chain(scores)
+              .map(function(score, player){
+                return {player: player, score: Math.round(score * 100) };
+              })
+              .sortBy(function(playerScore) { return -playerScore.score; })
+              .value();
+
+            cb(null, scores);
+          },
+      ], function(err, scores) {
+
+        if(err) return cb(err);
+        cache.set(key, scores, function(err) {
+          if(err) {return cb(err)}
+          return cb(null, scores);
+        });
+      });
+
+    }
+    
+  });
+
 };
 
 function computeScore(score, mean, sd, weight) {
