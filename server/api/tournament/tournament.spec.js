@@ -85,6 +85,103 @@ describe('GET /api/tournaments/mine', function() {
 
 });
 
+
+describe('GET /api/tournaments', function() {
+
+  before(function(done) {
+    user.save(function() {
+      player.save( function() {
+        tournament.save( function() {
+          done();
+        });
+      });
+    });
+  });
+
+  after(function(done) {
+    User.remove().exec().then(function() {
+      Player.remove().exec().then(function() {
+        Tournament.remove().exec().then(function() {
+          done();
+        });
+      });
+    });
+  });
+
+  it('should return a list of all tournaments that match the query', function(done) {
+
+    request(app)
+      .get('/api/tournaments')
+      .query({name: 'Fake Tournament'})
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        console.log(res.body);
+        res.body.should.be.instanceof(Array).and.have.lengthOf(1);
+        res.body[0].name.should.be.equal(tournament.name)
+        done();
+      });
+  });
+
+});
+
+
+describe('GET /api/tournaments/:id', function() {
+
+  var tournamentDoc = null;
+
+  before(function(done) {
+    user.save(function() {
+      player.save( function() {
+        tournament.save(function(err, tournament) {
+          tournamentDoc = tournament;
+          done();
+        });
+      });
+    });
+  });
+
+  after(function(done) {
+    User.remove().exec().then(function() {
+      Player.remove().exec().then(function() {
+        Tournament.remove().exec().then(function() {
+          done();
+        });
+      });
+    });
+  });
+
+  it('should return the tournament with the specified id', function(done) {
+
+    request(app)
+      .get('/api/tournaments/' + tournamentDoc._id)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        res.body.should.be.instanceof(Object);
+        res.body._id.should.be.equal(tournamentDoc._id.toHexString());
+        done();
+      });
+  });
+
+  it('should return the tournament with the specified slug', function(done) {
+
+    request(app)
+      .get('/api/tournaments/' + tournamentDoc.slug)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        res.body.should.be.instanceof(Object);
+        res.body._id.should.be.equal(tournamentDoc._id.toHexString());
+        done();
+      });
+  });
+
+});
+
 describe('POST /api/tournaments', function() {
 
   before(function(done) {
@@ -102,7 +199,7 @@ describe('POST /api/tournaments', function() {
   });
 
   afterEach(function(done) {
-    User.remove().exec().then(function() {
+    user.remove().exec().then(function() {
       done();
     });
   });

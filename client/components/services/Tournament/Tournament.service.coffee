@@ -61,7 +61,6 @@ angular.module 'boardgametournamentApp'
   getTimeSeries: ->
     $q (resolve, reject)->
       $http.get("/api/scores/timeseries/#{activeTournament._id}").then (res)->
-        console.log res
         resolve res.data
       , reject
 
