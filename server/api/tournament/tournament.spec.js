@@ -77,7 +77,6 @@ describe('GET /api/tournaments/mine', function() {
       .set('Authorization', 'Bearer '  + token)
       .end(function(err, res) {
         if (err) return done(err);
-        console.log(res.body);
         res.body.should.be.instanceof(Array).and.have.lengthOf(1);
         done();
       });
@@ -89,9 +88,9 @@ describe('GET /api/tournaments/mine', function() {
 describe('GET /api/tournaments', function() {
 
   before(function(done) {
-    user.save(function() {
-      player.save( function() {
-        tournament.save( function() {
+    User.create(user, function(err) {
+      Player.create(player, function(err) {
+        Tournament.create(tournament, function(err, tournament) {
           done();
         });
       });
@@ -116,8 +115,8 @@ describe('GET /api/tournaments', function() {
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
-        if (err) return done(err);
         console.log(res.body);
+        if (err) return done(err);
         res.body.should.be.instanceof(Array).and.have.lengthOf(1);
         res.body[0].name.should.be.equal(tournament.name)
         done();
@@ -132,9 +131,9 @@ describe('GET /api/tournaments/:id', function() {
   var tournamentDoc = null;
 
   before(function(done) {
-    user.save(function() {
-      player.save( function() {
-        tournament.save(function(err, tournament) {
+    User.create(user, function(err) {
+      Player.create(player, function(err) {
+        Tournament.create(tournament, function(err, tournament) {
           tournamentDoc = tournament;
           done();
         });
@@ -185,7 +184,7 @@ describe('GET /api/tournaments/:id', function() {
 describe('POST /api/tournaments', function() {
 
   before(function(done) {
-    user.save(function() {
+    User.create(user, function() {
       // authenticate user
       request(app)
         .post('/auth/local')
@@ -198,7 +197,7 @@ describe('POST /api/tournaments', function() {
     });
   });
 
-  afterEach(function(done) {
+  after(function(done) {
     user.remove().exec().then(function() {
       done();
     });

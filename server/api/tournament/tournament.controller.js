@@ -42,6 +42,11 @@ function findTournament(id, callback) {
 
 // Get list of tournaments
 exports.index = function(req, res) {
+  console.log(req.query);
+  console.log('CONTROLLER');
+  console.log(Tournament.db.host);
+  console.log(Tournament.db.host);
+  console.log(Tournament.db.name);
   Tournament.find(req.query, function (err, tournaments) {
     if(err) { return handleError(res, err); }
     return res.json(200, tournaments);
