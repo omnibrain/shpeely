@@ -1,11 +1,15 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'ScoreChartCtrl', ($scope, Tournament) ->
+.controller 'ScoreChartCtrl', ($scope, Tournament, $timeout) ->
+
+  $scope.chartLoading = true
 
   # get the scores
   Tournament.onChange ->
     Tournament.getScores().then (scores)->
+
+      $scope.chartLoading = false
 
       data = _.chain scores
         .pluck 'score'
@@ -35,4 +39,6 @@ angular.module 'boardgametournamentApp'
         yAxis:
           title:
             text: 'Score'
+        func: (c)->
+          $timeout (-> c.reflow()), 0
 

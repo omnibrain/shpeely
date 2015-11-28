@@ -7,6 +7,7 @@ var Player = require('../player/player.model.js');
 
 var async = require('async');
 var _ = require('lodash');
+var bggdata = require('../../lib/bggdata.js')
 
 // Get list of gameresults
 exports.index = function(req, res) {
@@ -21,7 +22,16 @@ exports.show = function(req, res) {
   Gameresult.findById(req.params.id, function (err, gameresult) {
     if(err) { return handleError(res, err); }
     if(!gameresult) { return res.send(404); }
-    return res.json(gameresult);
+    // populate players
+    gameresult.populate('scores.player', function(err, gameresult) {
+      //add game name
+      bggdata.shortInfo(gameresult.bggid, function(err, bgginfo) {
+        if(err) { return handleError(res, err); }
+        gameresult = gameresult.toObject()
+        gameresult.game = bgginfo;
+        return res.json(gameresult);
+      });
+    });
   });
 };
 

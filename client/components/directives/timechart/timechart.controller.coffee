@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'TimeChartCtrl', ($scope, Tournament, $timeout) ->
+.controller 'TimeChartCtrl', ($scope, Tournament, $timeout, $http, $sanitize) ->
 
   $scope.chartLoading = true
 
@@ -17,6 +17,9 @@ angular.module 'boardgametournamentApp'
   # get the scores
   Tournament.onChange ->
     Tournament.getTimeSeries().then (timeSeries)->
+
+      console.log timeSeries[0].data[0]
+
       $scope.chartLoading = false
 
       $scope.timechartConfig =
@@ -26,11 +29,37 @@ angular.module 'boardgametournamentApp'
           credits:
             enabled: false
           tooltip:
-            headerFormat: '<b>{series.name}</b><br>'
-            pointFormat: '{point.time:%e. %b}: {point.y:.0f}, {point.bla}'
+            borderRadius: 0
+            borderWidth: 0
+            shared: true
+            crosshairs: true
+            useHTML: true
+            formatter: ->
+              # load game result...
+              $http.get("/api/gameresults/#{this.points[0].point.gameresult}").then (res)->
+                gameresult = res.data
+                tooltipSelector = "#tooltip_#{res.data._id}"
+                game = $sanitize(gameresult.game.name)
+                players = _.map gameresult.scores, (score)-> $sanitize("#{score.player.name}: #{score.score}")
+                html = "<b>#{game}</b><br>#{players.join('<br>')}"
+                angular.element(tooltipSelector).removeClass('loading-spinner').html(html)
+
+              header = "<b>#{moment(this.points[0].point.time).format('LL')}<br></b><div class='loading-spinner' id='tooltip_#{this.points[0].point.gameresult}'>Loading Game Result...</div>"
+              points = _.sortBy(this.points, (point)-> -point.point.y)
+              points = _.reduce(points, ((memo, point)->
+                player = "#{point.series.name}: #{point.y}<br>"
+                memo + player)
+                , '')
+              "#{header}<br>#{points}"
           exporting:
             enabled: false
           plotOptions:
+            series:
+              cursor: 'pointer'
+              point:
+                events:
+                  click: (e)->
+                    console.log this
             line:
               marker:
                 enabled: false

@@ -1,1 +1,6 @@
-highchart(id='scorechart', config='scorechartConfig')
+.chart-container(ng-hide='chartLoading')
+  highchart(id='scorechart', config='scorechartConfig')
+.loading-container(ng-show='chartLoading')
+  .loading
+    span.loading-spinner
+    p.loading-text Loading Chart...

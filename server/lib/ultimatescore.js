@@ -36,9 +36,12 @@ UltimateScore.prototype.timeSeries = function (allResults, cb) {
 	async.map(allGamesChronological, function (games, cb) {
 		self.computeScores(games, games, function (err, scores) {
       if(err) { return cb(err)}
-			// add time to the scores
-			var time = _.last(games).time;
-			scores.push({time:time});
+
+			// add time and gameresult id to the scores
+			scores.push({
+        time: _.last(games).time,
+        gameresult: _.last(games),
+      });
 			cb(null, scores);
 		})
 	}, function (err, results) {
@@ -52,14 +55,18 @@ UltimateScore.prototype.timeSeries = function (allResults, cb) {
 			.compact()
 			.each( function (player) {
 				players[player] = [];
-			})
+			});
 
 		// add the data to the players
 		var index = 1;
 		_.each(results, function (scores) {
+
 			var time = _.find(scores, function (score) {
 				return score.time;	
 			}).time;
+			var gameresult = _.find(scores, function (score) {
+				return score.gameresult;	
+			}).gameresult;
 
 			_.each(scores, function (score) {
 				if(score.player) {
@@ -67,6 +74,7 @@ UltimateScore.prototype.timeSeries = function (allResults, cb) {
 						y: score.score,
 						x: index,
 						time: time.getTime(),
+            gameresult: gameresult._id,
 					};
 					players[score.player].push(tick);
 				}
@@ -79,7 +87,6 @@ UltimateScore.prototype.timeSeries = function (allResults, cb) {
 			return {
 				player: player,
 				data: data,
-        bla: 'bla',
 			};
 		});
 
