@@ -27,7 +27,7 @@ angular.module 'boardgametournamentApp'
             enabled: false
           tooltip:
             headerFormat: '<b>{series.name}</b><br>'
-            pointFormat: '{point.time:%e. %b}: {point.y:.0f}'
+            pointFormat: '{point.time:%e. %b}: {point.y:.0f}, {point.bla}'
           exporting:
             enabled: false
           plotOptions:

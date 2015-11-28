@@ -9,8 +9,6 @@ var TTL = 3600 * 24 * 3 // cache for 7 days
 var CachemanMongo = require('cacheman-mongo');
 
 // Simple wrapper for BGG api
-var BGGData = function () {};
-
 var cache = new CachemanMongo(config.mongo.uri, {
   ttl: TTL,
 });
@@ -37,12 +35,14 @@ UltimateScore.prototype.timeSeries = function (allResults, cb) {
 
 	async.map(allGamesChronological, function (games, cb) {
 		self.computeScores(games, games, function (err, scores) {
+      if(err) { return cb(err)}
 			// add time to the scores
 			var time = _.last(games).time;
 			scores.push({time:time});
 			cb(null, scores);
 		})
 	}, function (err, results) {
+    if(err) { return cb(err)}
 
 		// get the names of all players
 		var players = {};
@@ -79,6 +79,7 @@ UltimateScore.prototype.timeSeries = function (allResults, cb) {
 			return {
 				player: player,
 				data: data,
+        bla: 'bla',
 			};
 		});
 
@@ -109,21 +110,18 @@ UltimateScore.prototype.computeScores = function (gameResults, allResults, cb) {
       async.waterfall([
           function(cb){
             // get bggstats for the games
-            var bggids = _.pluck(gameResults, 'bggid');
+            var bggids = _.chain(gameResults).pluck('bggid').union().value();
             async.map(bggids, bggdata.info, cb);
           },
           function (bggstats, cb) {
+              
+            bggstats = _.groupBy(bggstats, function(stat) {
+              return stat.id; 
+            });
 
             // add the bgg stats to the game results
             gameResults = _.map(gameResults, function (gameResult, i) {
-
-              if(!bggstats[i].statistics && typeof bggstats[i] === 'string') {
-                // for some reason, the data returned by BGG is a string 
-                // instead of an object
-                bggstats[i] = JSON.parse(bggstats[i]);
-              }
-
-              gameResult.weight = bggstats[i].statistics.ratings.averageweight.value;
+              gameResult.weight = bggstats[gameResult.bggid][0].statistics.ratings.averageweight.value;
               return gameResult;
             });
 

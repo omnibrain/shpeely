@@ -1,19 +1,32 @@
-var bgg = require('bgg');
 var _ = require('lodash');
 
+var config = require('../config/environment');
+
 // Cache for responses from BGG
-var TTL = 3600 * 24 * 3 // cache BGG responses for 3 days
-var Cacheman = require('cacheman');
+var TTL = 3600 * 24 * 3 // cache for 7 days
+var CachemanMongo = require('cacheman-mongo');
+var cache = new CachemanMongo(config.mongo.uri, {
+  collection: 'bggdata'
+});
+
+// BGG API
+var bgg = require('bgg')({
+  timeout: 600e3,
+  retry: {
+    initial: 100,
+    multiplier: 2,
+    max: 15e3,
+  }
+});
 
 // Simple wrapper for BGG api
 var BGGData = function () {};
 
-var cache = new Cacheman({
-  ttl: TTL,
-  engine: 'redis',
-});
 
 function toObject(item, callback) {
+  if(typeof item === 'undefined') {
+      return callback(new Error('BGG item is undefined'));
+  }
   if(typeof item === 'string') {
     try {
       callback(null, JSON.parse(item));
@@ -44,19 +57,24 @@ BGGData.prototype.search = function (query, cb) {
           if(res.items.total > 0) {
             var items = res.items.total == 1 ? [res.items.item] : res.items.item;
 
-            cache.set(cacheKey, items, function(err, res) {
+            escapeKeys(items);
+            cache.set(cacheKey, items, TTL, function(err, res) {
               toObject(res, cb);
             });
           } else {
             // try the fuzzy search
             bgg('search', {query:query, type: 'boardgame'}).then(function(res){
                 var items = (res.items.total != 0) ? res.items.item : [];
-                cache.set(cacheKey, items, function(err, res) {
+                escapeKeys(items);
+                cache.set(cacheKey, items, TTL, function(err, res) {
                   toObject(res, cb);
                 });
             });
           }
           
+      }, function(error) {
+        console.error('BoardgameGeek API timeout')
+        cb(new Error('BoardgameGeek API timeout'));
       });
     }
   });
@@ -80,11 +98,6 @@ BGGData.prototype.info = function (bggid, cb) {
 				if(!data) {
 					// no data returned...
 					cb(new Error("No data found on BGG for id " + bggid));
-				} else if (data.html) {
-					// error returned by BGG
-					var error = 'BGG responded ' + data.html.head.title;
-					console.log(error);
-					cb(new Error(error));
 				} else {
           if(typeof data.items.item === 'string') {
             // this is a bug of BGG
@@ -95,10 +108,15 @@ BGGData.prototype.info = function (bggid, cb) {
             }
           }
 					// everything as expected
-          cache.set(cacheKey, data.items.item, function(err, res) {
+          escapeKeys(data.items.item);
+          cache.set(cacheKey, data.items.item, TTL, function(err, res) {
+            if(err) { return cb(err)}
             toObject(res, cb);
           });
 				}
+			}, function(err) {
+        console.error('BoardgameGeek API timeout')
+        cb(new Error('BoardgameGeek API timeout'));
 			});
 
   });
@@ -115,6 +133,32 @@ BGGData.prototype.shortInfo = function (bggid, cb) {
 
     cb(null, shortInfo);
   });
+}
+
+// escape $ and & in keys
+function escapeKeys(obj) {
+    if (!(Boolean(obj) && typeof obj == 'object'
+      && Object.keys(obj).length > 0)) {
+        return false;
+    }
+    Object.keys(obj).forEach(function(key) {
+        if (typeof(obj[key]) == 'object') {
+            escapeKeys(obj[key]);
+        } else {
+            if (key.indexOf('.') !== -1) {
+                var newkey = key.replace(/\./g, '_dot_');
+                obj[newkey] = obj[key];
+                delete obj[key];
+            }
+            if (key.indexOf('$') !== -1) {
+                var newkey = key.replace(/\$/g, '_amp_');
+                obj[newkey] = obj[key];
+                delete obj[key];
+            }
+
+        }
+    });
+    return true;
 }
 
 module.exports = new BGGData();
