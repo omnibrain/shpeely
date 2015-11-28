@@ -52,7 +52,10 @@ angular.module 'boardgametournamentApp'
         credits:
           enabled: false
         yAxis:
+          allowDecimals: false
           min: 0
+          title:
+            text: ''
         tooltip:
           valueSuffix: ' points'
         plotOptions:

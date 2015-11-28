@@ -1,6 +1,6 @@
 .panel.panel-default.panel-gameresult
   .panel-heading
-    h4 #[strong {{gameresult.game.name}}] ({{gameresult.scores.length}} Players)
+    h4 #[strong {{(gameresult.game.name | limitTo:38) + (gameresult.game.name.length > 50 ? "..." : "") }}] ({{gameresult.scores.length}} Players)
     div.dropdown.pull-right
       button#editButton.dropdown-toggle.btn.btn-xs.btn-default(type='button', data-toggle='dropdown', aria-expanded='true') Actions
         span.caret
