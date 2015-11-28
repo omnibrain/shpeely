@@ -23,6 +23,10 @@ angular.module 'boardgametournamentApp'
     Tournament.setActive tournament
     $scope.players = _.sortBy tournament.members, 'name'
 
+    # get the latest games from this tournament
+    Tournament.getGameResults(6).then (gameResults)->
+      $scope.gameResults = gameResults
+
     Tournament.canEdit (canEdit)->
       $scope.canEdit = canEdit
 

@@ -6,6 +6,9 @@ var User = require('../user/user.model.js');
 var Player = require('../player/player.model.js');
 var Gameresults = require('../gameresult/gameresult.model.js');
 var mongoose = require('mongoose');
+var async = require('async');
+
+var bggdata = require('../../lib/bggdata.js');
 
 // find tournament by slug or id and polulate
 // the players
@@ -42,11 +45,6 @@ function findTournament(id, callback) {
 
 // Get list of tournaments
 exports.index = function(req, res) {
-  console.log(req.query);
-  console.log('CONTROLLER');
-  console.log(Tournament.db.host);
-  console.log(Tournament.db.host);
-  console.log(Tournament.db.name);
   Tournament.find(req.query, function (err, tournaments) {
     if(err) { return handleError(res, err); }
     return res.json(200, tournaments);
@@ -122,8 +120,6 @@ exports.create = function(req, res) {
 };
 
 
-
-// UNFINISHED....
 exports.gameresults = function(req, res) {
   findTournament(req.params.id, function(err, tournament) {
     if(err) { return handleError(res, err); }
@@ -132,17 +128,43 @@ exports.gameresults = function(req, res) {
     var query = _.defaults({tournament: tournament._id});
     Gameresults
       .find(query) 
-      .sort('time', -1)
-      .limit(req.query.limit || 3000) // limit to 3000 by default
-      .exec(function(err, res) {
-           
+      .sort({'time': -1})
+      .limit(req.query.limit || 1000) // limit to 3000 by default
+      .populate('scores.player')
+      .exec(function(err, gameResults) {
+        if(err) { return handleError(res, err); }
+        
+        // add game info
+        async.map(_.pluck(gameResults, 'bggid'), bggdata.shortInfo.bind(bggdata), function(err, shortInfos) {
+
+          // add the short info to the game results
+          _.each(shortInfos, function(shortInfo, i) {
+            gameResults[i] = gameResults[i].toObject();
+            gameResults[i].game = shortInfo;
+          });
+
+          res.json(gameResults)
+        });
       });
-    
   });
 };
+
 exports.games = function(req, res) {
-  // TODO
-  res.json({});
+
+  var query = _.extend({ tournament: req.params.id }, req.query);
+
+  if(req.query.numPlayers) {
+    query.scores = {
+      $size: req.query.numPlayers,
+    }
+    delete query.numPlayers
+  }
+
+  console.log(query);
+
+  Gameresults.gameStats(query, function(err, gameStats) {
+    res.json(gameStats.length == 1 ? gameStats[0] : gameStats);
+  });
 };
 exports.players = function(req, res) {
   // TODO

@@ -44,7 +44,7 @@ angular.module 'boardgametournamentApp'
                 html = "<b>#{game}</b><br>#{players.join('<br>')}"
                 angular.element(tooltipSelector).removeClass('loading-spinner').html(html)
 
-              header = "<b>#{moment(this.points[0].point.time).format('LL')}<br></b><div class='loading-spinner' id='tooltip_#{this.points[0].point.gameresult}'>Loading Game Result...</div>"
+              header = "<b>#{moment(this.points[0].point.time).format('LL')}<br><br></b><div class='loading-spinner' id='tooltip_#{this.points[0].point.gameresult}'></div>"
               points = _.sortBy(this.points, (point)-> -point.point.y)
               points = _.reduce(points, ((memo, point)->
                 player = "#{point.series.name}: #{point.y}<br>"

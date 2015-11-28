@@ -1,0 +1,16 @@
+.panel.panel-default.panel-gameresult
+  .panel-heading
+    h4 #[strong {{gameresult.game.name}}] ({{gameresult.scores.length}} Players)
+    div.dropdown.pull-right
+      button#editButton.dropdown-toggle.btn.btn-xs.btn-default(type='button', data-toggle='dropdown', aria-expanded='true') Actions
+        span.caret
+      ul.dropdown-menu(role='menu', aria-labelledby='editButton')
+        li
+          a.delete-game-gameresult-button(href='#') Delete
+        li
+          a(href='todo') Game Stats
+        li
+          a(href='todo') Show Scores
+    p.game-date.pull-right(style='margin-right: 10px;') {{gameresult.time | date:"short"}}
+  .panel-body.game-result-chart(style="height:260px;")
+    highchart(config='gameresultChartConfig')

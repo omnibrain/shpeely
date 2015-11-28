@@ -64,6 +64,25 @@ angular.module 'boardgametournamentApp'
         resolve res.data
       , reject
 
+  getGameResults: (limit)->
+    $q (resolve, reject)->
+      params =
+        params:
+          limit: limit
+      $http.get("/api/tournaments/#{activeTournament._id}/gameresults", params).then (res)->
+        resolve res.data
+      , reject
+
+  getGameStats: (bggid, numPlayers)->
+    $q (resolve, reject)->
+      params =
+        params:
+          bggid: bggid
+          numPlayers: numPlayers
+      $http.get("/api/tournaments/#{activeTournament._id}/games", params).then (res)->
+        resolve res.data
+      , reject
+
   getOwnActivePlayer: (callback)->
     if not activeTournament
       console.error "No active tournament"
