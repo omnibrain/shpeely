@@ -23,7 +23,7 @@ function findTournament(id, callback) {
         // now try to find by slug
         Tournament.findOne({slug: id}, function (err, tournament) {
           if(err) { return callback(err); }
-          if(!tournament) { return res.send(404); }
+          if(!tournament) { return callback(null, null); }
 
           tournament.populate('members', function(err, tournament) {
             return callback(null, tournament);
@@ -159,8 +159,6 @@ exports.games = function(req, res) {
     }
     delete query.numPlayers
   }
-
-  console.log(query);
 
   Gameresults.gameStats(query, function(err, gameStats) {
     res.json(gameStats.length == 1 ? gameStats[0] : gameStats);

@@ -164,7 +164,7 @@ describe('GET /api/gameresults', function() {
     });
   });
 
-  afterEach(function(done) {
+  after(function(done) {
     Player.remove().exec().then(function() {
       Tournament.remove().exec().then(function() {
         done();

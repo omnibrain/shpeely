@@ -16,13 +16,13 @@ angular.module 'boardgametournamentApp'
     gameresult.push
       color: '#18BC9C'
       y: gameStats.highscore.score
-      name: '<strong>Highscore</strong> (' + gameStats.highscore.player + ')'
+      name: '<strong>Highscore</strong> (' + gameStats.highscore.player.name + ')'
 
     # add lowscore
     gameresult.push
       color: '#E74C3C'
       y: gameStats.lowscore.score
-      name: '<strong>Lowscore</strong> (' + gameStats.lowscore.player + ')'
+      name: '<strong>Lowscore</strong> (' + gameStats.lowscore.player.name + ')'
 
     # add average
     gameresult.push
@@ -74,7 +74,7 @@ angular.module 'boardgametournamentApp'
         title:
           text: ''
       size:
-        height: 270
+        height: 240
 
 
 

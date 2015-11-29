@@ -258,8 +258,8 @@ GameresultSchema.statics.gameStats = function(query, cb) {
         // KPIs
         var numPlayers = games[0].players.length
         var totalScore = _.reduce(games, function(memo, game) { return memo + game.totalScore; }, 0);
-        var lowscore = _.min(games, function(game) { return game.min.score; }).min;
-        var highscore = _.max(games, function(game) { return game.max.score; }).max;
+        var lowscore = _.min(games, function(game) { return game.min.score; }).min.toObject();
+        var highscore = _.max(games, function(game) { return game.max.score; }).max.toObject();
 
         // games per player
         var gamesPerPlayer = _.reduce(games, function(memo, game) {
@@ -336,12 +336,15 @@ GameresultSchema.statics.gameStats = function(query, cb) {
               ];
 
               async.map(players, function(playerId, callback) {
-                Player.findById(playerId, callback);
+                Player.findById(playerId).lean().exec(callback);
               }, function(err, players) {
+
                 stat.highscore.player = players[0];
                 stat.lowscore.player = players[1];
                 stat.playerWithHighestWinRatio = players[2];
                 stat.mostWins = players[3];
+
+                //console.log(stat);
 
                 // finally populate the game
                 bggdata.shortInfo(stat.game, function(err, bgginfo) {
