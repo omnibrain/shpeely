@@ -40,7 +40,12 @@ angular.module 'boardgametournamentApp'
                 gameresult = res.data
                 tooltipSelector = "#tooltip_#{res.data._id}"
                 game = $sanitize(gameresult.game.name)
-                players = _.map gameresult.scores, (score)-> $sanitize("#{score.player.name}: #{score.score}")
+                players = _.chain(gameresult.scores)
+                  .sortBy((item)-> -item.score)
+                  .tap((item)-> console.log item)
+                  .map((score)-> $sanitize("#{score.player.name}: #{score.score}"))
+                  .value()
+                console.log players
                 html = "<b>#{game}</b><br>#{players.join('<br>')}"
                 angular.element(tooltipSelector).removeClass('loading-spinner').html(html)
 

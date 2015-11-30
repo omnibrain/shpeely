@@ -38,7 +38,9 @@ exports.show = function(req, res) {
 // Creates a new gameresult in the DB.
 exports.create = function(req, res) {
 
+  console.log('request', req.body);
   async.map(req.body.scores, function(score, callback) {
+
     Player.findById(score.player, function(err, player) {
 
       // create new player objects for players that 
@@ -73,6 +75,7 @@ exports.create = function(req, res) {
   }, function(err, scores) {
     if(err) { return handleError(res, err); }
 
+    console.log('scores', scores);
     var gameresult = req.body;
     gameresult.scores = scores;
 

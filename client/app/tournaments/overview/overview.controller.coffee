@@ -15,21 +15,24 @@ angular.module 'boardgametournamentApp'
 
   $scope.players = []
   $scope.canEdit = false
+  $scope.emptyState = true
 
-  # load the tournament from the server
-  $http.get("/api/tournaments/#{$stateParams.slug}").then (res)->
-    tournament = res.data
-    $scope.tournament = tournament
-    Tournament.setActive tournament
-    $scope.players = _.sortBy tournament.members, 'name'
+  loadData = ()->
+    # load the tournament from the server
+    $http.get("/api/tournaments/#{$stateParams.slug}").then (res)->
+      tournament = res.data
+      $scope.tournament = tournament
+      Tournament.setActive tournament
+      $scope.players = _.sortBy tournament.members, 'name'
 
-    # get the latest games from this tournament
-    Tournament.getGameResults(6).then (gameResults)->
-      $scope.gameResults = gameResults
+      # get the latest games from this tournament
+      Tournament.getGameResults(6).then (gameResults)->
+        $scope.gameResults = gameResults
 
-    Tournament.canEdit (canEdit)->
-      $scope.canEdit = canEdit
+      Tournament.canEdit (canEdit)->
+        $scope.canEdit = canEdit
 
+  loadData()
 
   # is called when a game was selected in the dropdown
   getBggInfo = (bggid)->
@@ -80,10 +83,13 @@ angular.module 'boardgametournamentApp'
 
     $http.post('/api/gameresults', gameResult).then (res)->
       $scope.resetForm()
+      loadData()
 
   $scope.playerSelectizeConfig =
     maxItems: 1
-    create: true
+    create: (input, callback)->
+      player = _.find $scope.players, (player)-> player.name == input
+      if player then player else {name: "#{input} (new player)", _id: input}
     labelField: 'name'
     searchField: 'name'
     valueField: '_id'
