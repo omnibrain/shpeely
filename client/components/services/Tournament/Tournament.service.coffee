@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.service 'Tournament', ($state, $http, Auth, $q)->
+.service 'Tournament', ($state, $http, Auth, $q, $stateParams)->
 
   activeTournament = {}
   listeners = []
@@ -23,6 +23,12 @@ angular.module 'boardgametournamentApp'
           deferred.resolve tournaments
 
   loadTournaments()
+
+  load: (slug)->
+    $q (resolve, reject)=>
+      $http.get("/api/tournaments/#{slug}").then (res)=>
+        @setActive res.data
+        resolve()
 
   reload: loadTournaments
 

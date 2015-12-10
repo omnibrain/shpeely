@@ -1,83 +1,84 @@
 div(ng-include='"components/navbar/navbar.html"')
 
-.container
-  .row
-    .col-lg-12
-      h2(ng-bind='tournament.name')
-  .row(ng-show='canEdit')
-    .col-md-6
-      h3.mbot Add Game
-      form.form-horizontal(ng-submit='saveGame()', name='newGameResultForm')
-        .form-group
-          label.col-sm-2.control-label(for='game') Game
-          .col-sm-10
-            .selectize-wrapper(ng-class='{loading: gameSearchLoading}')
-              selectize.game-selectize(config='gameSelectizeConfig', options='gameOptions', ng-model='newGameResult.bggid', placeholder='Search Game...', required='')
-        .form-group(ng-repeat='result in newGameResult.scores')
-          label.col-sm-2.control-label(for='player{{$index}}') Player {{i}}
-          .col-sm-7
-            selectize(type='hidden', id='player{{$index}}', name='player{{$index}}', config='playerSelectizeConfig', ng-model='newGameResult.scores[$index].player', placeholder='Add Player', ng-required='$first', options='players')
-          label.col-sm-1.control-label(for='score{{$index}}') Score
-          .col-sm-2
-            input.form-control.input-sm(type='text', id='score{{$index}}', name='score{{$index}}' ng-model='newGameResult.scores[$index].score', placeholder='Score', ng-required='$first || newGameResult.scores[$index].player')
-        .form-group
-          .col-sm-offset-2.col-sm-10
-            input.btn.btn-primary(type='submit', value='Save Game', ng-disabled='newGameResultForm.$invalid')
+ui-view
+  .container
+    .row
+      .col-lg-12
+        h2(ng-bind='tournament.name')
+    .row(ng-show='canEdit')
+      .col-md-6
+        h3.mbot Add Game
+        form.form-horizontal(ng-submit='saveGame()', name='newGameResultForm')
+          .form-group
+            label.col-sm-2.control-label(for='game') Game
+            .col-sm-10
+              .selectize-wrapper(ng-class='{loading: gameSearchLoading}')
+                selectize.game-selectize(config='gameSelectizeConfig', options='gameOptions', ng-model='newGameResult.bggid', placeholder='Search Game...', required='')
+          .form-group(ng-repeat='result in newGameResult.scores')
+            label.col-sm-2.control-label(for='player{{$index}}') Player {{i}}
+            .col-sm-7
+              selectize(type='hidden', id='player{{$index}}', name='player{{$index}}', config='playerSelectizeConfig', ng-model='newGameResult.scores[$index].player', placeholder='Add Player', ng-required='$first', options='players')
+            label.col-sm-1.control-label(for='score{{$index}}') Score
+            .col-sm-2
+              input.form-control.input-sm(type='text', id='score{{$index}}', name='score{{$index}}' ng-model='newGameResult.scores[$index].score', placeholder='Score', ng-required='$first || newGameResult.scores[$index].player')
+          .form-group
+            .col-sm-offset-2.col-sm-10
+              input.btn.btn-primary(type='submit', value='Save Game', ng-disabled='newGameResultForm.$invalid')
 
-    .col-md-5.col-md-offset-1
-      h3.mbot BoardgameGeek Info
-      .please-select(ng-show='!selectedGame && !gameInfoLoading')
-        p Please select a game
-      .loading(ng-show='gameInfoLoading')
-        span.loading-spinner
-        p.loading-text Loading BoardgameGeek Infos...
-      .info(ng-show='selectedGame && !gameInfoLoading')
-        .media.bgg-info.mbot
-          .media-left.pull-left
-            a(href='https://boardgamegeek.com/boardgame/{{selectedGame.id}}', target='_blank')
-              img.media-object.game-thumbnail(src='{{selectedGame.thumbnail}}', alt='{{selectedGame.name}}')
-          .media-body
-            h4.media-heading {{selectedGame.name}} #[span.year ({{selectedGame.yearPublished}})]
-            table.info-table
-              tbody
-                tr
-                  td Rating:
-                  td.value {{selectedGame.statistics.average.value}}
-                  td.num-votes ({{selectedGame.statistics.usersrated.value}} votes)
-                tr
-                  td Weight:
-                  td.value {{selectedGame.statistics.averageweight.value}}
-                  td.num-votes ({{selectedGame.statistics.numweights.value}} votes)
-                tr
-                  td Owned By:
-                  td.value {{selectedGame.statistics.owned.value}}
-                  td.num-votes
-                tr
-                  td Play Time:
-                  td.value {{selectedGame.playTime}}min
-                  td.num-votes
-                tr
-                  td Rank:
-                  td.value {{selectedGame.rank}}
-                  td.num-votes
-        h4 Tags
-        a(href='{{"https://boardgamegeek.com/boardgamecategory/" + tag.id}}', ng-repeat='tag in selectedGame.tags | limitTo:20', target='_blank')
-          span.label.label-info.game-tag(ng-bind='tag.value')
+      .col-md-5.col-md-offset-1
+        h3.mbot BoardgameGeek Info
+        .please-select(ng-show='!selectedGame && !gameInfoLoading')
+          p Please select a game
+        .loading(ng-show='gameInfoLoading')
+          span.loading-spinner
+          p.loading-text Loading BoardgameGeek Infos...
+        .info(ng-show='selectedGame && !gameInfoLoading')
+          .media.bgg-info.mbot
+            .media-left.pull-left
+              a(href='https://boardgamegeek.com/boardgame/{{selectedGame.id}}', target='_blank')
+                img.media-object.game-thumbnail(src='{{selectedGame.thumbnail}}', alt='{{selectedGame.name}}')
+            .media-body
+              h4.media-heading {{selectedGame.name}} #[span.year ({{selectedGame.yearPublished}})]
+              table.info-table
+                tbody
+                  tr
+                    td Rating:
+                    td.value {{selectedGame.statistics.average.value}}
+                    td.num-votes ({{selectedGame.statistics.usersrated.value}} votes)
+                  tr
+                    td Weight:
+                    td.value {{selectedGame.statistics.averageweight.value}}
+                    td.num-votes ({{selectedGame.statistics.numweights.value}} votes)
+                  tr
+                    td Owned By:
+                    td.value {{selectedGame.statistics.owned.value}}
+                    td.num-votes
+                  tr
+                    td Play Time:
+                    td.value {{selectedGame.playTime}}min
+                    td.num-votes
+                  tr
+                    td Rank:
+                    td.value {{selectedGame.rank}}
+                    td.num-votes
+          h4 Tags
+          a(href='{{"https://boardgamegeek.com/boardgamecategory/" + tag.id}}', ng-repeat='tag in selectedGame.tags | limitTo:20', target='_blank')
+            span.label.label-info.game-tag(ng-bind='tag.value')
 
-  // charts...
-  .row
-    .col-md-12
-      h3 Scores
-    .col-md-12
-      scorechart
-  .row
-    .col-md-12
-      h3 Performance over Time
-    .col-md-12
-      timechart
-  .row
-    .col-md-12
-      h3 Latest Games
-    .col-md-6(ng-repeat='gameresult in gameResults')
-      gameresult(gameresult='gameresult')
-      
+    // charts...
+    .row
+      .col-md-12
+        h3 Scores
+      .col-md-12
+        scorechart
+    .row
+      .col-md-12
+        h3 Performance over Time
+      .col-md-12
+        timechart
+    .row
+      .col-md-12
+        h3 Latest Games
+      .col-md-6(ng-repeat='gameresult in gameResults')
+        gameresult(gameresult='gameresult')
+        
