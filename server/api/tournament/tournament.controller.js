@@ -167,8 +167,18 @@ exports.games = function(req, res) {
 
 
 exports.players = function(req, res) {
-  // TODO
-  res.json({});
+  var query = _.extend({ tournament: req.params.id }, req.query);
+
+  if(req.query.numPlayers) {
+    query.scores = {
+      $size: req.query.numPlayers,
+    }
+    delete query.numPlayers
+  }
+
+  Gameresults.playerStats(query, function(err, playerStats) {
+    res.json(playerStats.length == 1 ? playerStats[0] : playerStats);
+  });
 };
 
 

@@ -1,10 +1,10 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'GamesCtrl', ($scope, Tournament, $http, $stateParams) ->
+.controller 'GamesCtrl', ($scope, Tournament) ->
 
-  $scope.orderBy = 'game.name'
   $scope.reverse = false
+  $scope.loading = true
 
   $scope.columns = [
     {name: 'Game', sortKey: 'game.name'}
@@ -25,6 +25,7 @@ angular.module 'boardgametournamentApp'
   Tournament.getGameStats().then (gameStats)->
     console.log gameStats
     $scope.gameStats = gameStats
+    $scope.loading = false
 
 
 

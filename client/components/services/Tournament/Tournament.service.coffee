@@ -51,7 +51,9 @@ angular.module 'boardgametournamentApp'
     if ready then callback(tournaments) else deferred.promise.then(callback)
 
   # goes to the home of the active tournament
-  goToHome: ()-> $state.go 'tournament', {name: activeTournament.name}
+  goToHome: ()->
+    console.log activeTournament.slug
+    $state.go 'tournament', {slug: activeTournament.slug}
 
   onChange: (listener)-> listeners.push listener
 
@@ -83,6 +85,14 @@ angular.module 'boardgametournamentApp'
           bggid: bggid
           numPlayers: numPlayers
       $http.get("/api/tournaments/#{activeTournament._id}/games", params).then (res)->
+        resolve res.data
+      , reject
+
+  getPlayerStats: (params = {})->
+    $q (resolve, reject)->
+      params =
+        params: params
+      $http.get("/api/tournaments/#{activeTournament._id}/players", params).then (res)->
         resolve res.data
       , reject
 

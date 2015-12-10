@@ -148,7 +148,10 @@ GameresultSchema.statics.playerStats = function(query, cb) {
 
 	var playerStats = {};
 
-	this.find(query, function(err, games){
+	this
+    .find(query)
+    .populate('scores.player')
+    .exec(function(err, games){
 		if(err) cb(err);
 
 		// get winners and losers of all games
@@ -177,24 +180,25 @@ GameresultSchema.statics.playerStats = function(query, cb) {
 
 		//initialize stats object with all players
 		getPlayers(games).forEach(function(player) {
-			playerStats[player] = {
+			playerStats[player._id] = {
 				//default values
 				games: 0,
 				wins: 0,
 				losses: 0,
+        player: player
 			};
 		});
 
 		//count victories and losses
 		winners.forEach(function(winner){
-			playerStats[winner].wins++;
+			playerStats[winner._id].wins++;
 		});
 		losers.forEach(function(loser){
-			playerStats[loser].losses++;
+			playerStats[loser._id].losses++;
 		});
 		//count plays
 		players.forEach(function(player){
-			playerStats[player].games++;
+			playerStats[player._id].games++;
 		});
 
 		//object to array
