@@ -3,14 +3,13 @@
 angular.module 'boardgametournamentApp'
 .controller 'GameResultCtrl', ($scope, Tournament, $timeout) ->
 
+  $scope.chartLoading = true
   gameresult = $scope.gameresult
 
   Tournament.getGameStats(gameresult.bggid, gameresult.scores.length).then (gameStats)->
 
     gameresult = _.map gameresult.scores, (score) ->
       _.extend score, {y: score.score, name: score.player.name}
-
-    console.log "gameStats", gameStats
 
     # add highscore
     gameresult.push
@@ -34,9 +33,6 @@ angular.module 'boardgametournamentApp'
 
     players = _.pluck gameresult, 'name'
     scores = _.map gameresult, (item) -> { y: item.y, color: item.color }
-
-    console.log "players", players
-    console.log "scores", scores
 
     #create chart
     $scope.gameresultChartConfig =
@@ -74,7 +70,9 @@ angular.module 'boardgametournamentApp'
         title:
           text: ''
       size:
-        height: 240
-
+        height: 230
+        width: 500
+    
+    $scope.chartLoading = false
 
 

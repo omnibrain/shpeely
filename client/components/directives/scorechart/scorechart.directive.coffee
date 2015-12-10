@@ -5,3 +5,4 @@ angular.module 'boardgametournamentApp'
   templateUrl: 'components/directives/scorechart/scorechart.html'
   restrict: 'EA'
   controller: 'ScoreChartCtrl'
+  scope: {}

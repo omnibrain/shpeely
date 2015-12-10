@@ -61,14 +61,10 @@ div(ng-include='"components/navbar/navbar.html"')
                   td.value {{selectedGame.rank}}
                   td.num-votes
         h4 Tags
-        a(href='{{"https://boardgamegeek.com/boardgamecategory/" + tag.id}}', ng-repeat='tag in selectedGame.tags', target='_blank')
+        a(href='{{"https://boardgamegeek.com/boardgamecategory/" + tag.id}}', ng-repeat='tag in selectedGame.tags | limitTo:20', target='_blank')
           span.label.label-info.game-tag(ng-bind='tag.value')
-  .row
-    .col-md-12
-      h3 Latest Games
-    .col-md-6(ng-repeat='gameresult in gameResults')
-      gameresult(gameresult='gameresult')
-      
+
+  // charts...
   .row
     .col-md-12
       h3 Scores
@@ -79,3 +75,9 @@ div(ng-include='"components/navbar/navbar.html"')
       h3 Performance over Time
     .col-md-12
       timechart
+  .row
+    .col-md-12
+      h3 Latest Games
+    .col-md-6(ng-repeat='gameresult in gameResults')
+      gameresult(gameresult='gameresult')
+      

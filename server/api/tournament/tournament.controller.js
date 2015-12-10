@@ -164,6 +164,8 @@ exports.games = function(req, res) {
     res.json(gameStats.length == 1 ? gameStats[0] : gameStats);
   });
 };
+
+
 exports.players = function(req, res) {
   // TODO
   res.json({});

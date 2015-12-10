@@ -5,3 +5,4 @@ angular.module 'boardgametournamentApp'
   templateUrl: 'components/directives/timechart/timechart.html'
   restrict: 'EA'
   controller: 'TimeChartCtrl'
+  scope: {}

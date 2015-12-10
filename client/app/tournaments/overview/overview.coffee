@@ -2,8 +2,8 @@
 
 angular.module 'boardgametournamentApp'
 .config ($stateProvider) ->
-  $stateProvider.state 'tournamentoverview',
-    url: '/tournaments/:slug'
+  $stateProvider.state 'tournament',
+    url: ':slug'
     templateUrl: 'app/tournaments/overview/overview.html'
     controller: 'OverviewCtrl'
     resolve:

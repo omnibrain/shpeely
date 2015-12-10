@@ -19,6 +19,7 @@
 @import 'account/login/login.less';
 @import 'admin/admin.less';
 @import 'main/main.less';
+@import 'tournament/games/games.less';
 @import 'tournaments/overview/overview.less';
 @import 'tournaments/tournaments.less';
 @import 'directives/gameresult/gameresult.less';
@@ -26,6 +27,7 @@
 @import 'directives/timechart/timechart.less';
 @import 'directives/tournament/tournament.less';
 @import 'modal/modal.less';
+@import 'styles/animate/animate.less';
 @import 'styles/bootswatch-flatly/variables.less';
 @import 'styles/callouts/callouts.less';
 @import 'styles/loading/loading.less';
@@ -39,4 +41,12 @@
 // GLOBAL STYLES
 .mbot {
 	margin-bottom: 20px;
+}
+
+// animations
+.ng-hide-remove {
+	.fadeIn;
+}
+.animated-delay {
+	animation-delay: 1s;
 }

@@ -1,6 +1,6 @@
-.chart-container(ng-hide='chartLoading')
+.chart-container.animated.animated-delay.scorechart-container.ng-hide(ng-hide='chartLoading')
   highchart(id='scorechart', config='scorechartConfig')
-.loading-container(ng-show='chartLoading')
+.loading-container.scorechart-container(ng-show='chartLoading')
   .loading
     span.loading-spinner
     p.loading-text Loading Chart...

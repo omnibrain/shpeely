@@ -34,7 +34,6 @@ angular.module 'boardgametournamentApp'
 
   setActive: (tournament)->
     activeTournament = tournament
-    console.log "active tournament set:", tournament
     listener(tournament) for listener in listeners
 
   getActive: ()->
@@ -72,7 +71,6 @@ angular.module 'boardgametournamentApp'
       , reject
 
   getGameStats: (bggid, numPlayers)->
-    console.log "get game stats from tournament", activeTournament
     $q (resolve, reject)->
       params =
         params:

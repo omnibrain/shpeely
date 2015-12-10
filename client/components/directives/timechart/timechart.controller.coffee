@@ -18,8 +18,6 @@ angular.module 'boardgametournamentApp'
   Tournament.onChange ->
     Tournament.getTimeSeries().then (timeSeries)->
 
-      console.log timeSeries[0].data[0]
-
       $scope.chartLoading = false
 
       $scope.timechartConfig =
@@ -42,14 +40,12 @@ angular.module 'boardgametournamentApp'
                 game = $sanitize(gameresult.game.name)
                 players = _.chain(gameresult.scores)
                   .sortBy((item)-> -item.score)
-                  .tap((item)-> console.log item)
                   .map((score)-> $sanitize("#{score.player.name}: #{score.score}"))
                   .value()
-                console.log players
                 html = "<b>#{game}</b><br>#{players.join('<br>')}"
                 angular.element(tooltipSelector).removeClass('loading-spinner').html(html)
 
-              header = "<b>#{moment(this.points[0].point.time).format('LL')}<br><br></b><div class='loading-spinner' id='tooltip_#{this.points[0].point.gameresult}'></div>"
+              header = "<b>#{moment(this.points[0].point.time).format('LL')}<br><br></b><div class='loading-spinner' id='tooltip_#{this.points[0].point.gameresult}'></div><br><b>Ranking:</b>"
               points = _.sortBy(this.points, (point)-> -point.point.y)
               points = _.reduce(points, ((memo, point)->
                 player = "#{point.series.name}: #{point.y}<br>"
