@@ -21,7 +21,7 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
             li.divider(role='separator')
             li.dropdown-header Shortcuts
             li(ng-repeat='tournament in tournaments.getAll()')
-              a(ui-sref='tournamentoverview({slug:tournament.slug})') {{tournament.name}}
+              a(ui-sref='tournament({slug:tournament.slug})') {{tournament.name}}
 
         //-li(ng-hide='tournaments.getActive()._id')
           //-a(ui-sref='tournaments') Tournaments

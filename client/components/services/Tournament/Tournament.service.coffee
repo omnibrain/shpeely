@@ -45,7 +45,7 @@ angular.module 'boardgametournamentApp'
     if ready then callback(tournaments) else deferred.promise.then(callback)
 
   # goes to the home of the active tournament
-  goToHome: ()-> $state.go 'tournamentoverview', {name: activeTournament.name}
+  goToHome: ()-> $state.go 'tournament', {name: activeTournament.name}
 
   onChange: (listener)-> listeners.push listener
 

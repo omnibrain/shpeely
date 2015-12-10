@@ -11,7 +11,7 @@ header#banner.hero-unit
     .col-lg-12
       h2.page-header Active Tournaments
   .row
-    .col-md-4(ng-repeat='tournament in allTournaments', ui-sref='tournamentoverview({slug:tournament.slug})')
+    .col-md-4(ng-repeat='tournament in allTournaments', ui-sref='tournament({slug:tournament.slug})')
       tournament-callout(tournament='tournament')
 
 footer.footer

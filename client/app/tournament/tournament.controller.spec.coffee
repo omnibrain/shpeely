@@ -1,16 +1,16 @@
 'use strict'
 
-describe 'Controller: OverviewCtrl', ->
+describe 'Controller: TournamentCtrl', ->
 
   # load the controller's module
   beforeEach module 'boardgametournamentApp'
-  OverviewCtrl = undefined
+  TournamentCtrl = undefined
   scope = undefined
 
   # Initialize the controller and a mock scope
   beforeEach inject ($controller, $rootScope) ->
     scope = $rootScope.$new()
-    OverviewCtrl = $controller 'OverviewCtrl',
+    TournamentCtrl = $controller 'TournamentCtrl',
       $scope: scope
 
   it 'should ...', ->

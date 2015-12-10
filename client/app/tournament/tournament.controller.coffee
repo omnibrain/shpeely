@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'OverviewCtrl', ($scope, $stateParams, BggApi, $timeout, Auth, $http, Tournament) ->
+.controller 'TournamentCtrl', ($scope, $stateParams, BggApi, $timeout, Auth, $http, Tournament) ->
 
   DEFAUL_NUM_PLAYERS = 4
 
