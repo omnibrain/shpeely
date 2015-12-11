@@ -50,13 +50,6 @@ angular.module 'boardgametournamentApp'
   getAllAsync: (callback)->
     if ready then callback(tournaments) else deferred.promise.then(callback)
 
-  # goes to the home of the active tournament
-  goToHome: ()->
-    console.log activeTournament.slug
-    $state.go 'tournament', {slug: activeTournament.slug}
-
-  onChange: (listener)-> listeners.push listener
-
   getScores: ->
     $q (resolve, reject)->
       $http.get("/api/scores/#{activeTournament._id}").then (res)->

@@ -7,4 +7,5 @@ angular.module 'boardgametournamentApp'
     templateUrl: 'app/tournament/tournament.html'
     controller: 'TournamentCtrl'
     resolve:
-      tournaments: (Tournament)-> Tournament.promise
+      tournaments: (Tournament, $stateParams)->
+        Tournament.load $stateParams.slug

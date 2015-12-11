@@ -1,5 +1,7 @@
 'use strict';
 
+// TODO: Refactor: Move all non model related logic out of this class...
+
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
@@ -7,6 +9,15 @@ var Player = require('../player/player.model.js');
 var bggdata = require('../../lib/bggdata.js');
 var async = require('async');
 var _ = require('lodash')
+
+// cache for computations
+var config = require('../../config/environment');
+var TTL = 3600 * 24 * 7 // cache for 7 days
+var CachemanMongo = require('cacheman-mongo');
+var cache = new CachemanMongo(config.mongo.uri, {
+  collection: 'stats'
+});
+
 
 var GameresultSchema = new Schema({
   bggid: {type: Number, required: true},
@@ -224,147 +235,173 @@ GameresultSchema.statics.playerStats = function(query, cb) {
 	});
 }
 
+function computeGameStats(games, callback) {
+
+  //compute highscores, lowscores, averages
+  var stats = _.chain(games)
+    .map(function(game){
+
+      var minMaxTotal = _.reduce(game.scores, function(memo, player){
+        // compute min, max and total of this game
+        memo.min = _.min([memo.min, player], function(player) { return player.score });
+        memo.max = _.max([memo.max, player], function(player) { return player.score });
+        memo.total += player.score;
+        return memo;
+      }, {
+        min: {score: Infinity},
+        max: {score: -Infinity},
+        total: 0,
+      });
+
+      return {
+        game: game.bggid,
+        players: _.pluck(game.scores, 'player'),
+        totalScore: minMaxTotal.total,
+        min: minMaxTotal.min,
+        max: minMaxTotal.max,
+        winner: minMaxTotal.max.name,
+      };
+    })
+    .groupBy(function(item){
+      return sameGameKey(item.game, item.players.length);
+    })
+    .map(function(games, key){
+
+      // KPIs
+      var numPlayers = games[0].players.length
+      var totalScore = _.reduce(games, function(memo, game) { return memo + game.totalScore; }, 0);
+      var lowscore = _.min(games, function(game) { return game.min.score; }).min.toObject();
+      var highscore = _.max(games, function(game) { return game.max.score; }).max.toObject();
+
+      // games per player
+      var gamesPerPlayer = _.reduce(games, function(memo, game) {
+        _.each(game.players, function(player){
+          if(!(player in memo)) memo[player] = 0;
+          memo[player]++;
+        });
+        return memo;
+      }, {});
+
+      // winners
+      var wins = _.reduce(games, function(memo, game) {
+        var winner = game.max.player;
+        if(!(winner in memo)) memo[winner] = 0;
+        memo[winner]++;
+        return memo;
+      }, {});
+
+      // win ratios per player and highest win ratio
+      var winRatios = _.reduce(gamesPerPlayer, function(memo, numGames, player) {
+        var winsPerPlayer = wins[player] || 0;
+        memo[player] = winsPerPlayer / gamesPerPlayer[player];	
+        return memo;
+      }, {});
+
+      var playerWithHighestWinRatio = _.chain(winRatios)
+        .pairs()
+        .max(function(pair){return pair[1]})
+        .value()[0];
+
+      // best player
+      var mostWins = _.chain(wins)
+        .pairs()
+        .max(function(pair){return pair[1]})
+        .value()[0];
+
+      return {
+        highscore: highscore,
+        lowscore: lowscore,
+        players: numPlayers,
+        totalGames: games.length,
+        game: games[0].game,
+        averageScore: totalScore / (games.length * numPlayers),
+        wins: wins,
+        gamesPerPlayer: gamesPerPlayer,
+        winRatios: winRatios,
+        playerWithHighestWinRatio : playerWithHighestWinRatio,
+        mostWins: mostWins,
+      };
+    })
+    .sortBy(function(stat){
+      return -stat.totalGames;
+    })
+    .value();
+
+    // populate players
+    async.map(stats, function(stat, callback) {
+
+      //populate 
+      populatePlayerKeys(stat.winRatios, function(err, winRatios) {
+        if(err) return callback(err);
+        stat.winRatios = winRatios; 
+        populatePlayerKeys(stat.wins, function(err, wins) {
+          stat.wins = wins;
+          populatePlayerKeys(stat.gamesPerPlayer, function(err, gamesPerPlayer) {
+            stat.gamesPerPlayer = gamesPerPlayer;
+
+            // populate the remaining fields
+            var players = [
+              stat.highscore.player,
+              stat.lowscore.player,
+              stat.playerWithHighestWinRatio,
+              stat.mostWins,
+            ];
+
+            async.map(players, function(playerId, callback) {
+              Player.findById(playerId).lean().exec(callback);
+            }, function(err, players) {
+
+              stat.highscore.player = players[0];
+              stat.lowscore.player = players[1];
+              stat.playerWithHighestWinRatio = players[2];
+              stat.mostWins = players[3];
+
+              // finally populate the game
+              bggdata.shortInfo(stat.game, function(err, bgginfo) {
+                stat.game = bgginfo;
+                callback(null, stat);
+              });
+            });
+          });
+        });
+
+      });
+               
+    }, function(err, res) {
+      callback(null, res);
+    });
+ 
+}
+
+function getCacheKey(query, gameresults) {
+  var lastEdit = _.max(gameresults, 'lastEdit').lastEdit.getTime();
+  return 'gameStats:' + (JSON.stringify(query) + lastEdit).replace(/[^a-zA-Z0-9]/g, '');
+};
 
 GameresultSchema.statics.gameStats = function(query, cb) {
 
 	this.find(query, function(err, games){
+    if(err) {return cb(err)}
 
-    //compute highscores, lowscores, averages
-    var stats = _.chain(games)
-      .map(function(game){
+    var cacheKey = getCacheKey(query, games);
 
-        var minMaxTotal = _.reduce(game.scores, function(memo, player){
-          // compute min, max and total of this game
-          memo.min = _.min([memo.min, player], function(player) { return player.score });
-          memo.max = _.max([memo.max, player], function(player) { return player.score });
-          memo.total += player.score;
-          return memo;
-        }, {
-          min: {score: Infinity},
-          max: {score: -Infinity},
-          total: 0,
-        });
+    //cache.del(cacheKey, function() {});
 
-        return {
-          game: game.bggid,
-          players: _.pluck(game.scores, 'player'),
-          totalScore: minMaxTotal.total,
-          min: minMaxTotal.min,
-          max: minMaxTotal.max,
-          winner: minMaxTotal.max.name,
-        };
-      })
-      .groupBy(function(item){
-        return sameGameKey(item.game, item.players.length);
-      })
-      .map(function(games, key){
+    cache.get(cacheKey, function(err, val) {
+      if(err) { return cb(err)}
 
-        // KPIs
-        var numPlayers = games[0].players.length
-        var totalScore = _.reduce(games, function(memo, game) { return memo + game.totalScore; }, 0);
-        var lowscore = _.min(games, function(game) { return game.min.score; }).min.toObject();
-        var highscore = _.max(games, function(game) { return game.max.score; }).max.toObject();
-
-        // games per player
-        var gamesPerPlayer = _.reduce(games, function(memo, game) {
-          _.each(game.players, function(player){
-            if(!(player in memo)) memo[player] = 0;
-            memo[player]++;
+      if(val) {
+        // found in cache
+        return cb(null, JSON.parse(val));
+      } else {
+        // not found in cache
+        computeGameStats(games, function(err, result) {
+          cache.set(cacheKey, JSON.stringify(result), TTL, function(err, res) {
+            cb(err, result);
           });
-          return memo;
-        }, {});
-
-        // winners
-        var wins = _.reduce(games, function(memo, game) {
-          var winner = game.max.player;
-          if(!(winner in memo)) memo[winner] = 0;
-          memo[winner]++;
-          return memo;
-        }, {});
-
-        // win ratios per player and highest win ratio
-        var winRatios = _.reduce(gamesPerPlayer, function(memo, numGames, player) {
-          var winsPerPlayer = wins[player] || 0;
-          memo[player] = winsPerPlayer / gamesPerPlayer[player];	
-          return memo;
-        }, {});
-
-        var playerWithHighestWinRatio = _.chain(winRatios)
-          .pairs()
-          .max(function(pair){return pair[1]})
-          .value()[0];
-
-        // best player
-        var mostWins = _.chain(wins)
-          .pairs()
-          .max(function(pair){return pair[1]})
-          .value()[0];
-
-        return {
-          highscore: highscore,
-          lowscore: lowscore,
-          players: numPlayers,
-          totalGames: games.length,
-          game: games[0].game,
-          averageScore: totalScore / (games.length * numPlayers),
-          wins: wins,
-          gamesPerPlayer: gamesPerPlayer,
-          winRatios: winRatios,
-          playerWithHighestWinRatio : playerWithHighestWinRatio,
-          mostWins: mostWins,
-        };
-      })
-      .sortBy(function(stat){
-        return -stat.totalGames;
-      })
-      .value();
-
-      // populate players
-      async.map(stats, function(stat, callback) {
-
-        //populate 
-        populatePlayerKeys(stat.winRatios, function(err, winRatios) {
-          if(err) return callback(err);
-          stat.winRatios = winRatios; 
-          populatePlayerKeys(stat.wins, function(err, wins) {
-            stat.wins = wins;
-            populatePlayerKeys(stat.gamesPerPlayer, function(err, gamesPerPlayer) {
-              stat.gamesPerPlayer = gamesPerPlayer;
-
-              // populate the remaining fields
-              var players = [
-                stat.highscore.player,
-                stat.lowscore.player,
-                stat.playerWithHighestWinRatio,
-                stat.mostWins,
-              ];
-
-              async.map(players, function(playerId, callback) {
-                Player.findById(playerId).lean().exec(callback);
-              }, function(err, players) {
-
-                stat.highscore.player = players[0];
-                stat.lowscore.player = players[1];
-                stat.playerWithHighestWinRatio = players[2];
-                stat.mostWins = players[3];
-
-                //console.log(stat);
-
-                // finally populate the game
-                bggdata.shortInfo(stat.game, function(err, bgginfo) {
-                  stat.game = bgginfo;
-                  callback(null, stat);
-                });
-              });
-            });
-          });
-
         });
-                 
-      }, function(err, res) {
-        cb(null, res);
-      });
-
+      }
+    });
 
 	});
 }
