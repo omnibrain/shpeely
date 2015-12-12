@@ -4,7 +4,6 @@ angular.module 'boardgametournamentApp'
 .controller 'GamesCtrl', ($scope, Tournament) ->
 
   $scope.reverse = false
-  $scope.loading = true
 
   $scope.columns = [
     {name: 'Game', sortKey: 'game.name'}
@@ -21,11 +20,6 @@ angular.module 'boardgametournamentApp'
   $scope.sort = (column)->
     $scope.activeColumn = column
     $scope.reverse = !$scope.reverse
-
-  Tournament.getGameStats().then (gameStats)->
-    console.log gameStats
-    $scope.gameStats = gameStats
-    $scope.loading = false
 
 
 

@@ -17,20 +17,55 @@ angular.module 'boardgametournamentApp'
   $scope.canEdit = false
   $scope.emptyState = true
 
-  loadData = ()->
-    # load the tournament from the server
-    $http.get("/api/tournaments/#{$stateParams.slug}").then (res)->
+  loadTournament = (slug)->
+    $http.get("/api/tournaments/#{slug}").then (res)->
       tournament = res.data
       $scope.tournament = tournament
+
       Tournament.setActive tournament
       $scope.players = _.sortBy tournament.members, 'name'
 
-      # get the latest games from this tournament
-      Tournament.getGameResults(6).then (gameResults)->
-        $scope.gameResults = gameResults
-
       Tournament.canEdit (canEdit)->
         $scope.canEdit = canEdit
+      
+      tournament
+
+  loadLatestGameResults = ->
+    Tournament.getGameResults(6).then (gameResults)->
+      $scope.gameResults = gameResults
+      gameResults
+
+  loadGameStats = ->
+    Tournament.getGameStats().then (gameStats)->
+      $scope.gameStats = gameStats
+      gameStats
+
+  loadPlayerStats = ->
+    Tournament.getPlayerStats().then (playerStats)->
+      $scope.playerStats = playerStats
+      playerStats
+
+  loadScores = ->
+    Tournament.getScores().then (scores)->
+      $scope.scores = scores
+      scores
+
+  loadTimeSeries = ->
+    Tournament.getTimeSeries().then (timeSeries)->
+      $scope.timeSeries = timeSeries
+      timeSeries
+
+  # Run requestst in serie: Order these by priority, e.g. 
+  # the data that is first visible should be on top. 
+  # Some of the data loaded here is only required by 
+  # child states of this state.
+  loadData = ->
+    loadTournament($stateParams.slug)
+    loadScores()
+    loadTimeSeries()
+    loadLatestGameResults()
+    loadGameStats()
+    loadPlayerStats()
 
   loadData()
 

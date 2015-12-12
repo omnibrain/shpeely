@@ -22,11 +22,6 @@ angular.module 'boardgametournamentApp'
     $scope.activeColumn = column
     $scope.reverse = !$scope.reverse
 
-  Tournament.getPlayerStats().then (playerStats)->
-    $scope.playerStats = playerStats
-    $scope.loading = false
-    $scope.$broadcast 'player_stats_loaded'
-
 
 
 

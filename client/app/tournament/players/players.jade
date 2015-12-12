@@ -3,12 +3,12 @@ ui-view
     .row
       .col-md-12
         h3 Players
-    .row(ng-show='loading')
+    .row(ng-hide='playerStats')
       .col-md-12
         .loading
           span.loading-spinner
           p.loading-text Loading Players...
-    .row.ng-hide.animated(ng-hide='loading')
+    .row.ng-hide.animated(ng-show='playerStats')
       .col-md-12
         table.table.table-hover.table-striped.table-condensed.table-sortable
           thead

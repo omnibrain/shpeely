@@ -3,8 +3,7 @@
 angular.module 'boardgametournamentApp'
 .controller 'PlayerCtrl', ($scope, $stateParams, Tournament) ->
 
-  $scope.gamePlayerStats = {}
-  $scope.gamePlayerStats.columns = [
+  $scope.columns = [
     {name: 'Game', sortKey: 'game.name'}
     {name: 'Players', sortKey: 'players'}
     {name: 'Games Played', sortKey: 'games'}
@@ -13,21 +12,49 @@ angular.module 'boardgametournamentApp'
     {name: 'Lowscore', sortKey: 'lowscore'}
   ]
 
-  $scope.gamePlayerStats.reverse = false
-  $scope.gamePlayerStats.activeColumn = $scope.columns[0]
-  $scope.gamePlayerStats.loading = true
+  $scope.reverse = false
+  $scope.activeColumn = $scope.columns[0]
 
   $scope.sort = (column)->
-    $scope.gamePlayerStats.activeColumn = column
-    $scope.gamePlayerStats.reverse = !$scope.gamePlayerStats.reverse
+    $scope.activeColumn = column
+    $scope.reverse = !$scope.reverse
 
-  Tournament.getScores().then (scores)->
+  $scope.highscores = []
+  $scope.lowscores = []
+
+
+  displayStats = (playerStats)->
+    if not playerStats then return
+
+    $scope.player = _.find playerStats, (stats)-> stats.player.name == $stateParams.player
+    Tournament.getGamePlayerStats(player: $scope.player.player._id).then (gamePlayerStats)->
+      $scope.gamePlayerStats = gamePlayerStats
+
+  displayScore = (scores)->
+    if not scores then return
     $scope.score = (_.find scores, (score)-> score.player.name == $stateParams.player).score
 
-  $scope.$on 'player_stats_loaded', ->
-    $scope.player = _.find $scope.$parent.playerStats, (stats)-> stats.player.name == $stateParams.player
+  displayHighLowScores = (gameStats)->
+    if not gameStats then return
 
-    Tournament.getGamePlayerStats(player: $scope.player.player._id).then (gamePlayerStats)->
-      $scope.gamePlayerStats.stats = gamePlayerStats
-      $scope.gamePlayerStats.loading = false
+    $scope.highscores = _.chain(gameStats)
+      .filter (item)-> item.highscore.player.name == $stateParams.player
+      .map (item)-> {game: item.game, players: item.players, score: item.highscore.score }
+      .value()
+
+    $scope.lowscores = _.chain(gameStats)
+      .filter (item)-> item.lowscore.player.name == $stateParams.player
+      .map (item)-> {game: item.game, players: item.players, score: item.lowscore.score }
+      .value()
+
+
+  $scope.$watch 'playerStats', displayStats
+  $scope.$watch 'scores', displayScore
+  $scope.$watch 'gameStats', displayHighLowScores
+
+  displayStats($scope.playerStats)
+  displayScore($scope.scores)
+  displayHighLowScores($scope.gameStats)
+
+    
 

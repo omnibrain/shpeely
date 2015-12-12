@@ -1,14 +1,11 @@
-'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'ScoreChartCtrl', ($scope, Tournament, $timeout) ->
+.controller 'ScoreChartCtrl', ($scope, $timeout) ->
 
   $scope.chartLoading = true
 
-  # get the scores
-  Tournament.getScores().then (scores)->
-
-    $scope.chartLoading = false
+  createChart = (scores)->
+    if not scores then return
 
     data = _.chain scores
       .pluck 'score'
@@ -40,4 +37,7 @@ angular.module 'boardgametournamentApp'
           text: 'Score'
       func: (c)->
         $timeout (-> c.reflow()), 0
+        $scope.chartLoading = false
 
+  $scope.$watch 'scores', createChart
+  createChart($scope.scores)
