@@ -17,6 +17,7 @@ router.delete('/:id', controller.destroy);
 router.get('/:id/gameresults', controller.gameresults);
 router.get('/:id/games', controller.games);
 router.get('/:id/players', controller.players);
+router.get('/:id/gamePlayerStats', controller.gamePlayerStats);
 
 
 module.exports = router;

@@ -9,7 +9,9 @@ var async = require('async');
 
 // Get current scores of the players
 exports.index = function(req, res) {
+
   Gameresults.find({tournament: req.params.tournament}, function (err, gameResults) {
+
     if(err) { return handleError(res, err); }
     if(!gameResults) { return res.json([]); }
 

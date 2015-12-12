@@ -169,19 +169,41 @@ exports.games = function(req, res) {
 exports.players = function(req, res) {
   var query = _.extend({ tournament: req.params.id }, req.query);
 
+  query.scores = query.scores || {}
+  query.scores.$elemMatch = {}
+
   if(req.query.numPlayers) {
-    query.scores = {
-      $size: req.query.numPlayers,
-    }
+    query.scores.$elemMatch.$size = req.query.numPlayers,
     delete query.numPlayers
   }
 
+  if(req.query.player) {
+    query.scores.$elemMatch.player = req.query.player;
+    delete query.player;
+  }
+
   Gameresults.playerStats(query, function(err, playerStats) {
+
+    if(req.query.player) {
+
+      var playerStat = _.find(playerStats, function(stats) {
+        return stats.player._id == req.query.player;
+      });
+      return res.json(playerStat);
+    }
+
     res.json(playerStats.length == 1 ? playerStats[0] : playerStats);
   });
 };
 
 
+exports.gamePlayerStats = function(req, res) {
+
+  Gameresults.gamePlayerStats(req.query.player, function(err, stats) {
+    res.json(stats);
+  });
+
+};
 
 // Updates an existing tournament in the DB.
 exports.update = function(req, res) {

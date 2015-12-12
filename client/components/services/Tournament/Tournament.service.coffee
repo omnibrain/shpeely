@@ -50,7 +50,7 @@ angular.module 'boardgametournamentApp'
   getAllAsync: (callback)->
     if ready then callback(tournaments) else deferred.promise.then(callback)
 
-  getScores: ->
+  getScores: (player)->
     $q (resolve, reject)->
       $http.get("/api/scores/#{activeTournament._id}").then (res)->
         resolve res.data
@@ -86,6 +86,14 @@ angular.module 'boardgametournamentApp'
       params =
         params: params
       $http.get("/api/tournaments/#{activeTournament._id}/players", params).then (res)->
+        resolve res.data
+      , reject
+
+  getGamePlayerStats: (params = {})->
+    $q (resolve, reject)->
+      params =
+        params: params
+      $http.get("/api/tournaments/#{activeTournament._id}/gamePlayerStats", params).then (res)->
         resolve res.data
       , reject
 

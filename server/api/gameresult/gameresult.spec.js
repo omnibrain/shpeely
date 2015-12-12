@@ -120,13 +120,13 @@ describe('MODEL tests', function() {
   });
 
   it('#gamePlayerStats (Should return player stats for each game)', function(done) {
-    Gameresult.gamePlayerStats({}, null, function(err, res) {
-      console.log(res);
+    Gameresult.gamePlayerStats(null, function(err, res) {
+      //console.log(res);
       res.should.be.ok;
       res.should.be.instanceof(Array).and.have.lengthOf(10);
 
       // now for a specific player
-      Gameresult.gamePlayerStats({}, players[0]._id, function(err, res) {
+      Gameresult.gamePlayerStats(players[0]._id, function(err, res) {
         console.log(res);
         res.should.be.ok;
         res.should.be.instanceof(Array).and.have.lengthOf(1);

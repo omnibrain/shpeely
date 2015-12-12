@@ -20,8 +20,8 @@
     "highcharts": "highcharts-release#~4.1.9",
     "moment": "~2.10.6",
     "angular-animate": "~1.4.8",
-    "animate.css": "~3.4.0",
-    "bootswatch-dist": "yeti"
+    "bootswatch-dist": "yeti",
+    "angular-percentage-directive": "angular-percentage-filter#~1.0.2"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",

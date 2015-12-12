@@ -98,16 +98,21 @@ GameresultSchema.statics.scores = function(query, cb) {
 };
 
 
-GameresultSchema.statics.gamePlayerStats = function(query, player, cb) {
+GameresultSchema.statics.gamePlayerStats = function(player, cb) {
 
-	var pipeline = [
-		{$project: // add numPlayers to the results for grouping
+  var pipeline = []
+
+	pipeline.push({
+    $project: // add numPlayers to the results for grouping
 			{ bggid:'$bggid',
 				numPlayers: { $size:'$scores' },
 				scores:'$scores' }
-		},{
-			$unwind:'$scores'
-		},{ // group by game and num players and compute stats
+		});
+
+  pipeline.push({$unwind:'$scores' });
+
+  pipeline.push({
+    // group by game and num players and compute stats
 			$group: {
 				_id: {
 					bggid:'$bggid', numPlayers:'$numPlayers', player:'$scores.player'
@@ -120,23 +125,23 @@ GameresultSchema.statics.gamePlayerStats = function(query, player, cb) {
 				lowscore:{$min:'$scores.score'},
 				games:{$sum:1} 
 			}
-		},{
-			$sort: {
-				games: -1
-			}
-		}
-	];
-
-	if(player) {
-		pipeline.push({
-			$match: {
-				'_id.player':player
-			}
 		});
-	}
+
+  pipeline.push({ $sort: { games: -1 } });
+
+  // TODO: Filter first to reduce data size!
+  if(player) {
+    pipeline.push({
+      $match: {
+        'player': mongoose.Types.ObjectId(player)
+      }
+    });
+  }
 
 	this.aggregate(pipeline, function(err, gamePlayerStats){
 		if(err) { cb(err); return; }
+
+    console.log(gamePlayerStats[0]);
 
     async.map(gamePlayerStats, function(stats, callback) {
       // remove id and populate players
@@ -148,7 +153,14 @@ GameresultSchema.statics.gamePlayerStats = function(query, player, cb) {
       });
 
     }, function(err, gamePlayerStats) {
-      cb(null, gamePlayerStats);
+      async.map(gamePlayerStats, function(stats, callback) {
+        bggdata.shortInfo(stats.game, function(err, shortInfo) {
+          stats.game = shortInfo;
+          callback(null, stats);
+        });
+      }, function(err, gamePlayerStats) {
+        cb(null, gamePlayerStats);
+      });
     });
 
 	});

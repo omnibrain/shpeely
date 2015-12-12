@@ -1,0 +1,42 @@
+.container
+  .row
+    .col-md-12
+      h2 {{player.player.name}} #[span.label.pull-right.label-success(ng-class='{"label-success": score >= 0, "label-danger":score < 0}') {{score}}]
+  .row
+    .col-md-12
+      table.table.table-condensed.table-striped
+        thead
+          tr
+            th Total Games Played
+            th Total Wins
+            th Total Losses
+            th Total Win Ratio
+            th Total Lose Ratio
+        tbody
+          tr
+            td {{player.games}}
+            td {{player.wins}}
+            td {{player.losses}}
+            td {{player.winRatio | percentage:0}}
+            td {{player.loseRatio | percentage:0}}
+  .row(ng-show='loading')
+    .col-md-12
+      .loading
+        span.loading-spinner
+        p.loading-text Loading Games...
+  .row.ng-hide(ng-hide='loading')
+    .col-md-12
+      table.table.table-hover.table-striped.table-condensed.table-sortable
+        thead
+          tr
+            th(ng-repeat='column in gamePlayerStats.columns')
+              a(href='#', ng-click='sort(column)')
+                {{column.name}} #[span.fa(ng-show='column.name == gamePlayerStats.activeColumn.name', ng-class='{"fa-angle-up": !gamePlayerStats.reverse && column.name == gamePlayerStats.activeColumn.name, "fa-angle-down": gamePlayerStats.reverse && column.name == gamePlayerStats.activeColumn.name}')]
+        tbody
+          tr(ng-repeat='stat in gamePlayerStats.stats | orderBy:gamePlayerStats.activeColumn.sortKey:gamePlayerStats.reverse')
+            td {{stat.game.name}}
+            td {{stat.players}}
+            td {{stat.games}}
+            td {{stat.highscore}}
+            td {{stat.average | number:2}}
+            td {{stat.lowscore}}

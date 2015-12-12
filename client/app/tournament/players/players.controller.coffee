@@ -23,9 +23,9 @@ angular.module 'boardgametournamentApp'
     $scope.reverse = !$scope.reverse
 
   Tournament.getPlayerStats().then (playerStats)->
-    console.log playerStats
     $scope.playerStats = playerStats
     $scope.loading = false
+    $scope.$broadcast 'player_stats_loaded'
 
 
 
