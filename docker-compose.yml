@@ -1,0 +1,11 @@
+boardgame-tournament:
+        build: .
+        ports:
+                - "80:80"
+        links:
+                - mongodb
+mongodb:
+        image: mongo
+        container_name: mongodb
+
+
