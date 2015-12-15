@@ -1,5 +1,9 @@
 'use strict';
 
+function mongoDbUri() {
+  return process.env.MONGODB_HOST ? 'mongodb://' + process.env.MONGODB_HOST + '/boardgametournament' : null;
+}
+
 // Production specific configuration
 // =================================
 module.exports = {
@@ -15,7 +19,8 @@ module.exports = {
 
   // MongoDB connection options
   mongo: {
-    uri:    process.env.MONGOLAB_URI ||
+    uri:    mongoDbUri() || 
+            process.env.MONGOLAB_URI ||
             process.env.MONGOHQ_URL ||
             process.env.OPENSHIFT_MONGODB_DB_URL+process.env.OPENSHIFT_APP_NAME ||
             'mongodb://localhost/boardgametournament'
