@@ -14,7 +14,7 @@ var async = require('async');
 // connect to the spili database
 var MongoClient = require('mongodb').MongoClient;
 
-MongoClient.connect("mongodb://localhost:27017/spili", function(err, db) {
+MongoClient.connect(process.env.MIGRATE_SPILI, function(err, db) {
   if(err) {
     console.error('Failed to connect to the Spili Database');
     return;
