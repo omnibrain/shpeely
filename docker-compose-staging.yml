@@ -1,7 +1,7 @@
 boardgame-tournament:
-        build: .
+        image: omnibrain/boardgame-tournament:latest
         ports:
-                - "80:80"
+                - "7777:80"
         links:
                 - mongodb
         environment:
