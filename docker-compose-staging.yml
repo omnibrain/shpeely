@@ -1,12 +1,21 @@
 boardgame-tournament:
         image: omnibrain/boardgame-tournament:latest
         ports:
-                - "7777:80"
+                - "50100:80"
         links:
                 - mongodb
         environment:
                 MONGODB_HOST: mongodb
+
 mongodb:
-        image: mongo
+        image: mongo:3.2
+        volumes_from:
+                - boardgame-tournament-data
+
+boardgame-tournament-data:
+        command: /bin/echo "Boardgame Tournament Data Container"
+        image: mongo:3.2
+        volumes:
+                - /data/db
 
 
