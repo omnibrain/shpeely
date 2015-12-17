@@ -24,11 +24,26 @@ angular.module 'boardgametournamentApp'
 
   loadTournaments()
 
+  request = (url, params = {})->
+    $q (resolve, reject)->
+      params = _.extend params,
+        cache: true
+      console.log params
+      $http.get(url, params).then (res)->
+        resolve res.data
+      , reject
+
+
   load: (slug)->
     $q (resolve, reject)=>
-      $http.get("/api/tournaments/#{slug}").then (res)=>
-        @setActive res.data
+      request("/api/tournaments/#{slug}").then (tournament)=>
+        console.log "loaded tournament"
+        @setActive tournament
         resolve()
+    #$q (resolve, reject)=>
+      #$http.get("/api/tournaments/#{slug}").then (res)=>
+        #@setActive res.data
+        #resolve()
 
   reload: loadTournaments
 
@@ -51,51 +66,29 @@ angular.module 'boardgametournamentApp'
     if ready then callback(tournaments) else deferred.promise.then(callback)
 
   getScores: (player)->
-    $q (resolve, reject)->
-      $http.get("/api/scores/#{activeTournament._id}").then (res)->
-        resolve res.data
-      , reject
+    request "/api/scores/#{activeTournament._id}"
 
   getTimeSeries: ->
-    $q (resolve, reject)->
-      $http.get("/api/scores/timeseries/#{activeTournament._id}").then (res)->
-        resolve res.data
-      , reject
+    request "/api/scores/timeseries/#{activeTournament._id}"
 
   getGameResults: (limit)->
-    $q (resolve, reject)->
-      params =
-        params:
-          limit: limit
-      $http.get("/api/tournaments/#{activeTournament._id}/gameresults", params).then (res)->
-        resolve res.data
-      , reject
+    request "/api/tournaments/#{activeTournament._id}/gameresults",
+      params:
+        limit: limit
 
   getGameStats: (bggid, numPlayers)->
-    $q (resolve, reject)->
-      params =
-        params:
-          bggid: bggid
-          numPlayers: numPlayers
-      $http.get("/api/tournaments/#{activeTournament._id}/games", params).then (res)->
-        resolve res.data
-      , reject
+    request "/api/tournaments/#{activeTournament._id}/games",
+      params:
+        bggid: bggid
+        numPlayers: numPlayers
 
   getPlayerStats: (params = {})->
-    $q (resolve, reject)->
-      params =
-        params: params
-      $http.get("/api/tournaments/#{activeTournament._id}/players", params).then (res)->
-        resolve res.data
-      , reject
+    request "/api/tournaments/#{activeTournament._id}/players",
+      params: params
 
   getGamePlayerStats: (params = {})->
-    $q (resolve, reject)->
-      params =
-        params: params
-      $http.get("/api/tournaments/#{activeTournament._id}/gamePlayerStats", params).then (res)->
-        resolve res.data
-      , reject
+    request "/api/tournaments/#{activeTournament._id}/gamePlayerStats",
+      params: params
 
   getOwnActivePlayer: (callback)->
     if not activeTournament
