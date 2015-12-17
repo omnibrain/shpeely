@@ -38,7 +38,8 @@
             th Score
         tbody
           tr(ng-repeat='highscore in highscores | orderBy:"game.name"')
-            td {{highscore.game.name}}
+            td
+              gamelink(bggid='highscore.game.id', name='highscore.game.name')
             td {{highscore.players}}
             td {{highscore.score}}
     .col-md-6(ng-if='highscores.length')
@@ -51,7 +52,8 @@
             th Score
         tbody
           tr(ng-repeat='lowscore in lowscores | orderBy:"game.name"')
-            td {{lowscore.game.name}}
+            td
+              gamelink(bggid='lowscore.game.id', name='lowscore.game.name')
             td {{lowscore.players}}
             td {{lowscore.score}}
   .row
@@ -72,7 +74,8 @@
                 {{column.name}} #[span.fa(ng-show='column.name == activeColumn.name', ng-class='{"fa-angle-up": !reverse && column.name == activeColumn.name, "fa-angle-down": reverse && column.name == activeColumn.name}')]
         tbody
           tr(ng-repeat='stat in gamePlayerStats | orderBy:activeColumn.sortKey:reverse')
-            td {{stat.game.name}}
+            td
+              gamelink(bggid='stat.game.id', name='stat.game.name')
             td {{stat.players}}
             td {{stat.games}}
             td {{stat.highscore}}
