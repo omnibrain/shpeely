@@ -1,0 +1,31 @@
+.media.bgg-info.mbot
+  .media-left.pull-left
+    a(href='https://boardgamegeek.com/boardgame/{{gameInfo.id}}', target='_blank')
+      img.media-object.game-thumbnail(src='{{gameInfo.thumbnail}}', alt='{{gameInfo.name}}')
+  .media-body
+    h4.media-heading {{gameInfo.name}} #[span.year ({{gameInfo.yearPublished}})]
+    table.info-table
+      tbody
+        tr
+          td Rating:
+          td.value {{gameInfo.statistics.average.value}}
+          td.num-votes ({{gameInfo.statistics.usersrated.value}} votes)
+        tr
+          td Weight:
+          td.value {{gameInfo.statistics.averageweight.value}}
+          td.num-votes ({{gameInfo.statistics.numweights.value}} votes)
+        tr
+          td Owned By:
+          td.value {{gameInfo.statistics.owned.value}}
+          td.num-votes
+        tr
+          td Play Time:
+          td.value {{gameInfo.playTime}}min
+          td.num-votes
+        tr
+          td Rank:
+          td.value {{gameInfo.rank}}
+          td.num-votes
+h4 Tags
+a(href='{{"https://boardgamegeek.com/boardgamecategory/" + tag.id}}', ng-repeat='tag in gameInfo.tags | limitTo:20', target='_blank')
+  span.label.label-info.game-tag(ng-bind='tag.value')

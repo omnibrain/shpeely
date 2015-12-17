@@ -9,7 +9,6 @@ angular.module 'boardgametournamentApp'
   $scope.newGameResult.scores = ({} for i in _.range(DEFAUL_NUM_PLAYERS))
 
   $scope.gameOptions = []
-  $scope.selectedGame = null
   $scope.gameInfoLoading = false
   $scope.gameSearchLoading = false
 
@@ -77,19 +76,9 @@ angular.module 'boardgametournamentApp'
       return
 
 
-    BggApi.info(bggid).then (res)->
-      info = res.data
+    BggApi.info(bggid).then (info)->
 
-      $scope.selectedGame =
-        id: info.id
-        thumbnail: info.thumbnail
-        name: _.find([].concat(info.name), (name)-> name?.type == 'primary').value
-        yearPublished: info.yearpublished.value
-        statistics: info.statistics.ratings
-        maxPlayers: info.maxplayers.value
-        playTime: info.maxplaytime.value
-        rank: _.find([].concat(info.statistics.ratings.ranks.rank), (rank)-> rank.name == 'boardgame').value
-        tags: info.link
+      $scope.bgginfo = info
 
       # add or remove score rows
       numPlayersDelta = $scope.newGameResult.scores.length - info.maxplayers.value
@@ -150,10 +139,10 @@ angular.module 'boardgametournamentApp'
         # This will remove it for sure
         $scope.gameSearchLoading = false
 
-        if not res.data.length
+        if not res.length
           return
         options = []
-        for game in res.data
+        for game in res
           options.push
             id: game.id
             year: game.yearpublished?.value || 'unknown'

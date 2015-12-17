@@ -1,19 +1,22 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.service 'BggApi', ($http)->
+.service 'BggApi', ($http, $q)->
 
   BASE_URL = '/api/bgg'
 
-  search: (query)->
-    url = "#{BASE_URL}/search"
+  request = (url, params={})->
     params =
-      query: query
-    $http.get(url, {params: params})
+      params: params
+      cache: true
+    $q (resolve, reject)->
+      $http.get("#{BASE_URL}#{url}", params).then (res)->
+        resolve res.data
+      , reject
+
+  search: (query)->
+    request  "/search", {query: query}
       
   info: (bggid)->
-    url = "#{BASE_URL}/info"
-    params =
-      bggid: bggid
-    $http.get(url, {params: params})
+    request  "/info", {bggid: bggid}
 

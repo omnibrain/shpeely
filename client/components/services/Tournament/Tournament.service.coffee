@@ -28,22 +28,15 @@ angular.module 'boardgametournamentApp'
     $q (resolve, reject)->
       params = _.extend params,
         cache: true
-      console.log params
       $http.get(url, params).then (res)->
         resolve res.data
       , reject
 
-
   load: (slug)->
     $q (resolve, reject)=>
       request("/api/tournaments/#{slug}").then (tournament)=>
-        console.log "loaded tournament"
         @setActive tournament
         resolve()
-    #$q (resolve, reject)=>
-      #$http.get("/api/tournaments/#{slug}").then (res)=>
-        #@setActive res.data
-        #resolve()
 
   reload: loadTournaments
 

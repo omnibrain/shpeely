@@ -27,43 +27,13 @@ ui-view
 
       .col-md-5.col-md-offset-1
         h3.mbot BoardgameGeek Info
-        .please-select(ng-show='!selectedGame && !gameInfoLoading')
+        .please-select(ng-show='!bgginfo && !gameInfoLoading')
           p Please select a game
-        .loading(ng-show='gameInfoLoading')
+        .loading(ng-show='!bgginfo && gameInfoLoading')
           span.loading-spinner
           p.loading-text Loading BoardgameGeek Infos...
-        .info(ng-show='selectedGame && !gameInfoLoading')
-          .media.bgg-info.mbot
-            .media-left.pull-left
-              a(href='https://boardgamegeek.com/boardgame/{{selectedGame.id}}', target='_blank')
-                img.media-object.game-thumbnail(src='{{selectedGame.thumbnail}}', alt='{{selectedGame.name}}')
-            .media-body
-              h4.media-heading {{selectedGame.name}} #[span.year ({{selectedGame.yearPublished}})]
-              table.info-table
-                tbody
-                  tr
-                    td Rating:
-                    td.value {{selectedGame.statistics.average.value}}
-                    td.num-votes ({{selectedGame.statistics.usersrated.value}} votes)
-                  tr
-                    td Weight:
-                    td.value {{selectedGame.statistics.averageweight.value}}
-                    td.num-votes ({{selectedGame.statistics.numweights.value}} votes)
-                  tr
-                    td Owned By:
-                    td.value {{selectedGame.statistics.owned.value}}
-                    td.num-votes
-                  tr
-                    td Play Time:
-                    td.value {{selectedGame.playTime}}min
-                    td.num-votes
-                  tr
-                    td Rank:
-                    td.value {{selectedGame.rank}}
-                    td.num-votes
-          h4 Tags
-          a(href='{{"https://boardgamegeek.com/boardgamecategory/" + tag.id}}', ng-repeat='tag in selectedGame.tags | limitTo:20', target='_blank')
-            span.label.label-info.game-tag(ng-bind='tag.value')
+        .info(ng-show='bgginfo && !gameInfoLoading')
+          bgginfo(bgginfo='bgginfo')
 
     // charts...
     .row
