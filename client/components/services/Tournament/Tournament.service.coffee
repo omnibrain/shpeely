@@ -17,7 +17,6 @@ angular.module 'boardgametournamentApp'
         url: url
         method: method
         cache: cached
-      console.log params
       $http(config).then (res)->
         resolve res.data
       , reject
@@ -31,7 +30,6 @@ angular.module 'boardgametournamentApp'
       else
         request('api/tournaments', {limit: 18}).then (_tournaments)->
           tournaments = _tournaments
-          console.log tournaments
           deferred.resolve tournaments
 
   loadTournaments()
