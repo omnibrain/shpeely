@@ -49,6 +49,6 @@ ui-view
     .row
       .col-md-12
         h3 Latest Games
-      .col-md-6(ng-repeat='gameresult in gameResults')
+      .col-md-6(ng-repeat='gameresult in gameResults | limitTo:6')
         gameresult(gameresult='gameresult')
         

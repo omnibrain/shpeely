@@ -1,0 +1,23 @@
+.container
+  .row
+    .col-md-12
+      h3 Game Results
+  .row.mbot
+    form
+      .col-md-3
+        label Game
+        input.form-control(ng-model-options='{debounce: debounce}', ng-model='filter.game', placeholder='Search for Game...')
+      .col-md-3
+        label Players
+        input.form-control(ng-model-options='{debounce: debounce}', ng-model='filter.player', placeholder='Search for Player...')
+      .col-md-3
+        label Number of Players
+        input.form-control(ng-model-options='{debounce: debounce}', ng-model='filter.numberOfPlayers', type='number', placeholder='Enter Number of Players...')
+      .col-md-3
+        label Max Results To Display
+        input.form-control(ng-model='limitTo', type='number', placeholder='Enter Max Number of Results...')
+
+  .row
+    .col-md-6(ng-repeat='gameresult in gameResults | gameResultFilter:filter | limitTo:(limitTo || 10)')
+      gameresult(gameresult='gameresult')
+

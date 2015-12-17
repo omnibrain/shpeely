@@ -36,6 +36,9 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
         li(ng-show='tournament._id', ui-sref-active='active')
           a(ui-sref='tournament.players') Players
 
+        li(ng-show='tournament._id', ui-sref-active='active')
+          a(ui-sref='tournament.gameresults') Results
+
         //-li(ng-show='isAdmin()', ng-class='{active: isActive("/admin")}')
           //-a(href='/admin') Admin
 

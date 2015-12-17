@@ -30,7 +30,7 @@ angular.module 'boardgametournamentApp'
       tournament
 
   loadLatestGameResults = ->
-    Tournament.getGameResults(6).then (gameResults)->
+    Tournament.getGameResults().then (gameResults)->
       $scope.gameResults = gameResults
       gameResults
 
