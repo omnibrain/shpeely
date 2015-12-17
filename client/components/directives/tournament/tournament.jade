@@ -1,5 +1,9 @@
-.bs-callout(ng-class='{"bs-callout-info": role == "editor", "bs-callout-warning": role == "admin", "bs-callout-primary": !role}')
+.bs-callout.tournament-callout(ng-class='{"bs-callout-info": role == "editor", "bs-callout-warning": role == "admin", "bs-callout-primary": !role}')
   h4(ng-bind='tournament.name')
   p {{tournament.members.length}} Members
+  //-p Last Game: {{tournament.lastEdit | date:"MMMM d, y"}}
+  //-p Created: {{tournament.created | date:"MMMM d, y"}}
+  p(ng-if='tournament.lastEdit') Last game {{tournament.lastEdit | timeAgo}}
+  p(ng-if='!tournament.lastEdit') No games yet...
   p Created on {{tournament.created | date:"MMMM d, y"}}
   span.label.label-danger(ng-show='role') {{role|capitalize}}

@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var Player = require('../player/player.model.js');
+var Tournament = require('../tournament/tournament.model.js');
 var bggdata = require('../../lib/bggdata.js');
 var async = require('async');
 var _ = require('lodash')
@@ -28,6 +29,15 @@ var GameresultSchema = new Schema({
     score: Number,
     player: {type : mongoose.Schema.ObjectId, ref : 'Player'}
   }]
+});
+
+// Hooks
+
+// update lastEdit of the tournament
+GameresultSchema.post('save', function(gameresult) {
+  Tournament.update({_id: gameresult.tournament}, {lastEdit: gameresult.time}, {}, function(err, res) {
+    // nothing to do?
+  });
 });
 
 
@@ -386,9 +396,10 @@ function computeGameStats(games, callback) {
 }
 
 function getCacheKey(query, gameresults) {
-  var lastEdit = _.max(gameresults, 'lastEdit').lastEdit.getTime();
+  var lastEdit = gameresults.length ? _.max(gameresults, 'lastEdit').lastEdit.getTime() : '';
   return 'gameStats:' + (JSON.stringify(query) + lastEdit).replace(/[^a-zA-Z0-9]/g, '');
 };
+
 
 GameresultSchema.statics.gameStats = function(query, cb) {
 

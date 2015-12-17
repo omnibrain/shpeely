@@ -45,10 +45,14 @@ function findTournament(id, callback) {
 
 // Get list of tournaments
 exports.index = function(req, res) {
-  Tournament.find(req.query, function (err, tournaments) {
-    if(err) { return handleError(res, err); }
-    return res.json(200, tournaments);
-  });
+  Tournament
+    .find(req.query.query)
+    .limit(req.query.limit)
+    .sort('-lastEdit')
+    .exec(function(err, tournaments) {
+      if(err) { return handleError(res, err); }
+      return res.json(200, tournaments);
+    });
 };
 
 // Get a single tournament
