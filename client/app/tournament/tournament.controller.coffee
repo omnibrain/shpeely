@@ -81,11 +81,11 @@ angular.module 'boardgametournamentApp'
       $scope.bgginfo = info
 
       # add or remove score rows
-      numPlayersDelta = $scope.newGameResult.scores.length - info.maxplayers.value
+      numPlayersDelta = $scope.newGameResult.scores.length - info.maxPlayers
       if numPlayersDelta < 0
         $scope.newGameResult.scores.push {} for i in _.range(0, -numPlayersDelta)
       else if numPlayersDelta > 0
-        $scope.newGameResult.scores = $scope.newGameResult.scores[0...info.maxplayers.value]
+        $scope.newGameResult.scores = $scope.newGameResult.scores[0...info.maxPlayers]
 
       $scope.gameInfoLoading = false
 

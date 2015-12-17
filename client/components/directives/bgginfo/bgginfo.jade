@@ -1,31 +1,32 @@
-.media.bgg-info.mbot
-  .media-left.pull-left
-    a(href='https://boardgamegeek.com/boardgame/{{gameInfo.id}}', target='_blank')
-      img.media-object.game-thumbnail(src='{{gameInfo.thumbnail}}', alt='{{gameInfo.name}}')
-  .media-body
-    h4.media-heading {{gameInfo.name}} #[span.year ({{gameInfo.yearPublished}})]
-    table.info-table
-      tbody
-        tr
-          td Rating:
-          td.value {{gameInfo.statistics.average.value}}
-          td.num-votes ({{gameInfo.statistics.usersrated.value}} votes)
-        tr
-          td Weight:
-          td.value {{gameInfo.statistics.averageweight.value}}
-          td.num-votes ({{gameInfo.statistics.numweights.value}} votes)
-        tr
-          td Owned By:
-          td.value {{gameInfo.statistics.owned.value}}
-          td.num-votes
-        tr
-          td Play Time:
-          td.value {{gameInfo.playTime}}min
-          td.num-votes
-        tr
-          td Rank:
-          td.value {{gameInfo.rank}}
-          td.num-votes
-h4 Tags
-a(href='{{"https://boardgamegeek.com/boardgamecategory/" + tag.id}}', ng-repeat='tag in gameInfo.tags | limitTo:20', target='_blank')
-  span.label.label-info.game-tag(ng-bind='tag.value')
+.bgginfo-wrapper.ng-hide(ng-show='bgginfo')
+  .media.bgg-info.mbot
+    .media-left.pull-left
+      a(href='https://boardgamegeek.com/boardgame/{{bgginfo.id}}', target='_blank')
+        img.media-object.game-thumbnail(src='{{bgginfo.thumbnail}}', alt='{{bgginfo.name}}')
+    .media-body
+      h4.media-heading {{bgginfo.name}} #[span.year ({{bgginfo.yearPublished}})]
+      table.info-table
+        tbody
+          tr
+            td Rating:
+            td.value {{bgginfo.statistics.average.value}}
+            td.num-votes ({{bgginfo.statistics.usersrated.value}} votes)
+          tr
+            td Weight:
+            td.value {{bgginfo.statistics.averageweight.value}}
+            td.num-votes ({{bgginfo.statistics.numweights.value}} votes)
+          tr
+            td Owned By:
+            td.value {{bgginfo.statistics.owned.value}}
+            td.num-votes
+          tr
+            td Play Time:
+            td.value {{bgginfo.playTime}}min
+            td.num-votes
+          tr
+            td Rank:
+            td.value {{bgginfo.rank}}
+            td.num-votes
+  h4 Tags
+  a(href='{{"https://boardgamegeek.com/boardgamecategory/" + tag.id}}', ng-repeat='tag in bgginfo.tags | limitTo:20', target='_blank')
+    span.label.label-info.game-tag(ng-bind='tag.value')

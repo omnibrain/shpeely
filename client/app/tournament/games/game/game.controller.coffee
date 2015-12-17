@@ -1,19 +1,29 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'GameCtrl', ($scope, $http, $stateParams) ->
+.controller 'GameCtrl', ($scope, $http, $stateParams, BggApi, Tournament) ->
+
+  bggid = Number($stateParams.bggid)
+
+  $scope.gameSpecificStats = null
 
   # load bgg info for this game
-  $http.get("/api/bgg/info", {cache: true, params: {bggid: $stateParams.bggid}}).then (res)->
-    console.log res.data
+  BggApi.info(bggid).then (bgginfo)->
+    $scope.bgginfo = bgginfo
+
+  getGameSpecificStats = (gameStats)->
+    if not gameStats then return
+    $scope.gameSpecificStats = _.filter gameStats, (stats)-> stats.game.id == bggid
+
+  # get game statistics
+  $scope.$watch 'gameStats', getGameSpecificStats
 
   $scope.columns = [
-    {name: 'Game', sortKey: 'game.name'}
     {name: 'Players', sortKey: 'players'}
-    {name: 'Games Played', sortKey: 'games'}
-    {name: 'Highscore', sortKey: 'highscore'}
-    {name: 'Average', sortKey: 'average'}
-    {name: 'Lowscore', sortKey: 'lowscore'}
+    {name: 'Games Played', sortKey: 'totalGames'}
+    {name: 'Highscore', sortKey: 'highscore.score'}
+    {name: 'Average', sortKey: 'averageScore'}
+    {name: 'Lowscore', sortKey: 'lowscore.score'}
   ]
 
   $scope.reverse = false
