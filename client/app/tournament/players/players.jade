@@ -18,7 +18,8 @@ ui-view
                   {{column.name}} #[span.fa(ng-show='column.name == activeColumn.name', ng-class='{"fa-angle-up": !reverse && column.name == activeColumn.name, "fa-angle-down": reverse && column.name == activeColumn.name}')]
           tbody
             tr(ng-repeat='stat in playerStats | orderBy:activeColumn.sortKey:reverse')
-              td {{stat.player.name}}
+              td
+                playerlink(player='stat.player.name')
               td {{stat.games}}
               td {{stat.winRatio * 100 | number:2}}%
               td {{stat.loseRatio * 100 | number:2}}%

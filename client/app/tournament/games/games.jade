@@ -21,10 +21,15 @@ ui-view
               td {{stat.game.name}}
               td {{stat.players}}
               td {{stat.totalGames}}
-              td {{stat.highscore.player.name}} ({{stat.highscore.score}})
+              td
+                playerlink(player='stat.highscore.player.name')
+                | ({{stat.highscore.score}})
               td {{stat.averageScore | number:2}}
-              td {{stat.lowscore.player.name}} ({{stat.lowscore.score}})
-              td {{stat.playerWithHighestWinRatio.name}}
+              td
+                playerlink(player='stat.lowscore.player.name')
+                | ({{stat.lowscore.score}})
+              td
+                playerlink(player='stat.playerWithHighestWinRatio.name')
 
 
 
