@@ -106,8 +106,10 @@ angular.module 'boardgametournamentApp'
     gameResult.tournament = $scope.tournament._id
 
     $http.post('/api/gameresults', gameResult).then (res)->
+      Tournament.cache(false)
       $scope.resetForm()
       loadData()
+      Tournament.cache(true)
 
   $scope.playerSelectizeConfig =
     maxItems: 1

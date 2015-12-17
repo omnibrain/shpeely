@@ -10,6 +10,7 @@ angular.module 'boardgametournamentApp'
   ready = true
 
   tournaments = []
+  cached = false
 
   loadTournaments = ->
     Auth.isLoggedInAsync (loggedIn)->
@@ -27,7 +28,7 @@ angular.module 'boardgametournamentApp'
   request = (url, params = {})->
     $q (resolve, reject)->
       params = _.extend params,
-        cache: true
+        cache: cached
       $http.get(url, params).then (res)->
         resolve res.data
       , reject
@@ -39,6 +40,8 @@ angular.module 'boardgametournamentApp'
         resolve()
 
   reload: loadTournaments
+
+  cache: (cache)-> cached = cache
 
   isReady: -> ready
   promise: deferred.promise
