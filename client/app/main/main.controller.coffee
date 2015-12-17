@@ -11,5 +11,5 @@ angular.module 'boardgametournamentApp'
     'Statistics don\'t lie',
   ]
   
-  Tournament.getAllAsync (tournaments)->
+  Tournament.getTournaments().then (tournaments)->
     $scope.allTournaments = tournaments

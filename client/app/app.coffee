@@ -10,6 +10,7 @@ angular.module 'boardgametournamentApp', [
   'highcharts-ng',
   'ngAnimate',
   'percentage',
+  'yaru22.angular-timeago',
 ]
 .config ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) ->
   $urlRouterProvider

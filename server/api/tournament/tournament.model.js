@@ -9,7 +9,10 @@ var TournamentSchema = new Schema({
   active: {type: Boolean, default: true, required: true},
   created: {type: Date, default: Date.now, required: true},
   members: [ {type : mongoose.Schema.ObjectId, ref : 'Player'} ],
+  lastEdit: {type: Date}
 });
+
 
 TournamentSchema.plugin(slug('name'));
 module.exports = mongoose.model('Tournament', TournamentSchema);
+
