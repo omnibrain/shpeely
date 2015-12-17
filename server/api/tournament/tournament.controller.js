@@ -55,6 +55,22 @@ exports.index = function(req, res) {
     });
 };
 
+// search tournaments by name
+exports.search = function(req, res) {
+
+  var searchString = req.params.searchString;
+  console.log(searchString);
+
+  Tournament
+    .find({name: {$regex: searchString, $options: 'i'}})
+    .limit(req.query.limit || 100)
+    .sort('-lastEdit')
+    .exec(function(err, tournaments) {
+      if(err) { return handleError(res, err); }
+      return res.json(200, tournaments);
+    });
+};
+
 // Get a single tournament
 exports.show = function(req, res) {
 

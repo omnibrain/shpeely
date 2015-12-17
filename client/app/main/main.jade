@@ -8,11 +8,34 @@ header#banner.hero-unit
 
 .container
   .row
-    .col-lg-12
-      h2.page-header Active Tournaments
+    .col-md-12
+      h2 Tournaments
   .row
+    .col-md-6
+      form(ng-submit='search()')
+        label Search Tournaments
+        .input-group
+          input.form-control(ng-model='query', placeholder='Search tournaments by name...')
+          span.input-group-btn
+            button.btn.btn-primary(type='submit') Find Tournament!
+  .row.mtop
+    .col-md-12
+      h4(ng-hide='foundTournaments') Recent Tournaments
+      h4.ng-hide(ng-show='foundTournaments')
+
+  .row(ng-show='!foundTournaments && !loading')
     .col-md-4(ng-repeat='tournament in allTournaments', ui-sref='tournament({slug:tournament.slug})')
       tournament-callout(tournament='tournament')
+  .row.ng-hide(ng-show='foundTournaments && !loading')
+    .col-md-4(ng-repeat='tournament in foundTournaments', ui-sref='tournament({slug:tournament.slug})')
+      tournament-callout(tournament='tournament')
+  .row(ng-hide='!loading')
+    .loading
+      span.loading-spinner
+      p.loading-text Loading BoardgameGeek Infos...
+  .row(ng-show='!loading && foundTournaments && !foundTournaments.length')
+    .col-md-12
+      p No Tournaments found with "{{query}}" in the name. Try something else...
 
 footer.footer
   .container

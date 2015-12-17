@@ -42,9 +42,12 @@ angular.module 'boardgametournamentApp'
         resolve()
 
   getTournaments: (query, limit=18)->
-    request 'api/tournaments',
+    request '/api/tournaments',
       query: query
       limit: limit
+
+  search: (query)->
+    request "/api/tournaments/search/#{query}"
 
   reload: loadTournaments
 

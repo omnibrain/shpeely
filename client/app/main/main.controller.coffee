@@ -13,3 +13,12 @@ angular.module 'boardgametournamentApp'
   
   Tournament.getTournaments().then (tournaments)->
     $scope.allTournaments = tournaments
+
+  $scope.search = ->
+    console.log "search"
+    $scope.loading = true
+    Tournament.search($scope.query).then (found)->
+      console.log found
+      $scope.loading = false
+      $scope.foundTournaments = found
+

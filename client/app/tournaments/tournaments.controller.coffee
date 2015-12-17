@@ -20,3 +20,4 @@ angular.module 'boardgametournamentApp'
       $scope.myTournaments.push res.data
 
     $scope.newTournament = ''
+
