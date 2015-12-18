@@ -7,16 +7,16 @@
           span.caret
         ul.dropdown-menu(role='menu', aria-labelledby='editButton')
           li
-            a.delete-game-gameresult-button(href='#') Delete
+            a.delete-game-gameresult-button(href='#') Delete (TODO)
           li
-            a(href='todo') Game Stats
+            a(ui-sref='tournament.gameresults.gameresult({gameresult:gameresult._id})') Show Details
           li
-            a(href='todo') Show Scores
+            a(ui-sref='tournament.games.game({bggid:gameresult.game.id})') Show Game Stats
       p.game-date.pull-right(style='margin-right: 10px;') {{gameresult.time | date:"short"}}
     .panel-body
       highchart(config='gameresultChartConfig')
 .loading-container.gameresult-container(ng-show='chartLoading')
   .loading
     span.loading-spinner
-    p.loading-text Loading Chart...
+    p.loading-text Loading Game Result...
 
