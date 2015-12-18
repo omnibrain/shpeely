@@ -15,8 +15,10 @@ angular.module 'boardgametournamentApp'
     $scope.allTournaments = tournaments
 
   $scope.search = ->
-    console.log "search"
     $scope.loading = true
+
+    if not $scope.query or not $scope.query.length then return
+
     Tournament.search($scope.query).then (found)->
       console.log found
       $scope.loading = false

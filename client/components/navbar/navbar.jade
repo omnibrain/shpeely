@@ -14,13 +14,13 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
           //-a(ui-sref='{{item.state}}') {{item.title}}
 
         li.dropdown.open(ng-show='isLoggedIn()')
-          a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='true') Tournaments #[span.caret]
+          a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='true') My Tournaments #[span.caret]
           ul.dropdown-menu
             li
               a(ui-sref='tournaments') Overview
             li.divider(role='separator')
             li.dropdown-header Shortcuts
-            li(ng-repeat='tournament in tournaments.getAll()')
+            li(ng-repeat='tournament in tournaments.getAll() | limitTo:10')
               a(ui-sref='tournament({slug:tournament.slug})') {{tournament.name}}
 
         //-li(ng-hide='tournaments.getActive()._id')

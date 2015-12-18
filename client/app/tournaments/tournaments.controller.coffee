@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'TournamentsCtrl', ($scope, $log, $http, Auth, Tournament) ->
+.controller 'TournamentsCtrl', ($scope, $log, $http, Auth, Tournament, $state) ->
 
   $scope._ = _
   $scope.user = Auth.getCurrentUser()
@@ -17,6 +17,7 @@ angular.module 'boardgametournamentApp'
       name: $scope.newTournament
     .then (res)->
       Tournament.add res.data
+      $state.go 'tournament', {slug: res.data.slug}
       $scope.myTournaments.push res.data
 
     $scope.newTournament = ''
