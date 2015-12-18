@@ -16,21 +16,11 @@ exports.index = function(req, res) {
     if(!gameResults) { return res.json([]); }
 
     ultimatescore.computeScores(gameResults, gameResults, function(err, scores) {
-
-      // populate players
-      async.map(scores, function(score, callback) {
-
-        Player.findById(score.player, function(err, player) {
-          if(err) return callback(err);
-          return callback(null, {score: score.score, player: player});
-        });
-
-      }, function(err, scoresPopulated) {
+      populatePlayers(scores, function(err, scores) {
         if(err) return handleError(res, err);
-        return res.json(scoresPopulated);
+        return res.json(scores);
       });
     });
-
   });
 };
 
@@ -41,6 +31,7 @@ exports.timeseries = function(req, res) {
     if(!gameResults) { return res.json([]); }
 
     ultimatescore.timeSeries(gameResults, function(err, scores) {
+
       // populate players
       async.map(scores, function(score, callback) {
 
@@ -53,8 +44,45 @@ exports.timeseries = function(req, res) {
         if(err) return handleError(res, err);
         return res.json(scoresPopulated);
       });
+
+    });
+  });
+};
+
+exports.gameresult = function(req, res) {
+
+  // find the game result
+  Gameresults.findById(req.params.gameresult, function (err, gameResult) {
+    if(err) { return handleError(res, err); }
+    if(!gameResult) { return res.json([]); }
+
+    // get all gameresults of this tournament
+    Gameresults.find({tournament: gameResult.tournament}, function (err, allResults) {
+
+      // compute the score
+      ultimatescore.computeScores([gameResult], allResults, function(err, scores) {
+
+        // populate players
+        populatePlayers(scores, function(err, scores) {
+          if(err) return handleError(res, err);
+          return res.json(scores);
+        });
+      });
+    });
+  });
+};
+
+// populate players
+function populatePlayers(scores, callback) {
+  async.map(scores, function(score, callback) {
+
+    Player.findById(score.player, function(err, player) {
+      if(err) return callback(err);
+      return callback(null, {score: score.score, player: player});
     });
 
+  }, function(err, scoresPopulated) {
+    callback(err, scoresPopulated);
   });
 };
 
