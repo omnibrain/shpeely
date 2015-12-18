@@ -45,6 +45,8 @@
 // VARIABLES
 @font-size-xs:         ceil((@font-size-small * 0.85)); // ~12px
 
+@alert-link-color: darken(@brand-warning, 20%);
+
 
 // GLOBAL STYLES
 .mbot {
@@ -79,6 +81,17 @@
 	color: @text-color;
 	&:hover {
 		text-decoration: none;
+	}
+}
+
+
+//alerts
+.alert-warning {
+	a {
+		color: @alert-link-color;
+		&:hover {
+			color: darken(@alert-link-color, 5%);
+		}
 	}
 }
 
