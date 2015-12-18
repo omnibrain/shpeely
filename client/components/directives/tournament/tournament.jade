@@ -1,9 +1,19 @@
 .bs-callout.tournament-callout(ng-class='{"bs-callout-info": role == "editor", "bs-callout-warning": role == "admin", "bs-callout-primary": !role}')
-  h4(ng-bind='tournament.name')
+  h4.clickable(ui-sref='tournament({slug:tournament.slug})') {{tournament.name}} #[span.label.label-danger.pull-right(ng-show='role') You Are {{role|capitalize}}]
   p {{tournament.members.length}} Members
   //-p Last Game: {{tournament.lastEdit | date:"MMMM d, y"}}
   //-p Created: {{tournament.created | date:"MMMM d, y"}}
   p(ng-if='tournament.lastEdit') Last game {{tournament.lastEdit | timeAgo}}
   p(ng-if='!tournament.lastEdit') No games yet...
   p Created on {{tournament.created | date:"MMMM d, y"}}
-  span.label.label-danger(ng-show='role') {{role|capitalize}}
+  
+  button.btn.btn-primary.btn-sm(ui-sref='tournament({slug:tournament.slug})') Enter!
+  .btn-group(dropdown='', is-open='status.isopen', ng-show='role')
+    button#single-button.btn.btn-default.btn-sm(type='button', dropdown-toggle='', ng-disabled='disabled')
+      | More...
+      span.caret
+    ul.dropdown-menu(role='menu', aria-labelledby='single-button')
+      li(role='menuitem')
+        a(href='#') Forget Tournament
+      li(role='menuitem')
+        a(href='#') Delete Tournament

@@ -24,10 +24,10 @@ header#banner.hero-unit
       h4.ng-hide(ng-show='foundTournaments')
 
   .row(ng-show='!foundTournaments && !loading')
-    .col-md-4(ng-repeat='tournament in allTournaments', ui-sref='tournament({slug:tournament.slug})')
+    .col-md-4(ng-repeat='tournament in allTournaments')
       tournament-callout(tournament='tournament')
   .row.ng-hide(ng-show='foundTournaments && !loading')
-    .col-md-4(ng-repeat='tournament in foundTournaments', ui-sref='tournament({slug:tournament.slug})')
+    .col-md-4(ng-repeat='tournament in foundTournaments')
       tournament-callout(tournament='tournament')
   .row(ng-hide='!loading')
     .loading
