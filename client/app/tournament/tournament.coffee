@@ -3,7 +3,7 @@
 angular.module 'boardgametournamentApp'
 .config ($stateProvider) ->
   $stateProvider.state 'tournament',
-    url: '/{slug}'
+    url: '/:slug'
     templateUrl: 'app/tournament/tournament.html'
     controller: 'TournamentCtrl'
     resolve:

@@ -15,5 +15,5 @@ div(ng-include='"components/navbar/navbar.html"')
     .col-md-12
       h4 My Tournaments
   .row
-    .col-md-4(ng-repeat='tournament in myTournaments', ui-sref='tournament({slug:tournament.slug})')
+    .col-md-4(ng-repeat='tournament in myTournaments | orderBy:"-lastEdit"', ui-sref='tournament({slug:tournament.slug})')
       tournament-callout(tournament='tournament')
