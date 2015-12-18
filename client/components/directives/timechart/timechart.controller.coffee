@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'TimeChartCtrl', ($scope, $timeout, $http, $sanitize) ->
+.controller 'TimeChartCtrl', ($scope, $timeout, $http, $sanitize, $state) ->
 
   $scope.chartLoading = true
 
@@ -58,7 +58,7 @@ angular.module 'boardgametournamentApp'
             point:
               events:
                 click: (e)->
-                  console.log this
+                  $state.go 'tournament.gameresults.gameresult', {gameresult: this.gameresult}
           line:
             marker:
               enabled: false
