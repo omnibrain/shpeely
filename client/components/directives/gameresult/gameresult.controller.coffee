@@ -5,8 +5,12 @@ angular.module 'boardgametournamentApp'
 
   $scope.chartLoading = true
 
+  loaded = false
+
   showChart = (gameresult)->
-    if not gameresult then return
+    if (not gameresult) or loaded then return
+
+    loaded = true
 
     Tournament.getGameStats(gameresult.bggid, gameresult.scores.length).then (gameStats)->
 
