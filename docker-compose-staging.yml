@@ -1,5 +1,5 @@
 boardgame-tournament:
-        image: omnibrain/boardgame-tournament:latest
+        image: localhost:50003/boardgame-tournament:latest
         ports:
                 - "50100:80"
         links:

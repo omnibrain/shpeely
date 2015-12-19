@@ -11,7 +11,9 @@ angular.module 'boardgametournamentApp', [
   'ngAnimate',
   'percentage',
   'yaru22.angular-timeago',
+  'ngDialog'
 ]
+
 .config ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) ->
   $urlRouterProvider
   .otherwise '/'
