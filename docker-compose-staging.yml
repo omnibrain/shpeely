@@ -8,6 +8,11 @@ boardgame-tournament:
                 MONGODB_HOST: mongodb
                 DOMAIN: lustigsbusi.ch:50100
                 SESSION_SECRET: gexnAQqL80Cmyw3v7XjVpQ8heD6IThNBAXAmG1Xq8MFbPVcDNIWDpFUymg6opOKK
+                
+                # OAuth
+                FACEBOOK_ID: 982039645213438
+                FACEBOOK_SECRET: 3e2dd6b364aa42b905fde562f79ce4a8
+
 
 mongodb:
         image: mongo:3.2
