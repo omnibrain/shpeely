@@ -25,10 +25,10 @@ header#banner.hero-unit
 
   .row(ng-show='!foundTournaments && !loading')
     .col-md-4(ng-repeat='tournament in allTournaments')
-      tournament-callout(tournament='tournament')
+      tournament-callout(on-remove='deleteTournament(tournament)', tournament='tournament')
   .row.ng-hide(ng-show='foundTournaments && !loading')
     .col-md-4(ng-repeat='tournament in foundTournaments')
-      tournament-callout(tournament='tournament')
+      tournament-callout(on-remove='deleteTournament(tournament)', tournament='tournament')
   .row(ng-hide='!loading')
     .loading
       span.loading-spinner
