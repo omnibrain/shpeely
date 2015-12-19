@@ -6,4 +6,5 @@ angular.module 'boardgametournamentApp'
   restrict: 'EA'
   scope:
     tournament: '='
+    onRemove: '&'
   controller: 'TournamentCalloutCtrl'

@@ -24,18 +24,21 @@ header#banner.hero-unit
       h4.ng-hide(ng-show='foundTournaments')
 
   .row(ng-show='!foundTournaments && !loading')
-    .col-md-4(ng-repeat='tournament in allTournaments', ui-sref='tournament({slug:tournament.slug})')
-      tournament-callout(tournament='tournament')
+    .col-md-4(ng-repeat='tournament in allTournaments')
+      tournament-callout(on-remove='deleteTournament(tournament)', tournament='tournament')
   .row.ng-hide(ng-show='foundTournaments && !loading')
-    .col-md-4(ng-repeat='tournament in foundTournaments', ui-sref='tournament({slug:tournament.slug})')
-      tournament-callout(tournament='tournament')
+    .col-md-4(ng-repeat='tournament in foundTournaments')
+      tournament-callout(on-remove='deleteTournament(tournament)', tournament='tournament')
   .row(ng-hide='!loading')
     .loading
       span.loading-spinner
       p.loading-text Loading BoardgameGeek Infos...
   .row(ng-show='!loading && foundTournaments && !foundTournaments.length')
-    .col-md-12
-      p No Tournaments found with "{{query}}" in the name. Try something else...
+    .col-md-6
+      .alert.alert-dismissible.alert-warning
+        h4 No Tournaments found
+        p Sorry, no tournaments found with "{{query}}" in the name. Try something else... 
+        p ... or show #[a(href='#', ng-click='foundTournaments = null') show recent tournaments] 
 
 footer.footer
   .container

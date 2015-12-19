@@ -1,9 +1,35 @@
 .bs-callout.tournament-callout(ng-class='{"bs-callout-info": role == "editor", "bs-callout-warning": role == "admin", "bs-callout-primary": !role}')
-  h4(ng-bind='tournament.name')
+  h4.title.clickable(ui-sref='tournament({slug:tournament.slug})') {{tournament.name}}
+  span.label.label-danger.role-label.pull-right(ng-show='role') You Are {{role|capitalize}}
   p {{tournament.members.length}} Members
   //-p Last Game: {{tournament.lastEdit | date:"MMMM d, y"}}
   //-p Created: {{tournament.created | date:"MMMM d, y"}}
   p(ng-if='tournament.lastEdit') Last game {{tournament.lastEdit | timeAgo}}
   p(ng-if='!tournament.lastEdit') No games yet...
   p Created on {{tournament.created | date:"MMMM d, y"}}
-  span.label.label-danger(ng-show='role') {{role|capitalize}}
+  
+  button.btn.btn-primary.btn-sm(ui-sref='tournament({slug:tournament.slug})') Enter!
+  .btn-group(dropdown='', is-open='status.isopen', ng-show='role')
+    button#single-button.btn.btn-default.btn-sm(type='button', dropdown-toggle='', ng-disabled='disabled')
+      | More...
+      span.caret
+    ul.dropdown-menu(role='menu', aria-labelledby='single-button')
+      li(role='menuitem')
+        a(href='#', ng-click='disconnectDialog()') Disconnect from Tournament
+      li(role='menuitem')
+        a(href='#', ng-click='deleteDialog()') Delete Tournament
+
+// delete modal
+script#deleteTournamentModal(type='text/ng-template')
+  h3.text-danger Delete Tournament?
+  p Are you sure you want to delete this tournament? All game results will be gone. Deleted. Gone forever. You'll never see them again, nor will anybody else.
+  button.btn.btn-danger.btn-sm(ng-click='closeThisDialog(); onRemove(tournament)') Yes, Delete!
+  button.btn.btn-default.btn-sm(ng-click='closeThisDialog()') Cancel
+
+// forget modal
+script#forgetTournamentModal(type='text/ng-template')
+  h3.text-warning Disconnect from Tournament?
+  p Are you sure you want to disconnect from this tournament? You will not be able to add any game results to this tournament after you disconnected from it.
+  button.btn.btn-warning.btn-sm(ng-click='closeThisDialog(); disconnect()') Yes, Disconnect!
+  button.btn.btn-default.btn-sm(ng-click='closeThisDialog()') Cancel
+

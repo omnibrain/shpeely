@@ -38,12 +38,15 @@
 @import 'styles/animate/animate.less';
 @import 'styles/bootswatch-flatly/variables.less';
 @import 'styles/callouts/callouts.less';
+@import 'styles/dialogs/dialogs.less';
 @import 'styles/loading/loading.less';
 @import 'styles/navbar/navbar.less';
 // endinjector
 
 // VARIABLES
 @font-size-xs:         ceil((@font-size-small * 0.85)); // ~12px
+
+@alert-link-color: darken(@brand-warning, 20%);
 
 
 // GLOBAL STYLES
@@ -52,6 +55,10 @@
 }
 .mtop {
 	margin-top: 20px;
+}
+
+.clickable {
+	cursor: pointer;
 }
 
 // colors
@@ -76,4 +83,21 @@
 	&:hover {
 		text-decoration: none;
 	}
+}
+
+
+//alerts
+.alert-warning {
+	a {
+		color: @alert-link-color;
+		&:hover {
+			color: darken(@alert-link-color, 5%);
+		}
+	}
+}
+
+// buttons
+.btn:focus {
+	// why is this even in bootstrap??? default focus outline looks broken & ugly.
+	outline: 0 none;
 }

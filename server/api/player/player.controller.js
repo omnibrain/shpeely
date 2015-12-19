@@ -2,6 +2,8 @@
 
 var _ = require('lodash');
 var Player = require('./player.model');
+var Tournament = require('../tournament/tournament.model.js');
+var mongoose = require('mongoose');
 
 // Get list of players
 exports.index = function(req, res) {
@@ -27,6 +29,58 @@ exports.create = function(req, res) {
     return res.json(201, player);
   });
 };
+
+// disconnects a player from a user
+exports.disconnect = function(req, res) {
+
+  if(!req.body.player) {
+      return res.json(400, {msg: 'player id missing'});
+  }
+
+  Player.findById(req.body.player, function (err, player) {
+    if(typeof player._user == 'undefined') {
+      return res.json(400, {msg: 'Player ' + player._id + ' is not connected to a user'});
+    }
+
+    if(req.user._id != req.body.player) {
+      // User requesting disconnection is not connected to that player!
+      // Check if the player requesting the disconnection is an admin. 
+
+      // find the tournament containing the player to disconnect
+      Tournament
+        .findOne({
+          members: mongoose.Types.ObjectId(req.body.player)
+        })
+        .populate('members')
+        .exec(function(err, tournament) {
+
+          var deletingPlayer = _.find(tournament.members, function(member) {
+            return member._user == req.user.id;
+          });
+
+          if(deletingPlayer.role != 'admin') {
+            return res.json(403, {msg: 'Trying to disconnect other users from their players? Now that\s not nice...'});
+          } else {
+            // all good!
+            player._user = undefined;
+            player.save(function(err, player) {
+              return res.json(200, player);
+            });
+          }
+      });
+
+
+    } else {
+      // all good! Remove reference from player
+      player._user = undefined;
+      player.save( function(err, player) {
+        return res.json(200, player);
+      });
+    }
+
+  });
+};
+
 
 // Updates an existing player in the DB.
 exports.update = function(req, res) {

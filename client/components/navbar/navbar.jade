@@ -13,7 +13,7 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
         //-li(ng-repeat='item in menu', ng-class='{active: isActive(item.link)}')
           //-a(ui-sref='{{item.state}}') {{item.title}}
 
-        li.dropdown.open(ng-show='isLoggedIn()')
+        li.dropdown(ng-show='isLoggedIn()', ng-click='dropdownOpen = !dropdownOpen', ng-class='{"open": dropdownOpen}')
           a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='true') My Tournaments #[span.caret]
           ul.dropdown-menu
             li
