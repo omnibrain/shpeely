@@ -6,6 +6,8 @@ boardgame-tournament:
                 - mongodb
         environment:
                 MONGODB_HOST: mongodb
+                DOMAIN: lustigsbusi.ch:50100
+                SESSION_SECRET: gexnAQqL80Cmyw3v7XjVpQ8heD6IThNBAXAmG1Xq8MFbPVcDNIWDpFUymg6opOKK
 
 mongodb:
         image: mongo:3.2
