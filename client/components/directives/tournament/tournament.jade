@@ -15,14 +15,21 @@
       span.caret
     ul.dropdown-menu(role='menu', aria-labelledby='single-button')
       li(role='menuitem')
-        a(href='#') Forget Tournament
+        a(href='#', ng-click='disconnectDialog()') Disconnect from Tournament
       li(role='menuitem')
-        a(href='#', ng-click='delete()') Delete Tournament
+        a(href='#', ng-click='deleteDialog()') Delete Tournament
 
 // delete modal
 script#deleteTournamentModal(type='text/ng-template')
   h3.text-danger Delete Tournament?
   p Are you sure you want to delete this tournament? All game results will be gone. Deleted. Gone forever. You'll never see them again, nor will anybody else.
   button.btn.btn-danger.btn-sm(ng-click='closeThisDialog(); onRemove(tournament)') Yes, Delete!
+  button.btn.btn-default.btn-sm(ng-click='closeThisDialog()') Cancel
+
+// forget modal
+script#forgetTournamentModal(type='text/ng-template')
+  h3.text-warning Disconnect from Tournament?
+  p Are you sure you want to disconnect from this tournament? You will not be able to add any game results to this tournament after you disconnected from it.
+  button.btn.btn-warning.btn-sm(ng-click='closeThisDialog(); disconnect()') Yes, Disconnect!
   button.btn.btn-default.btn-sm(ng-click='closeThisDialog()') Cancel
 
