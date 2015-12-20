@@ -7,7 +7,7 @@ div(ng-include='"components/navbar/navbar.html"')
       form(ng-submit='createTournament()')
         label(for='newTournament') Tournament Name
         .input-group
-          input.form-control(type='text', id='newTournament', ng-model='newTournament', required='')
+          input.form-control(type='text', id='newTournament', ng-model='newTournament', required='', maxlength='50')
           span.input-group-btn
             button.btn.btn-primary(type='submit') Create Tournament!
   hr
