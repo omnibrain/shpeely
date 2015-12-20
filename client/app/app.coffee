@@ -1,17 +1,18 @@
 'use strict'
 
 angular.module 'boardgametournamentApp', [
-  'ngCookies',
-  'ngResource',
-  'ngSanitize',
-  'ui.router',
-  'ui.bootstrap',
-  'selectize',
-  'highcharts-ng',
-  'ngAnimate',
-  'percentage',
-  'yaru22.angular-timeago',
+  'ngCookies'
+  'ngResource'
+  'ngSanitize'
+  'ui.router'
+  'ui.bootstrap'
+  'selectize'
+  'highcharts-ng'
+  'ngAnimate'
+  'percentage'
+  'yaru22.angular-timeago'
   'ngDialog'
+  'truncate'
 ]
 
 .config ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) ->
