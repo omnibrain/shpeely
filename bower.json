@@ -23,14 +23,15 @@
     "bootswatch-dist": "yeti",
     "angular-percentage-directive": "angular-percentage-filter#~1.0.2",
     "angular-timeago": "~0.2.4",
-    "ng-dialog": "~0.5.6"
+    "ng-dialog": "~0.5.6",
+    "angular-truncate": "*"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",
     "angular-scenario": ">=1.2.*"
   },
   "resolutions": {
-    "angular": "1.4.8",
+    "angular": ">=1.2.*",
     "bootswatch-dist": "yeti"
   }
 }
