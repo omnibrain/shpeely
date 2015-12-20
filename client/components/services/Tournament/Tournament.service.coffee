@@ -62,7 +62,13 @@ angular.module 'boardgametournamentApp'
     if !tournament and !activeTournament then return
 
     id = if !tournament and activeTournament then activeTournament._id else tournament._id
-    request "/api/tournaments/#{id}", {}, 'DELETE'
+
+    $q (resolve, reject)->
+      request("/api/tournaments/#{id}", {}, 'DELETE').then ->
+        _.remove tournaments, (t)-> t._id == id
+        resolve()
+      , reject
+
 
 
   setActive: (tournament)-> activeTournament = tournament
