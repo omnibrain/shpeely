@@ -1,5 +1,5 @@
 boardgame-tournament:
-        image: localhost:50003/boardgame-tournament:latest
+        image: lustigsbusi.ch:5000/boardgame-tournament:latest
         ports:
                 - "50100:80"
         links:
