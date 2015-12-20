@@ -19,7 +19,6 @@ angular.module 'boardgametournamentApp'
       className: 'dialog dialog-danger'
       scope: $scope
 
-
   $scope.disconnect = ->
     $http.post("/api/players/disconnect", {player: $scope.player._id}).then ->
       $scope.role = null

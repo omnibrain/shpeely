@@ -16,4 +16,4 @@ div(ng-include='"components/navbar/navbar.html"')
       h4 My Tournaments
   .row
     .col-md-4(ng-repeat='tournament in myTournaments | orderBy:"-lastEdit"')
-      tournament-callout(tournament='tournament')
+      tournament-callout(on-remove='deleteTournament(tournament)', tournament='tournament')

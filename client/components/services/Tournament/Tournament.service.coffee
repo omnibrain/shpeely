@@ -105,6 +105,7 @@ angular.module 'boardgametournamentApp'
       Auth.isLoggedInAsync (loggedIn)=>
         if loggedIn
           tournament = _.find(tournaments, (tournament)-> tournament._id == tournamentId)
+          if not tournament then return callback()
           player = _.find(tournament.members, (member)-> member._user == Auth.getCurrentUser()._id)
           callback player
         else

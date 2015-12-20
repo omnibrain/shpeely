@@ -19,4 +19,9 @@ angular.module 'boardgametournamentApp'
   $scope.isActive = (route) ->
     route is $location.path()
 
-  $scope.tournaments = Tournament
+  $scope.tournaments = Tournament.getAll()
+
+  $scope.$watch Tournament.getAll, (newValue, oldValue)->
+    $scope.tournaments = newValue
+
+
