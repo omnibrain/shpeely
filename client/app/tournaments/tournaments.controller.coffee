@@ -6,10 +6,14 @@ angular.module 'boardgametournamentApp'
   $scope._ = _
   $scope.user = Auth.getCurrentUser()
 
-  $scope.myTournaments
+  $scope.isLoggedIn = Auth.isLoggedIn
 
-  $http.get('/api/tournaments/mine').success (tournaments) ->
-    $scope.myTournaments = tournaments
+  $scope.tournaments = Tournament.getAll()
+
+  $scope.$watch Tournament.getAll, (newValue, oldValue)->
+    console.log "tournaments!"
+    console.log newValue
+    $scope.myTournaments = newValue
 
   $scope.createTournament = (form)->
     return if $scope.newTournament is ''

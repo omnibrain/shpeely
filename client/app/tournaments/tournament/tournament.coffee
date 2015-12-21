@@ -2,10 +2,10 @@
 
 angular.module 'boardgametournamentApp'
 .config ($stateProvider) ->
-  $stateProvider.state 'tournament.gameresults',
-    url: '/gameresults'
-    templateUrl: 'app/tournament/gameresults/gameresults.html'
-    controller: 'GameresultsCtrl'
+  $stateProvider.state 'tournaments.tournament',
+    url: '/:slug'
+    templateUrl: 'app/tournaments/tournament/tournament.html'
+    controller: 'TournamentCtrl'
     resolve:
       tournaments: (Tournament, $stateParams)->
         Tournament.load $stateParams.slug

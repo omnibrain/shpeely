@@ -9,9 +9,9 @@
           li
             a.delete-game-gameresult-button(href='#') Delete (TODO)
           li
-            a(ui-sref='tournament.gameresults.gameresult({gameresult:gameresult._id})') Show Details
+            a(ui-sref='tournaments.tournament.gameresults.gameresult({gameresult:gameresult._id})') Show Details
           li
-            a(ui-sref='tournament.games.game({bggid:gameresult.game.id})') Show Game Stats
+            a(ui-sref='tournaments.tournament.games.game({bggid:gameresult.game.id})') Show Game Stats
       p.game-date.pull-right(style='margin-right: 10px;') {{gameresult.time | date:"short"}}
     .panel-body
       highchart(config='gameresultChartConfig')
