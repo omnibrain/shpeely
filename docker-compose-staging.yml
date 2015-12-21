@@ -1,5 +1,5 @@
 boardgame-tournament:
-        image: localhost:5000/boardgame-tournament:latest
+        image: boardgame-tournament:latest
         ports:
                 - "50100:80"
         links:
