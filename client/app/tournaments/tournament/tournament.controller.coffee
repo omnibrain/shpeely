@@ -109,6 +109,7 @@ angular.module 'boardgametournamentApp'
       Tournament.cache(false)
       $scope.resetForm()
       loadData()
+      Tournament.reload()
       Tournament.cache(true)
 
   $scope.playerSelectizeConfig =

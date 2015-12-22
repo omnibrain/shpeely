@@ -19,8 +19,9 @@ exports.claimPlayer = function(req, res) {
     .populate('members')
     .exec(function(err, tournament) {
       
+      console.log('TOURNAMENT: ', tournament);
       // send the request to all admins
-      var admins = _.chain(tournament.memebers)
+      var admins = _.chain(tournament.members)
         .filter(function(member) {
           return member.role == 'admin' 
         })
@@ -29,7 +30,8 @@ exports.claimPlayer = function(req, res) {
         })
         .value();
 
-      async.each(admin, function(admin, callback) {
+      console.log(admins);
+      async.each(admins, function(admin, callback) {
 
         var message = Message({
           sender: req.user._id,

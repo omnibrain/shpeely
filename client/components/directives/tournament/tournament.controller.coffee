@@ -35,6 +35,11 @@ angular.module 'boardgametournamentApp'
       $scope.role = null
       Tournament.reload()
 
+  $scope.claimPlayer = (player)->
+    if not player then return
+    $http.post("/api/messages/claimPlayer", {player: player}).then ->
+      console.log "request sent!"
+
   $scope.memberSelectizeConfig =
     maxItems: 1
     valueField: '_id'

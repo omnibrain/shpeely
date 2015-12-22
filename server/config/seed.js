@@ -15,6 +15,7 @@ User.find({}).remove(function() {
     email: 'r.voellmy@gmail.com',
     password: 'test'
   }, {
+    _id: '567990d7e6af47961bc0374d',
     provider: 'local',
     role: 'admin',
     name: 'Admin',
@@ -25,3 +26,4 @@ User.find({}).remove(function() {
     }
   );
 });
+

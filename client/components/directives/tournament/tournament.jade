@@ -54,6 +54,6 @@ script#connectToTournamentModal(type='text/ng-template', ng-if='isLoggedIn')
       //-.player-select(ng-show='!existingPlayer')
         //-label(for'playerName') Enter a Name...
         //-input.form-control.input-sm(placeholder='Enter Your Name for this Tournament', name='playerName')
-      button.btn.btn-primary.btn-sm(ng-click='closeThisDialog(); connectToTournament()') Send Membership Request
+      button.btn.btn-primary.btn-sm(ng-click='closeThisDialog(); claimPlayer(playerToClaim)') Send Membership Request
       button.btn.btn-default.btn-sm(ng-click='closeThisDialog()') Cancel
 
