@@ -13,6 +13,7 @@ angular.module 'boardgametournamentApp', [
   'yaru22.angular-timeago'
   'ngDialog'
   'truncate'
+  'ui.checkbox' # bootstrap styled checkboxes
 ]
 
 .config ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) ->

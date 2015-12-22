@@ -7,6 +7,7 @@ var Message = require('./message.model');
 //var Player = require('../player/player.model.js');
 var Tournament = require('../tournament/tournament.model.js');
 
+
 // send a claim player request to the admins of a tournament
 exports.claimPlayer = function(req, res) {
   var player = req.body.player;
@@ -25,7 +26,7 @@ exports.claimPlayer = function(req, res) {
         })
         .map(function(member) {
           return member._id; 
-        });
+        })
         .value();
 
       async.each(admin, function(admin, callback) {

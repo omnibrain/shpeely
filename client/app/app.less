@@ -19,6 +19,7 @@
 @import 'account/login/login.less';
 @import 'admin/admin.less';
 @import 'main/main.less';
+@import 'messages/messages.less';
 @import 'tournaments/tournament/gameresults/gameresult/gameresult.less';
 @import 'tournaments/tournament/gameresults/gameresults.less';
 @import 'tournaments/tournament/games/game/game.less';
@@ -100,4 +101,13 @@
 .btn:focus {
 	// why is this even in bootstrap??? default focus outline looks broken & ugly.
 	outline: 0 none;
+}
+
+// checkbox 
+.btn span.glyphicon.glyphicon-ok {
+	// kind of ugly hack to use font awesome instead of glyphicons
+	&:before {
+		font-family: FontAwesome;
+		content: '\f00c';
+	}
 }

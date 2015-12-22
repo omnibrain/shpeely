@@ -49,6 +49,7 @@ exports.index = function(req, res) {
     .find(req.query.query)
     .limit(req.query.limit)
     .sort('-lastEdit')
+    .populate('members')
     .exec(function(err, tournaments) {
       if(err) { return handleError(res, err); }
       return res.json(200, tournaments);
@@ -104,11 +105,14 @@ exports.mine = function(req, res) {
     
   });
 
-  
 }
 
 // Creates a new tournament in the DB.
 exports.create = function(req, res) {
+
+  if(!req.body.name) {
+    return res.json(400, {err: 'No tournament name submitted'});
+  }
 
   // create new player of the user that created the tournament
   var player = {

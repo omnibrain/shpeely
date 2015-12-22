@@ -9,27 +9,51 @@
   p Created on {{tournament.created | date:"MMMM d, y"}}
   
   button.btn.btn-primary.btn-sm(ui-sref='tournaments.tournament({slug:tournament.slug})') Enter!
-  .btn-group(dropdown='', is-open='status.isopen', ng-show='role')
+  .btn-group(dropdown='', is-open='status.isopen', ng-show='loggedIn', ng-if='claimablePlayers.length || role')
     button#single-button.btn.btn-default.btn-sm(type='button', dropdown-toggle='', ng-disabled='disabled')
       | More...
       span.caret
     ul.dropdown-menu(role='menu', aria-labelledby='single-button')
-      li(role='menuitem')
+      li(role='menuitem', ng-show='loggedIn && !role && claimablePlayers.length')
+        a(href='#', ng-click='connectDialog()') Request Membership
+      li(role='menuitem', ng-show='role')
         a(href='#', ng-click='disconnectDialog()') Disconnect from Tournament
-      li(role='menuitem')
+      li(role='menuitem', ng-show='role =="admin"')
         a(href='#', ng-click='deleteDialog()') Delete Tournament
 
 // delete modal
-script#deleteTournamentModal(type='text/ng-template')
-  h3.text-danger Delete Tournament?
+script#deleteTournamentModal(type='text/ng-template', ng-if='isLoggedIn')
+  .dialog-header
+    h3.text-danger Delete Tournament?
   p Are you sure you want to delete this tournament? All game results will be gone. Deleted. Gone forever. You'll never see them again, nor will anybody else.
   button.btn.btn-danger.btn-sm(ng-click='closeThisDialog(); onRemove(tournament)') Yes, Delete!
   button.btn.btn-default.btn-sm(ng-click='closeThisDialog()') Cancel
 
 // forget modal
-script#forgetTournamentModal(type='text/ng-template')
-  h3.text-warning Disconnect from Tournament?
+script#forgetTournamentModal(type='text/ng-template', ng-if='isLoggedIn')
+  .dialog-header
+    h3.text-warning Disconnect from Tournament?
   p Are you sure you want to disconnect from this tournament? You will not be able to add any game results to this tournament after you disconnected from it.
   button.btn.btn-warning.btn-sm(ng-click='closeThisDialog(); disconnect()') Yes, Disconnect!
   button.btn.btn-default.btn-sm(ng-click='closeThisDialog()') Cancel
+
+// connect modal
+script#connectToTournamentModal(type='text/ng-template', ng-if='isLoggedIn')
+  .connect-modal
+    .dialog-header
+      h3.text-primary Request Membersip
+    p If you agree, a #[strong Membership Request] will be sent to all administrators of #[strong {{tournament.name}}]. When you are a member of a tournament, the tournament will show up under "My Tournaments", and you will be able to add game results to the tournaments.
+    form
+      label(for'playerSelect') Select Player...
+      selectize(ng-show='existingPlayer', config='memberSelectizeConfig', options='claimablePlayers', ng-model='playerToClaim', name='playerSelect')
+      //-checkbox.btn-primary(ng-model='existingPlayer', name='existingPlayerCheckbox')
+      //-label.clickable(for='existingPlayerCheckbox', ng-click='existingPlayer = !existingPlayer') I'm already part of this tournament
+      //-.player-select(ng-show='existingPlayer')
+        //-label(for'playerSelect') Select Player...
+        //-selectize(ng-show='existingPlayer', config='memberSelectizeConfig', options='tournament.members', ng-model='playerToClaim', name='playerSelect')
+      //-.player-select(ng-show='!existingPlayer')
+        //-label(for'playerName') Enter a Name...
+        //-input.form-control.input-sm(placeholder='Enter Your Name for this Tournament', name='playerName')
+      button.btn.btn-primary.btn-sm(ng-click='closeThisDialog(); connectToTournament()') Send Membership Request
+      button.btn.btn-default.btn-sm(ng-click='closeThisDialog()') Cancel
 

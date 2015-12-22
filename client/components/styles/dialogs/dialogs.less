@@ -68,8 +68,7 @@
 .ngdialog.dialog .ngdialog-content {
   -webkit-animation: ngdialog-flyin .5s;
   animation: ngdialog-flyin .5s;
-  background: #f0f0f0;
-  border-radius: 5px;
+  border-radius: 3px;
   color: #444;
   font-family: 'Helvetica',sans-serif;
   line-height: 1.5em;
@@ -192,12 +191,17 @@
 
 .ngdialog.dialog {
 
-	//title
-	h1,h2,h3,h4,h5 {
-		display: inline;
-		&.text-warning {
-			color: @brand-warning;
+	// header
+	.dialog-header {
+		//title
+		h1,h2,h3,h4,h5 {
+			display: inline;
+			&.text-warning {
+				color: @brand-warning;
+			}
 		}
+
+		margin-bottom: 8px;
 	}
 
 	// buttons
@@ -205,3 +209,5 @@
 		margin: 4px 8px 4px 0;
 	}
 }
+
+

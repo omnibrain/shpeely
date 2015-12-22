@@ -198,7 +198,7 @@ describe('POST /api/tournaments', function() {
   });
 
   after(function(done) {
-    user.remove().exec().then(function() {
+    User.remove().exec().then(function() {
       done();
     });
   });

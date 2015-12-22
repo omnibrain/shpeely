@@ -9,7 +9,7 @@ var MessageSchema = new Schema({
   read: {type: Boolean, default: false},
   type: String,
   msg: String,
-  data: Schema.Type.Mixed,
+  data: Schema.Types.Mixed,
 });
 
 module.exports = mongoose.model('Message', MessageSchema);

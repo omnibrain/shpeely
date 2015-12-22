@@ -4,11 +4,11 @@ ui-view
   .container
     .row
       .col-md-6
-        h3 Create New Tournament
-        form(ng-submit='createTournament()')
+        h3 Create New Tournament {{newTournament}}
+        form(name='newTournamentForm', ng-submit='createTournament(newTournament)')
           label(for='newTournament') Tournament Name
           .input-group
-            input.form-control(type='text', id='newTournament', ng-model='newTournament', required='', maxlength='50')
+            input.form-control(type='text', ng-model='newTournament', required='', maxlength='50')
             span.input-group-btn
               button.btn.btn-primary(type='submit') Create Tournament!
     hr
@@ -16,5 +16,5 @@ ui-view
       .col-md-12
         h4 My Tournaments
     .row
-      .col-md-4(ng-repeat='tournament in myTournaments | orderBy:"-lastEdit"')
+      .col-md-4(ng-repeat='tournament in myTournaments track by tournament.slug | orderBy:"-lastEdit"')
         tournament-callout(on-remove='deleteTournament(tournament)', tournament='tournament')
