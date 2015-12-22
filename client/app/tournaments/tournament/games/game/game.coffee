@@ -2,7 +2,7 @@
 
 angular.module 'boardgametournamentApp'
 .config ($stateProvider) ->
-  $stateProvider.state 'tournament.games.game',
+  $stateProvider.state 'tournaments.tournament.games.game',
     url: '/:bggid'
-    templateUrl: 'app/tournament/games/game/game.html'
+    templateUrl: 'app/tournaments/tournament/games/game/game.html'
     controller: 'GameCtrl'

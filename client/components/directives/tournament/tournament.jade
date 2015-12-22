@@ -1,5 +1,5 @@
 .bs-callout.tournament-callout(ng-class='{"bs-callout-info": role == "editor", "bs-callout-warning": role == "admin", "bs-callout-primary": !role}')
-  h4.title.clickable(ui-sref='tournament({slug:tournament.slug})') {{tournament.name | characters:20 }}
+  h4.title.clickable(ui-sref='tournaments.tournament({slug:tournament.slug})') {{tournament.name | characters:20 }}
   span.label.label-danger.role-label.pull-right(ng-show='role') You Are {{role|capitalize}}
   p {{tournament.members.length}} Members
   //-p Last Game: {{tournament.lastEdit | date:"MMMM d, y"}}
@@ -8,7 +8,7 @@
   p(ng-if='!tournament.lastEdit') No games yet...
   p Created on {{tournament.created | date:"MMMM d, y"}}
   
-  button.btn.btn-primary.btn-sm(ui-sref='tournament({slug:tournament.slug})') Enter!
+  button.btn.btn-primary.btn-sm(ui-sref='tournaments.tournament({slug:tournament.slug})') Enter!
   .btn-group(dropdown='', is-open='status.isopen', ng-show='role')
     button#single-button.btn.btn-default.btn-sm(type='button', dropdown-toggle='', ng-disabled='disabled')
       | More...
