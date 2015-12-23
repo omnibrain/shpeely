@@ -6,7 +6,7 @@ div(ng-include='"components/navbar/navbar.html"')
       h2 Messages
   .row 
     .col-md-12
-      h3 New
+      h4 New
   .row 
     .col-md-12(ng-repeat='message in unreadMessages')
       message(message='message')
@@ -14,7 +14,7 @@ div(ng-include='"components/navbar/navbar.html"')
       alert(type='info') No new messages...
   .row 
     .col-md-12
-      h3 Read
+      h4 Read
   .row 
     .col-md-12(ng-repeat='message in readMessages')
       message(message='message')

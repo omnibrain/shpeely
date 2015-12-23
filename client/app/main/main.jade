@@ -17,7 +17,7 @@ header#banner.hero-unit
         .input-group
           input.form-control(ng-model='query', placeholder='Search tournaments by name...')
           span.input-group-btn
-            button.btn.btn-primary(ng-disabled='!query', type='submit') Find Tournament!
+            button.btn.btn-primary(type='submit') Find Tournament!
   .row.mtop
     .col-md-12
       h4(ng-hide='foundTournaments') Recent Tournaments
@@ -32,7 +32,7 @@ header#banner.hero-unit
   .row(ng-hide='!loading')
     .loading
       span.loading-spinner
-      p.loading-text Loading BoardgameGeek Infos...
+      p.loading-text Loading tournaments...
   .row(ng-show='!loading && foundTournaments && !foundTournaments.length')
     .col-md-6
       .alert.alert-dismissible.alert-warning
