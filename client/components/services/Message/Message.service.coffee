@@ -9,3 +9,13 @@ angular.module 'boardgametournamentApp'
       method: 'GET'
       params:
         controller: 'count'
+    acceptMembershipRequest:
+      method: 'GET'
+      params:
+        controller: 'acceptMembershipRequest'
+    denyMembershipRequest:
+      method: 'GET'
+      params:
+        controller: 'denyMembershipRequest'
+
+

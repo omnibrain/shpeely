@@ -1,7 +1,14 @@
 .panel.message(ng-class='{"panel-primary": !message.read, "panel-default": message.read}')
   .panel-heading
-    h3.panel-title(ng-if='message.type == "claim-player-request"') Tournament Membership Request
-    span.pull-right.message-date(style='margin-right: 10px;') {{message.time | date:"short"}}
+    h3.panel-title(ng-if='message.type == "claim-player-request"') Tournament Membership Request for {{message.data.tournament.name}}
+    span.pull-right.message-date.hidden-sm.hidden-xs(style='margin-right: 10px;') {{message.time | date:"short"}}
   .panel-body
     .cliam-player-content(ng-if='message.type == "claim-player-request"')
       | User #[strong {{message.sender.name}} ({{message.sender.email}})] wants to be a member of the tournament #[strong #[a(ui-sref='tournaments.tournament({slug: message.data.tournament.slug})') {{message.data.tournament.name}}]] by claiming access of player #[strong #[playerlink(player='message.data.player.name', tournament='message.data.tournament')]] of that tournament.
+      p If you accept the membership request, {{message.sender.name}} will be able to add game results to the tournament.
+      .button-wrapper(ng-hide='message.replied')
+        button.btn.btn-success.btn-sm(ng-click='acceptMembershipRequest()') Accept Membership Request!
+        button.btn.btn-danger.btn-sm(ng-click='denyMembershipRequest()') Deny Membership
+      .success-message.ng-hide(ng-show='message.replied')
+        p.text-success(ng-if='message.accepted') Membership Request Accepted!
+        p.text-danger(ng-if='!message.accepted') Membership Request Denied!

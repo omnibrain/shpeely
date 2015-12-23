@@ -56,6 +56,49 @@ exports.claimPlayer = function(req, res) {
     });
 }
 
+var membershipRequestResponse = function(accept, req, res) {
+
+  var messageId = req.params.id;
+
+  Message.findById(messageId, function(err, message) {
+      if(err) { return handleError(res, err); }
+      if(!message) { return res.json(400, {err: 'No message with id ' + messageId}); }
+
+      if(message.recipient.toHexString() != req.user._id.toHexString()) {
+        return res.json(403, {err: 'Trying to respond to a membership request of another user? How dare you.'});
+      }
+
+      // ok, move along
+
+      if(accept){
+        Player.findById(message.data.player, function(err, player) {
+          if(err) { return handleError(res, err); }
+          if(!player) { return res.json(400, {err: 'No player with id ' + message.player.id}); }
+          
+          // ok, player found -> add user
+          player._user = message.recipient; 
+          player.save(function(err, player) {
+            res.json(200, player);
+          });
+        });
+      } else {
+        res.json(200, player);
+      }
+
+      // delete the message, regardless of of the answer
+      message.remove();
+  });
+  
+};
+
+exports.acceptMembershipRequest = function(req, res) {
+  membershipRequestResponse(true, req, res);
+};
+
+exports.denyMembershipRequest = function(req, res) {
+  membershipRequestResponse(false, req, res);
+};
+
 // Get list of messages
 exports.index = function(req, res) {
   Message

@@ -8,6 +8,8 @@ var router = express.Router();
 var auth = require('../../auth/auth.service.js');
 
 router.post('/claimPlayer', auth.isAuthenticated(), controller.claimPlayer);
+router.get('/:id/acceptMembershipRequest', auth.isAuthenticated(), controller.acceptMembershipRequest);
+router.get('/:id/denyMembershipRequest', auth.isAuthenticated(), controller.denyMembershipRequest);
 router.get('/', auth.isAuthenticated(), controller.index);
 router.get('/count', auth.isAuthenticated(), controller.count);
 router.get('/:id', controller.show);
