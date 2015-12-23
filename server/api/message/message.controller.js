@@ -61,6 +61,8 @@ exports.index = function(req, res) {
   Message
     .find({recipient: req.user._id})
     .lean()
+    .limit(100)
+    .sort('-time')
     .populate('sender')
     .exec(function (err, messages) {
       if(err) { return handleError(res, err); }
@@ -72,6 +74,16 @@ exports.index = function(req, res) {
       return res.json(200, messages);
     });
 };
+
+exports.count = function(req, res) {
+  Message
+    .find({recipient: req.user._id, read: false})
+    .exec(function (err, messages) {
+      if(err) { return handleError(res, err); }
+      return res.json(200, {unread: messages.length});
+    });
+};
+
 
 // Get a single message
 exports.show = function(req, res) {

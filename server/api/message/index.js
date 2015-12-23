@@ -9,6 +9,7 @@ var auth = require('../../auth/auth.service.js');
 
 router.post('/claimPlayer', auth.isAuthenticated(), controller.claimPlayer);
 router.get('/', auth.isAuthenticated(), controller.index);
+router.get('/count', auth.isAuthenticated(), controller.count);
 router.get('/:id', controller.show);
 router.get('/:id', controller.show);
 router.post('/', controller.create);

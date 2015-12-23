@@ -19,6 +19,3 @@ angular.module 'boardgametournamentApp'
 
 
   getMessages()
-
-  $scope.noNewMessagesAlert = true
-  $scope.closeNoNewMessagesAlert = -> $scope.noNewMessagesAlert = false

@@ -1,16 +1,16 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'NavbarCtrl', ($scope, $location, Auth, Tournament) ->
+.controller 'NavbarCtrl', ($scope, $location, Auth, Tournament, Message) ->
 
-  $scope.menu = [
-    #{title: 'Tournaments', state: 'tournaments'},
-  ]
 
   $scope.isCollapsed = true
   $scope.isLoggedIn = Auth.isLoggedIn
   $scope.isAdmin = Auth.isAdmin
   $scope.getCurrentUser = Auth.getCurrentUser
+
+  Message.count (res)->
+    $scope.unreadMessagesCount = res.unread
 
   $scope.logout = ->
     Auth.logout()
