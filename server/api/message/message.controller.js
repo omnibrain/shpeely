@@ -4,7 +4,7 @@ var _ = require('lodash');
 var mongoose = require('mongoose');
 var async = require('async');
 var Message = require('./message.model');
-//var Player = require('../player/player.model.js');
+var Player = require('../player/player.model.js');
 var Tournament = require('../tournament/tournament.model.js');
 
 
@@ -31,15 +31,23 @@ exports.claimPlayer = function(req, res) {
 
       async.each(admins, function(admin, callback) {
 
-        var message = Message({
-          sender: req.user._id,
-          recipient: admin,
-          type: 'claim-player-request',
-          data: {
-            player: player,
-          }
+        // load the player
+        Player.findById(player, function(err, player) {
+
+          if(err) { return handleError(res, err); }
+          if(!player) {return res.json(400, {err: 'Player does not exist'}); }
+
+          var message = Message({
+            sender: req.user._id,
+            recipient: admin,
+            type: 'claim-player-request',
+            data: {
+              tournament: tournament,
+              player: player
+            }
+          });
+          message.save(callback);
         });
-        message.save(callback);
 
       }, function(err) {
         if(err) { return handleError(res, err); }
@@ -50,11 +58,19 @@ exports.claimPlayer = function(req, res) {
 
 // Get list of messages
 exports.index = function(req, res) {
-  console.log(req.user);
-  Message.find({recipient: req.user._id}, function (err, messages) {
-    if(err) { return handleError(res, err); }
-    return res.json(200, messages);
-  });
+  Message
+    .find({recipient: req.user._id})
+    .lean()
+    .populate('sender')
+    .exec(function (err, messages) {
+      if(err) { return handleError(res, err); }
+
+      // remove sensitive data from sender field
+      _.each(messages, function(msg) {
+        msg.sender = _.pick(msg.sender, ['_id', 'name', 'email']);
+      });
+      return res.json(200, messages);
+    });
 };
 
 // Get a single message
@@ -76,11 +92,15 @@ exports.create = function(req, res) {
 
 // Updates an existing message in the DB.
 exports.update = function(req, res) {
+
+  // whitelist of fields to allow updating
+  var update = _.pick(req.body, ['read'])
+
   if(req.body._id) { delete req.body._id; }
   Message.findById(req.params.id, function (err, message) {
     if (err) { return handleError(res, err); }
     if(!message) { return res.send(404); }
-    var updated = _.merge(message, req.body);
+    var updated = _.merge(message, update);
     updated.save(function (err) {
       if (err) { return handleError(res, err); }
       return res.json(200, message);

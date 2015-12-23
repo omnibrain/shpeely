@@ -5,7 +5,20 @@ div(ng-include='"components/navbar/navbar.html"')
     .col-md-12
       h2 Messages
   .row 
-    .col-md-12(ng-repeat='message in messages')
+    .col-md-12
+      h3 New
+  .row 
+    .col-md-12(ng-repeat='message in unreadMessages')
       message(message='message')
+    .col-md-12(ng-if='!unreadMessages.length')
+      alert(type='info') No new messages...
+  .row 
+    .col-md-12
+      h3 Read
+  .row 
+    .col-md-12(ng-repeat='message in readMessages')
+      message(message='message')
+    .col-md-12(ng-if='!readMessages.length')
+      alert(type='info') No read messages yet...
 
 

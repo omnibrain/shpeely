@@ -7,3 +7,4 @@ angular.module 'boardgametournamentApp'
   controller: 'PlayerlinkCtrl'
   scope:
     player: '='
+    tournament: '='

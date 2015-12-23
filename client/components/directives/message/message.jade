@@ -1,6 +1,7 @@
-.panel.panel-primary.message
+.panel.message(ng-class='{"panel-primary": !message.read, "panel-default": message.read}')
   .panel-heading
-    h3.panel-title {{titles[message.type]}}
+    h3.panel-title(ng-if='message.type == "claim-player-request"') Tournament Membership Request
     span.pull-right.message-date(style='margin-right: 10px;') {{message.time | date:"short"}}
   .panel-body
-    | {{message}}
+    .cliam-player-content(ng-if='message.type == "claim-player-request"')
+      | User #[strong {{message.sender.name}} ({{message.sender.email}})] wants to be a member of the tournament #[strong #[a(ui-sref='tournaments.tournament({slug: message.data.tournament.slug})') {{message.data.tournament.name}}]] by claiming access of player #[strong #[playerlink(player='message.data.player.name', tournament='message.data.tournament')]] of that tournament.

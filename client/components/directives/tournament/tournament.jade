@@ -43,6 +43,7 @@ script#connectToTournamentModal(type='text/ng-template', ng-if='isLoggedIn')
     .dialog-header
       h3.text-primary Request Membersip
     p If you agree, a #[strong Membership Request] will be sent to all administrators of #[strong {{tournament.name}}]. When you are a member of a tournament, the tournament will show up under "My Tournaments", and you will be able to add game results to the tournaments.
+    p.text-danger Please note that your email address will be revealed to the administrators of the tournament!
     form
       label(for'playerSelect') Select Player...
       selectize(ng-show='existingPlayer', config='memberSelectizeConfig', options='claimablePlayers', ng-model='playerToClaim', name='playerSelect')

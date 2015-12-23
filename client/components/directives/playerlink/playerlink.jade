@@ -1,1 +1,3 @@
-a.playerlink(ui-sref='tournaments.tournament.players.player({player: player})', ng-bind='player')
+// TODO: Do this more elegantly
+a.playerlink(ng-if='!tournament', ui-sref='tournaments.tournament.players.player({player: player})', ng-bind='player')
+  a.playerlink(ng-if='tournament', href='/tournaments/{{tournament.slug}}/players/{{player}}', ng-bind='player')

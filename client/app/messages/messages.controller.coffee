@@ -1,10 +1,24 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'MessagesCtrl', ($scope, $http) ->
-  
+.controller 'MessagesCtrl', ($scope, $http, Message, $timeout) ->
+
   getMessages = ->
-    $http.get('/api/messages').then (res)->
-      $scope.messages = res.data
+    Message.query (messages)->
+      $scope.unreadMessages = _.filter messages, (msg)-> !msg.read
+      $scope.readMessages = _.filter messages, (msg)-> msg.read
+      
+      # mark messages as read after a short delay
+      $timeout ->
+        _.chain(angular.copy messages)
+          .filter (msg)-> !msg.read
+          .each (msg, i)->
+            msg.read = true
+            msg.$save()
+      , 3000
+
 
   getMessages()
+
+  $scope.noNewMessagesAlert = true
+  $scope.closeNoNewMessagesAlert = -> $scope.noNewMessagesAlert = false
