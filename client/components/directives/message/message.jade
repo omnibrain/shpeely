@@ -1,0 +1,6 @@
+.panel.panel-primary.message
+  .panel-heading
+    h3.panel-title {{titles[message.type]}}
+    span.pull-right.message-date(style='margin-right: 10px;') {{message.time | date:"short"}}
+  .panel-body
+    | {{message}}

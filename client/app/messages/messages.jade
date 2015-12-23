@@ -4,3 +4,8 @@ div(ng-include='"components/navbar/navbar.html"')
   .row 
     .col-md-12
       h2 Messages
+  .row 
+    .col-md-12(ng-repeat='message in messages')
+      message(message='message')
+
+

@@ -19,36 +19,39 @@ exports.claimPlayer = function(req, res) {
     .populate('members')
     .exec(function(err, tournament) {
       
-      console.log('TOURNAMENT: ', tournament);
       // send the request to all admins
       var admins = _.chain(tournament.members)
         .filter(function(member) {
           return member.role == 'admin' 
         })
         .map(function(member) {
-          return member._id; 
+          return member._user; 
         })
         .value();
 
-      console.log(admins);
       async.each(admins, function(admin, callback) {
 
         var message = Message({
           sender: req.user._id,
           recipient: admin,
           type: 'claim-player-request',
+          data: {
+            player: player,
+          }
         });
         message.save(callback);
 
       }, function(err) {
-        if(err) {console.log(err);}
+        if(err) { return handleError(res, err); }
+        return res.json(200, {'msg': 'ok'});
       });
     });
 }
 
 // Get list of messages
 exports.index = function(req, res) {
-  Message.find(function (err, messages) {
+  console.log(req.user);
+  Message.find({recipient: req.user._id}, function (err, messages) {
     if(err) { return handleError(res, err); }
     return res.json(200, messages);
   });
