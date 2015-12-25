@@ -26,17 +26,14 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
         //-li(ng-hide='tournaments.getActive()._id')
           //-a(ui-sref='tournaments') Tournaments
 
-        li(ng-hide='tournaments.getActive()._id')
-          a(ui-sref='tournaments') {{tournaments.getActive().name}}
-
         // tournament navigation
-        li(ng-show='tournament._id', ui-sref-active='active')
+        li(ng-show='activeTournament()', ui-sref-active='active')
           a(ui-sref='tournaments.tournament.games') Games
 
-        li(ng-show='tournament._id', ui-sref-active='active')
+        li(ng-show='activeTournament()', ui-sref-active='active')
           a(ui-sref='tournaments.tournament.players') Players
 
-        li(ng-show='tournament._id', ui-sref-active='active')
+        li(ng-show='activeTournament()', ui-sref-active='active')
           a(ui-sref='tournaments.tournament.gameresults') Results
 
         //-li(ng-show='isAdmin()', ng-class='{active: isActive("/admin")}')
@@ -45,9 +42,9 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
       ul.nav.navbar-nav.navbar-right
 
         // active tournament
-        li(ng-show='tournament._id')
+        li(ng-show='activeTournament()')
           a(href='#', ui-sref='tournaments.tournament')
-            span.label.label-danger.active-tournament-label {{tournament.name}}
+            span.label.label-danger.active-tournament-label {{activeTournament().name}}
 
         li(ng-hide='isLoggedIn()', ng-class='{active: isActive("/signup")}')
           a(href='/signup') Sign up

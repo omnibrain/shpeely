@@ -60,7 +60,6 @@ exports.index = function(req, res) {
 exports.search = function(req, res) {
 
   var searchString = req.params.searchString;
-  console.log(searchString);
 
   Tournament
     .find({name: {$regex: searchString, $options: 'i'}})
@@ -92,15 +91,11 @@ exports.mine = function(req, res) {
     var query = _.merge(req.query, {
       members: {$in: players}
     });
-    
-    console.log('nr players: ', players.length);
-    console.log('players: ', players);
 
     // find all tournaments of all players of this user
     Tournament.find(query)
       .populate('members')
       .exec(function(err, tournaments) {
-        console.log('nr tournaments: ', tournaments.length);
         if(!tournaments) {return res.send(404)}
         res.send(tournaments);
     });

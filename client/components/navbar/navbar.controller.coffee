@@ -9,8 +9,13 @@ angular.module 'boardgametournamentApp'
   $scope.isAdmin = Auth.isAdmin
   $scope.getCurrentUser = Auth.getCurrentUser
 
-  Message.count (res)->
-    $scope.unreadMessagesCount = res.unread
+  $scope.getUnread = ->
+    Auth.isLoggedInAsync (loggedIn)->
+      if loggedIn
+        Message.count (res)->
+          $scope.unreadMessagesCount = res.unread
+      else
+        $scope.unread = 0
 
   $scope.logout = ->
     Auth.logout()
@@ -23,5 +28,7 @@ angular.module 'boardgametournamentApp'
 
   $scope.$watch Tournament.getAll, (newValue, oldValue)->
     $scope.tournaments = newValue
+
+  $scope.activeTournament = Tournament.getActive
 
 
