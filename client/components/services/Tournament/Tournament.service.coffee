@@ -119,6 +119,6 @@ angular.module 'boardgametournamentApp'
 
   canEdit: (callback)->
     @getOwnActivePlayer (player)->
-      if player then callback player.role in ['editor', 'admin'] else callback(false)
+      if player then callback player.role in ['member', 'admin'] else callback(false)
 
 

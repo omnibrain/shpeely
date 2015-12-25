@@ -76,17 +76,17 @@ var membershipRequestResponse = function(accept, req, res) {
           if(!player) { return res.json(400, {err: 'No player with id ' + message.player.id}); }
           
           // ok, player found -> add user
-          player._user = message.recipient; 
+          player._user = message.sender; 
           player.save(function(err, player) {
             res.json(200, player);
+            message.remove();
           });
         });
       } else {
         res.json(200, player);
+        message.remove();
       }
 
-      // delete the message, regardless of of the answer
-      message.remove();
   });
   
 };

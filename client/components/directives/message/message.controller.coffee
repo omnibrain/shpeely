@@ -5,7 +5,6 @@ angular.module 'boardgametournamentApp'
 
   $scope.acceptMembershipRequest = ->
     Message.acceptMembershipRequest {id: $scope.message._id}, (res)->
-      console.log message
       $scope.message.replied = true
       $scope.message.accepted = true
 
