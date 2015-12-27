@@ -11,8 +11,8 @@ User.find({}).remove(function() {
   User.create({
     _id: '564fa617687f9a7c2bdad64d',
     provider: 'local',
-    name: 'Raphael',
-    email: 'r.voellmy@gmail.com',
+    name: 'Test User',
+    email: 'test@test.com',
     password: 'test'
   }, {
     _id: '567990d7e6af47961bc0374d',
