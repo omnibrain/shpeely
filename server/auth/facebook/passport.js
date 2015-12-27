@@ -8,6 +8,12 @@ exports.setup = function (User, config) {
       callbackURL: config.facebook.callbackURL
     },
     function(accessToken, refreshToken, profile, done) {
+
+      console.log('profile:', profile);
+      console.log('accessToken:', accessToken);
+      console.log('clientSecret:', clientSecret);
+      console.log('refreshToken:', refreshToken);
+
       User.findOne({
         'facebook.id': profile.id
       },

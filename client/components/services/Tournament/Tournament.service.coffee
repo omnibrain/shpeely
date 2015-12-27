@@ -3,7 +3,7 @@
 angular.module 'boardgametournamentApp'
 .service 'Tournament', ($state, $http, Auth, $q, $stateParams)->
 
-  activeTournament = {}
+  activeTournament = null
 
   deferred = $q.defer()
   cached = true

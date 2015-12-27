@@ -12,6 +12,12 @@ boardgame-tournament:
                 # OAuth
                 FACEBOOK_ID: 982039645213438
                 FACEBOOK_SECRET: 3e2dd6b364aa42b905fde562f79ce4a8
+                
+                GOOGLE_ID: 902849090234-8tg5cehqt0ecdkpb4h3q4482jfvngeo0.apps.googleusercontent.com
+                GOOGLE_SECRET: ArLwcd50HSgr2LKzwJ6JWeS0
+
+                TWITTER_ID: BHiaBlbsl0vsPfchKCcPahD7e
+                TWITTER_SECRET: UbvnAB7maSgWSggs6CKT3nokqmiuCffOW0rd2hmmZeHawjcKjE 
 
 
 mongodb:
