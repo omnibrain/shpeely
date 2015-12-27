@@ -2,19 +2,22 @@
   .panel.panel-default.panel-gameresult
     .panel-heading
       h4 #[strong {{(gameresult.game.name | limitTo:38) + (gameresult.game.name.length > 50 ? "..." : "") }}] ({{gameresult.scores.length}} Players)
-      .dropdown.pull-right
-        button#editButton.dropdown-toggle.btn.btn-xs.btn-default(type='button', data-toggle='dropdown', aria-expanded='true') Actions
+      .btn-group.pull-right(dropdown='', is-open='status.isopen')
+        button#single-button.btn.btn-default.btn-xs(type='button', dropdown-toggle='', ng-disabled='disabled')
+          | More...
           span.caret
-        ul.dropdown-menu(role='menu', aria-labelledby='editButton')
-          li
-            a.delete-game-gameresult-button(href='#') Delete (TODO)
-          li
+        ul.dropdown-menu(role='menu', aria-labelledby='single-button')
+          li(role='menuitem')
+            a(href='#') Delete (TODO)
+          li(role='menuitem')
             a(ui-sref='tournaments.tournament.gameresults.gameresult({gameresult:gameresult._id})') Show Details
-          li
-            a(ui-sref='tournaments.tournament.games.game({bggid:gameresult.game.id})') Show Game Stats
+          li(role='menuitem')
+            a(ui-sref='tournaments.tournament.games.game({bggid:gameresult.game.id})') Show Game Statistics
+
       p.game-date.pull-right(style='margin-right: 10px;') {{gameresult.time | date:"short"}}
     .panel-body
       highchart(config='gameresultChartConfig')
+
 .loading-container.gameresult-container(ng-show='chartLoading')
   .loading
     span.loading-spinner
