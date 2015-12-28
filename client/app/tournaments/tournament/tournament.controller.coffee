@@ -16,6 +16,8 @@ angular.module 'boardgametournamentApp'
   $scope.canEdit = false
   $scope.emptyState = true
 
+  $scope.bgginfo = null
+
   loadTournament = (slug)->
     $http.get("/api/tournaments/#{slug}").then (res)->
       tournament = res.data
