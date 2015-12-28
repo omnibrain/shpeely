@@ -11,12 +11,14 @@
           | More...
           span.caret
         ul.dropdown-menu(role='menu', aria-labelledby='single-button')
-          li(role='menuitem', ng-hide='ownRole != "admin"')
-            a(href='#', ng-click='delete()') Delete
           li(role='menuitem')
             a(ui-sref='tournaments.tournament.gameresults.gameresult({gameresult:gameresult._id})') Show Details
           li(role='menuitem')
             a(ui-sref='tournaments.tournament.games.game({bggid:gameresult.game.id})') Show Game Statistics
+          li(role='menuitem')
+            a(ui-sref='tournaments.tournament.gameresults.gameresult.edit({gameresult:gameresult._id})') Edit
+          li(role='menuitem', ng-hide='ownRole != "admin"')
+            a(href='#', ng-click='delete()') Delete
 
       p.game-date.pull-right(style='margin-right: 10px;') {{gameresult.time | date:"short"}}
     .panel-body
