@@ -9,7 +9,7 @@
           | More...
           span.caret
         ul.dropdown-menu(role='menu', aria-labelledby='single-button')
-          li(role='menuitem')
+          li(role='menuitem', ng-hide='ownRole != "admin"')
             a(href='#', ng-click='delete()') Delete
           li(role='menuitem')
             a(ui-sref='tournaments.tournament.gameresults.gameresult({gameresult:gameresult._id})') Show Details
