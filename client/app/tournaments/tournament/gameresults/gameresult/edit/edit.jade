@@ -7,7 +7,7 @@
           button.undo-button.btn.btn-warning.btn-sm(ng-click='undoDelete()') Oh no! What have I done?! Undo!
     .col-md-6(ng-hide='deleted')
       h3 Edit Game Result
-      form.form-horizontal(ng-submit='saveChanges()', name='editGameResultForm')
+      form.form-horizontal.edit-gameresult-form(ng-submit='saveChanges()', name='editGameResultForm')
         .form-group
           label.col-sm-2.control-label(for='game') Game
           .col-sm-10
@@ -27,7 +27,7 @@
         .form-group(ng-hide='saved')
           .col-sm-offset-2.col-sm-10
             input.btn.btn-primary(type='submit', value='Save Changes', ng-disabled='newGameResultForm.$invalid')
-            input.btn.btn-danger.pull-right(type='button', value='Delete Result', ng-click='delete()')
+            input.btn.btn-danger.delete-button(type='button', value='Delete Result', ng-click='delete()')
 
     .col-md-5.col-md-offset-1(ng-hide='deleted')
       h3.mbot BoardgameGeek Info
