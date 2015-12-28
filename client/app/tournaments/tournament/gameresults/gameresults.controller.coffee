@@ -3,7 +3,7 @@
 angular.module 'boardgametournamentApp'
 .controller 'GameresultsCtrl', ($scope, Tournament) ->
 
-  $scope.limitTo = 12
+  $scope.limitTo = 10
 
   $scope.debounce = 350
 

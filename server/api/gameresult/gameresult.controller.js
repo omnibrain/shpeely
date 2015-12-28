@@ -35,10 +35,7 @@ exports.show = function(req, res) {
   });
 };
 
-// Creates a new gameresult in the DB.
-exports.create = function(req, res) {
-
-  console.log('request', req.body);
+function preparePlayers(req, res, next) {
 
   // change player subdocs to ids
   req.body.scores = _.map(req.body.scores, function(score) {
@@ -46,9 +43,9 @@ exports.create = function(req, res) {
     return score;
   });
 
-  console.log('request new', req.body);
-
   async.map(req.body.scores, function(score, callback) {
+
+    if(score._id) { delete score._id; }
 
     Player.findById(score.player, function(err, player) {
 
@@ -84,28 +81,49 @@ exports.create = function(req, res) {
   }, function(err, scores) {
     if(err) { return handleError(res, err); }
 
-    console.log('scores', scores);
+    req.body.scores = scores;
+    next(req);
+
+  });
+
+}
+
+// Creates a new gameresult in the DB.
+exports.create = function(req, res) {
+
+  preparePlayers(req, res, function(req) {
+
     var gameresult = req.body;
-    gameresult.scores = scores;
 
     Gameresult.create(gameresult, function(err, gameresult) {
       if(err) { return handleError(res, err); }
       return res.json(201, gameresult);
     });
+    
   });
-
 };
 
 // Updates an existing gameresult in the DB.
 exports.update = function(req, res) {
-  if(req.body._id) { delete req.body._id; }
-  Gameresult.findById(req.params.id, function (err, gameresult) {
-    if (err) { return handleError(res, err); }
-    if(!gameresult) { return res.send(404); }
-    var updated = _.merge(gameresult, req.body);
-    updated.save(function (err) {
+  preparePlayers(req, res, function(req) {
+
+    if(req.body._id) { delete req.body._id; }
+    Gameresult.findById(req.params.id, function (err, gameresult) {
       if (err) { return handleError(res, err); }
-      return res.json(200, gameresult);
+      if(!gameresult) { return res.send(404); }
+
+      var updated = _.merge(gameresult, req.body);
+
+      if(req.body.scores) {
+        updated.scores = req.body.scores;
+      }
+
+      updated.lastEdit = new Date();
+
+      updated.save(function (err, gameresult) {
+        if (err) { return handleError(res, err); }
+        return res.json(200, gameresult);
+      });
     });
   });
 };

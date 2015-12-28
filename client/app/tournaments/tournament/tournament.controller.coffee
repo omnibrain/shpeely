@@ -69,7 +69,7 @@ angular.module 'boardgametournamentApp'
   loadData()
 
   # is called when a game was selected in the dropdown
-  getBggInfo = (bggid)->
+  $scope.getBggInfo = (bggid)->
 
     $scope.gameInfoLoading = true
     if not bggid or bggid == ''
@@ -127,7 +127,7 @@ angular.module 'boardgametournamentApp'
     valueField: 'id'
     labelField: 'name'
     searchField: 'name'
-    onChange: getBggInfo
+    onChange: $scope.getBggInfo
     render:
       option: render
       item: render
