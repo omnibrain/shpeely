@@ -1,11 +1,17 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'GameResultCtrl', ($scope, Tournament, $timeout) ->
+.controller 'GameResultCtrl', ($scope, Tournament, $timeout, $http) ->
 
   $scope.chartLoading = true
+  $scope.deleted = false
 
   loaded = false
+
+  $scope.delete = ->
+    $http.delete("api/gameresults/#{$scope.gameresult._id}").then ->
+      $scope.deleted = true
+
 
   showChart = (gameresult)->
     if (not gameresult) or loaded then return

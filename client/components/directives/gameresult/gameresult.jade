@@ -1,4 +1,6 @@
-.chart-container.gameresult-container(ng-hide='chartLoading')
+.alert.alert-danger(ng-if='deleted')
+  p {{gameresult.game.name}} game result was deleted...
+.chart-container.gameresult-container(ng-hide='chartLoading', ng-if='!deleted')
   .panel.panel-default.panel-gameresult
     .panel-heading
       h4 #[strong {{(gameresult.game.name | limitTo:38) + (gameresult.game.name.length > 50 ? "..." : "") }}] ({{gameresult.scores.length}} Players)
@@ -8,7 +10,7 @@
           span.caret
         ul.dropdown-menu(role='menu', aria-labelledby='single-button')
           li(role='menuitem')
-            a(href='#') Delete (TODO)
+            a(href='#', ng-click='delete()') Delete
           li(role='menuitem')
             a(ui-sref='tournaments.tournament.gameresults.gameresult({gameresult:gameresult._id})') Show Details
           li(role='menuitem')
