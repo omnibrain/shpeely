@@ -103,49 +103,16 @@ exports.update = function(req, res) {
 
 // Deletes a gameresult from the DB.
 exports.destroy = function(req, res) {
-
-  // check if user is allowed to delete game results
-  var userId = req.user._id;
-  Player.find({_user: req.user._id}, function(err, players) {
-    if(err) { return handleError(err); }
-    if(!players) {return res.json(404, {err: 'No player found with user id ' + req.user._id}); }
-
     // get the game result
     Gameresult.findById(req.params.id, function (err, gameresult) {
       if(err) { return handleError(res, err); }
       if(!gameresult) { return res.send(404); }
 
-      // get the tournament
-      Tournament.findById(gameresult.tournament, function(err, tournament) {
+      gameresult.remove(function(err) {
         if(err) { return handleError(res, err); }
-        if(!tournament) { return res.send(404, {err: 'No tournament found with id ' + gameresult.tournament}); }
-
-        var memberIds = _.map(tournament.members, function(id) {
-          return id.toHexString();
-        });
-        var playerIds = _.map(_.pluck(players, '_id'), function(id) {
-          return id.toHexString();
-        });
-
-        var playerId = _.intersection(memberIds, playerIds);
-
-        Player.findOne({
-          _id: playerId,
-          role: 'admin'
-        }, function(err, player) {
-
-          if(!player) {
-            res.json(403, {err: 'Only admins are allowed to delete game results'})
-          } else {
-            gameresult.remove(function(err) {
-              if(err) { return handleError(res, err); }
-              return res.send(204);
-            });
-          }
-        });
+        return res.send(204);
       });
     });
-  });
 };
 
 function handleError(res, err) {
