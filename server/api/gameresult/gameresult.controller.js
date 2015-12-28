@@ -39,6 +39,15 @@ exports.show = function(req, res) {
 exports.create = function(req, res) {
 
   console.log('request', req.body);
+
+  // change player subdocs to ids
+  req.body.scores = _.map(req.body.scores, function(score) {
+    score.player = score.player._id ? score.player._id : score.player;
+    return score;
+  });
+
+  console.log('request new', req.body);
+
   async.map(req.body.scores, function(score, callback) {
 
     Player.findById(score.player, function(err, player) {

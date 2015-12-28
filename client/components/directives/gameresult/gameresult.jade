@@ -1,5 +1,7 @@
-.alert.alert-danger(ng-if='deleted')
-  p {{gameresult.game.name}} game result was deleted...
+.undo-alert(ng-if='deleted')
+  .alert.alert-danger
+    p {{gameresult.game.name}} game result was deleted...
+    button.undo-button.btn.btn-warning.btn-sm(ng-click='undoDelete()') Oh no! What have I done?! Undo!
 .chart-container.gameresult-container(ng-hide='chartLoading', ng-if='!deleted')
   .panel.panel-default.panel-gameresult
     .panel-heading

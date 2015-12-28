@@ -12,9 +12,16 @@ angular.module 'boardgametournamentApp'
     $http.delete("api/gameresults/#{$scope.gameresult._id}").then ->
       $scope.deleted = true
 
+  $scope.undoDelete = ->
+    $http.post("api/gameresults", $scope.gameresult).then ->
+      $scope.deleted = false
+
+
   # get the role of the player of the currently logged in user 
-  Tournament.getOwnPlayer $scope.gameresult.tournament, (player)->
-    $scope.ownRole = player.role
+  getOwnRole = (gameresult)->
+    if not gameresult then return
+    Tournament.getOwnPlayer gameresult.tournament, (player)->
+      $scope.ownRole = player.role
 
 
   showChart = (gameresult)->
@@ -93,5 +100,7 @@ angular.module 'boardgametournamentApp'
 
   
   showChart($scope.gameresult)
+  getOwnRole($scope.gameresult)
   $scope.$watch 'gameresult', showChart
+  $scope.$watch 'gameresult', getOwnRole
 
