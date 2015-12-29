@@ -21,7 +21,7 @@ angular.module 'boardgametournamentApp'
   getOwnRole = (gameresult)->
     if not gameresult then return
     Tournament.getOwnPlayer gameresult.tournament, (player)->
-      $scope.ownRole = player.role
+      $scope.ownRole = player?.role
 
 
   showChart = (gameresult)->
