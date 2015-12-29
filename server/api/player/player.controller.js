@@ -30,8 +30,7 @@ exports.create = function(req, res) {
   });
 };
 
-// disconnects a player from a user
-exports.disconnect = function(req, res) {
+function isAdmin(req, res, next) {
 
   if(!req.body.player) {
       return res.json(400, {msg: 'player id missing'});
@@ -62,22 +61,71 @@ exports.disconnect = function(req, res) {
             return res.json(403, {msg: 'Trying to disconnect other users from their players? Now that\s not nice...'});
           } else {
             // all good!
-            player._user = undefined;
-            player.save(function(err, player) {
-              return res.json(200, player);
-            });
+            next(req, res);
           }
       });
 
 
     } else {
       // all good! Remove reference from player
-      player._user = undefined;
-      player.save( function(err, player) {
-        return res.json(200, player);
-      });
+      next(req, res);
     }
 
+  });
+
+};
+
+// disconnects a player from a user
+exports.disconnect = function(req, res) {
+
+  isAdmin(req, res, function(req, res) {
+
+    Player.findById(req.body.player, function(err, player) {
+      if(!player) { return res.json(404, 'No player found with id' + req.body.player); }
+      if (err) { return handleError(res, err); }
+
+        // all good!
+        player._user = undefined;
+        player.save(function(err, player) {
+          return res.json(200, player);
+        });
+
+    });
+  });
+};
+
+exports.promote = function(req, res) {
+  isAdmin(req, res, function(req, res) {
+    Player.findById(req.body.player, function(err, player) {
+      if(!player) { return res.json(404, 'No player found with id' + req.body.player); }
+      if (err) { return handleError(res, err); }
+
+      // update player role
+      player.role = 'admin';
+      player.save(function(err, player) {
+        if (err) { return handleError(res, err); }
+        res.json(200, player);
+      });
+
+    });
+  });
+};
+
+
+exports.demote = function(req, res) {
+  isAdmin(req, res, function(req, res) {
+    Player.findById(req.body.player, function(err, player) {
+      if(!player) { return res.json(404, 'No player found with id' + req.body.player); }
+      if (err) { return handleError(res, err); }
+
+      // update player role
+      player.role = 'member';
+      player.save(function(err, player) {
+        if (err) { return handleError(res, err); }
+        res.json(200, player);
+      });
+
+    });
   });
 };
 

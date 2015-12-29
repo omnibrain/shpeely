@@ -104,6 +104,48 @@ exports.mine = function(req, res) {
 
 }
 
+// returns all users of this tournament
+exports.users = function(req, res) {
+
+  Tournament
+    .findById(req.params.id)
+    .populate('members')
+    .exec(function(err, tournament) {
+      if(err) {return handleError(err)}
+      if(!tournament) {return res.send(404)}
+
+      // check if user is an admin
+      if(!_.find(tournament.members, function(member) {
+        return member._user.toHexString() == req.user._id.toHexString() && member.role == 'admin';
+      })) {
+        // user is not an admin
+        return res.json(403, {err: 'Only admins can see the users of a tournament'});
+      }
+
+      // all good -> return users
+      var users = _.chain(tournament.members)
+        .filter(function(member) {
+          return !!member._user; 
+        })
+        .pluck('_user')
+        .map(function(userId) {
+          return mongoose.Types.ObjectId(userId);
+        })
+        .value();
+
+      User.find({_id: {$in: users}}, 'name email')
+        .exec(function(err, users) {
+          if(err) {return handleError(err)}
+          if(!users) {return res.send(404)}
+
+          res.json(200, users);
+      });
+      
+  })
+
+}
+
+
 // Creates a new tournament in the DB.
 exports.create = function(req, res) {
 
@@ -184,6 +226,7 @@ exports.games = function(req, res) {
   Gameresults.gameStats(query, function(err, gameStats) {
     res.json(gameStats.length == 1 ? gameStats[0] : gameStats);
   });
+
 };
 
 

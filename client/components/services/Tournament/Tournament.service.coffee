@@ -78,6 +78,9 @@ angular.module 'boardgametournamentApp'
 
   getAll: -> tournaments
 
+  getUsers: ->
+    request "/api/tournaments/#{activeTournament._id}/users"
+
   getScores: (player)->
     request "/api/scores/#{activeTournament._id}"
 
@@ -118,6 +121,7 @@ angular.module 'boardgametournamentApp'
           callback()
 
   getPlayer: ->
+    if not activeTournament then return
     player = _.find(activeTournament.members, (member)-> member._user == Auth.getCurrentUser()._id)
 
   canEdit: (callback)->

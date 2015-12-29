@@ -9,13 +9,15 @@ angular.module 'boardgametournamentApp'
   $scope.isAdmin = Auth.isAdmin
   $scope.getCurrentUser = Auth.getCurrentUser
 
-  $scope.getUnread = ->
+  getUnread = ->
     Auth.isLoggedInAsync (loggedIn)->
       if loggedIn
         Message.count (res)->
           $scope.unreadMessagesCount = res.unread
       else
         $scope.unread = 0
+
+  getUnread()
 
   $scope.logout = ->
     Auth.logout()
