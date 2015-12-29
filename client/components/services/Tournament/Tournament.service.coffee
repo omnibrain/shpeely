@@ -117,6 +117,9 @@ angular.module 'boardgametournamentApp'
         else
           callback()
 
+  getPlayer: ->
+    player = _.find(activeTournament.members, (member)-> member._user == Auth.getCurrentUser()._id)
+
   canEdit: (callback)->
     @getOwnActivePlayer (player)->
       if player then callback player.role in ['member', 'admin'] else callback(false)

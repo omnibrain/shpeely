@@ -6,7 +6,6 @@ angular.module 'boardgametournamentApp'
   $scope.loading = true
 
   $scope.reverse = false
-
   $scope.columns = [
     {name: 'Player', sortKey: 'player.name'}
     {name: 'Games', sortKey: 'games'}

@@ -29,6 +29,9 @@ angular.module 'boardgametournamentApp'
   $scope.$watch Tournament.getAll, (newValue, oldValue)->
     $scope.tournaments = newValue
 
+  $scope.getPlayer = Tournament.getPlayer
   $scope.activeTournament = Tournament.getActive
+  $scope.getRole = ->
+    Tournament.getPlayer()?.role
 
 

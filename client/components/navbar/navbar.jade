@@ -26,17 +26,21 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
         li.dropdown(ng-show='activeTournament()', ng-click='tournamentDropdownOpen = !tournamentDropdownOpen', ng-class='{"open": tournamentDropdownOpen}')
           a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='true') #[strong.text-success {{activeTournament().name}}] #[span.caret]
           ul.dropdown-menu
-            li(ui-sref-active='active')
+            li
               a(ui-sref='tournaments.tournament') Overview
             li.divider(role='separator')
-            li(ng-show='activeTournament()', ui-sref-active='active')
+            li(ui-sref-active='active')
               a(ui-sref='tournaments.tournament.games') Games
 
-            li(ng-show='activeTournament()', ui-sref-active='active')
+            li(ui-sref-active='active')
               a(ui-sref='tournaments.tournament.players') Players
 
-            li(ng-show='activeTournament()', ui-sref-active='active')
+            li(ui-sref-active='active')
               a(ui-sref='tournaments.tournament.gameresults') Results
+
+            li.divider(role='separator', ng-show='getRole() == "admin"')
+            li(ui-sref-active='active', ng-show='getRole() == "admin"')
+              a(ui-sref='tournaments.tournament.dashboard') Admin Dashboard
 
       ul.nav.navbar-nav.navbar-right
 
