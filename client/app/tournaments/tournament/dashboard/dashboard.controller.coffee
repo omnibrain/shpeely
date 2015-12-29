@@ -24,7 +24,6 @@ angular.module 'boardgametournamentApp'
   getUsers = ->
     Tournament.getUsers().then (users)->
       connectedPlayers = _.filter $scope.activeTournament.members, (member)-> member._user
-      console.log connectedPlayers
       $scope.users = _.map users, (user)->
         user.player = _.find connectedPlayers, (player)-> player._user == user._id
         return user
