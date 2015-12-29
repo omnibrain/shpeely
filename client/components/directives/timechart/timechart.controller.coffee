@@ -58,7 +58,8 @@ angular.module 'boardgametournamentApp'
             point:
               events:
                 click: (e)->
-                  $state.go 'tournament.gameresults.gameresult', {gameresult: this.gameresult}
+                  $state.go '.gameresults.gameresult',
+                    gameresult: this.gameresult
           line:
             marker:
               enabled: false
