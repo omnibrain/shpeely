@@ -10,8 +10,8 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
 
     div#navbar-main.navbar-collapse.collapse(collapse='isCollapsed')
       ul.nav.navbar-nav
-        //-li(ng-repeat='item in menu', ng-class='{active: isActive(item.link)}')
-          //-a(ui-sref='{{item.state}}') {{item.title}}
+        //-li
+          //-a(href='#') {{getRole()}}
 
         li.dropdown(ng-show='isLoggedIn()', ng-click='dropdownOpen = !dropdownOpen', ng-class='{"open": dropdownOpen}')
           a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='true') My Tournaments #[span.caret]

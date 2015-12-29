@@ -115,14 +115,16 @@ angular.module 'boardgametournamentApp'
         if loggedIn
           tournament = _.find(tournaments, (tournament)-> tournament._id == tournamentId)
           if not tournament then return callback()
-          player = _.find(tournament.members, (member)-> member._user == Auth.getCurrentUser()._id)
+          player = _.find(tournament.members, (member)->
+            member._user and member._user == Auth.getCurrentUser()._id)
           callback player
         else
           callback()
 
   getPlayer: ->
     if not activeTournament then return
-    player = _.find(activeTournament.members, (member)-> member._user == Auth.getCurrentUser()._id)
+    player = _.find(activeTournament.members, (member)->
+      member._user and member._user == Auth.getCurrentUser()._id)
 
   canEdit: (callback)->
     @getOwnActivePlayer (player)->
