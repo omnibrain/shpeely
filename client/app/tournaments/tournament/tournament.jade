@@ -34,17 +34,17 @@ ui-view
           bgginfo(bgginfo='bgginfo')
 
     // charts...
-    .row
+    .row(ng-show='gameResults.length')
       .col-md-12
         h3 Scores
       .col-md-12
         scorechart(scores='scores')
-    .row
+    .row(ng-show='gameResults.length')
       .col-md-12
         h3 Performance over Time
       .col-md-12
         timechart(time-series='timeSeries')
-    .row
+    .row(ng-show='gameResults.length')
       .col-md-12
         h3 Latest Games
       .col-md-6(ng-repeat='gameresult in gameResults | limitTo:6')

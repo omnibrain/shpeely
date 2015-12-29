@@ -18,8 +18,8 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
           ul.dropdown-menu
             li
               a(ui-sref='tournaments') Overview
-            li.divider(role='separator')
-            li.dropdown-header Shortcuts
+            li.divider(role='separator', ng-show='tournaments.length')
+            li.dropdown-header(ng-show='tournaments.length') Shortcuts
             li(ng-repeat='tournament in tournaments | limitTo:10', ui-sref-active='active')
               a(ui-sref='tournaments.tournament({slug:tournament.slug})') {{tournament.name}}
 

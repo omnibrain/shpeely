@@ -18,3 +18,9 @@ ui-view
     .row
       .col-md-4(ng-repeat='tournament in myTournaments track by tournament.slug | orderBy:"-lastEdit"')
         tournament-callout(on-remove='deleteTournament(tournament)', tournament='tournament')
+    .row(ng-hide='tournaments.length || alertClosed')
+      .col-md-12
+        alert(close='alertClosed = true', type='info')
+          p You are not member of any tournaments yet...
+
+
