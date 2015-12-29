@@ -104,8 +104,7 @@ exports.mine = function(req, res) {
 
 }
 
-// returns all users of this tournament
-exports.users = function(req, res) {
+function isAdmin(req, res, next) {
 
   Tournament
     .findById(req.params.id)
@@ -119,30 +118,43 @@ exports.users = function(req, res) {
         return member._user.toHexString() == req.user._id.toHexString() && member.role == 'admin';
       })) {
         // user is not an admin
-        return res.json(403, {err: 'Only admins can see the users of a tournament'});
+        return res.json(403, {err: 'Only admins can perform this action.'});
       }
 
-      // all good -> return users
-      var users = _.chain(tournament.members)
-        .filter(function(member) {
-          return !!member._user; 
-        })
-        .pluck('_user')
-        .map(function(userId) {
-          return mongoose.Types.ObjectId(userId);
-        })
-        .value();
+      // all good
+      next(req, res);
 
-      User.find({_id: {$in: users}}, 'name email')
-        .exec(function(err, users) {
-          if(err) {return handleError(err)}
-          if(!users) {return res.send(404)}
+  });
+}
 
-          res.json(200, users);
-      });
-      
-  })
+// returns all users of this tournament
+exports.users = function(req, res) {
 
+  isAdmin(req, res, function(req, res) {
+
+    Tournament.findById(req.params.id)
+      .populate('members')
+      .exec(function(err, tournament) {
+        // all good -> return users
+        var users = _.chain(tournament.members)
+          .filter(function(member) {
+            return !!member._user; 
+          })
+          .pluck('_user')
+          .map(function(userId) {
+            return mongoose.Types.ObjectId(userId);
+          })
+          .value();
+
+        User.find({_id: {$in: users}}, 'name email')
+          .exec(function(err, users) {
+            if(err) {return handleError(err)}
+            if(!users) {return res.send(404)}
+
+            res.json(200, users);
+        });
+    });
+  });
 }
 
 
@@ -285,12 +297,14 @@ exports.update = function(req, res) {
 
 // Deletes a tournament from the DB.
 exports.destroy = function(req, res) {
-  Tournament.findById(req.params.id, function (err, tournament) {
-    if(err) { return handleError(res, err); }
-    if(!tournament) { return res.send(404); }
-    tournament.remove(function(err) {
+  isAdmin(req, res, function(req, res) {
+    Tournament.findById(req.params.id, function (err, tournament) {
       if(err) { return handleError(res, err); }
-      return res.send(204);
+      if(!tournament) { return res.send(404); }
+      tournament.remove(function(err) {
+        if(err) { return handleError(res, err); }
+        return res.send(204);
+      });
     });
   });
 };

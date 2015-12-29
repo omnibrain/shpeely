@@ -28,7 +28,8 @@ angular.module 'boardgametournamentApp'
       $scope.foundTournaments = found
 
   $scope.deleteTournament = (tournament)->
-    Tournament.delete(tournament).then ->
+    Tournament.delete(tournament).then (res)->
+      console.log res
       _.remove $scope.allTournaments, (t)-> t._id == tournament._id
       _.remove $scope.foundTournaments, (t)-> t._id == tournament._id
 
