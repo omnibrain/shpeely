@@ -30,7 +30,7 @@ exports.create = function(req, res) {
   });
 };
 
-function isAdmin(req, res, next) {
+function hasPermission(req, res, next) {
 
   if(!req.body.player) {
       return res.json(400, {msg: 'player id missing'});
@@ -41,7 +41,7 @@ function isAdmin(req, res, next) {
       return res.json(400, {msg: 'Player ' + player._id + ' is not connected to a user'});
     }
 
-    if(req.user._id != req.body.player) {
+    if(req.user._id != player._user.toHexString()) {
       // User requesting disconnection is not connected to that player!
       // Check if the player requesting the disconnection is an admin. 
 
@@ -78,7 +78,7 @@ function isAdmin(req, res, next) {
 // disconnects a player from a user
 exports.disconnect = function(req, res) {
 
-  isAdmin(req, res, function(req, res) {
+  hasPermission(req, res, function(req, res) {
 
     Player.findById(req.body.player, function(err, player) {
       if(!player) { return res.json(404, 'No player found with id' + req.body.player); }
@@ -95,7 +95,7 @@ exports.disconnect = function(req, res) {
 };
 
 exports.promote = function(req, res) {
-  isAdmin(req, res, function(req, res) {
+  hasPermission(req, res, function(req, res) {
     Player.findById(req.body.player, function(err, player) {
       if(!player) { return res.json(404, 'No player found with id' + req.body.player); }
       if (err) { return handleError(res, err); }
@@ -113,7 +113,7 @@ exports.promote = function(req, res) {
 
 
 exports.demote = function(req, res) {
-  isAdmin(req, res, function(req, res) {
+  hasPermission(req, res, function(req, res) {
     Player.findById(req.body.player, function(err, player) {
       if(!player) { return res.json(404, 'No player found with id' + req.body.player); }
       if (err) { return handleError(res, err); }
