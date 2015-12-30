@@ -20,8 +20,8 @@ angular.module 'boardgametournamentApp'
           type: 'column'
         exporting:
           enabled: false
-        credits:
-          enabled: false
+        #credits:
+          #enabled: false
       # higharts-ng options
       title:
         text: ''

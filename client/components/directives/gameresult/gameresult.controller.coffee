@@ -68,8 +68,8 @@ angular.module 'boardgametournamentApp'
             text: ''
           exporting:
             enabled: false
-          credits:
-            enabled: false
+          #credits:
+            #enabled: false
           yAxis:
             allowDecimals: false
             min: 0

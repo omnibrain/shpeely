@@ -22,8 +22,8 @@ angular.module 'boardgametournamentApp'
       options:
         chart:
           type: 'line'
-        credits:
-          enabled: false
+        #credits:
+          #enabled: false
         tooltip:
           borderRadius: 0
           borderWidth: 0
