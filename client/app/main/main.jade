@@ -2,9 +2,12 @@ div(ng-include='"components/navbar/navbar.html"')
 
 header#banner.hero-unit
   .container
-    h1 Boardgame Tournament
+    img.trophy(src='assets/images/trophy2.svg', alt='Shpeely Logo')
+    h1.title Shpeely
     p.lead {{lead}}
-    img.trophy(src='assets/images/trophy2.svg', alt='Boardgame Tournament Trophy')
+    .button-wrapper
+      a.btn.btn-primary(ui-sref='signup') Sign Up
+      a.btn.btn-default(ui-sref='login') Login
 
 .container
   .row
