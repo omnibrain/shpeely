@@ -13,6 +13,7 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
         //-li
           //-a(href='#') {{getRole()}}
 
+        // tournaments navigation
         li.dropdown(ng-show='isLoggedIn()', ng-click='dropdownOpen = !dropdownOpen', ng-class='{"open": dropdownOpen}')
           a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='true') My Tournaments #[span.caret]
           ul.dropdown-menu
@@ -23,11 +24,12 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
             li(ng-repeat='tournament in tournaments | limitTo:10', ui-sref-active='active')
               a(ui-sref='tournaments.tournament({slug:tournament.slug})') {{tournament.name}}
 
+        // active tournament navigation
         li.dropdown(ng-show='activeTournament()', ng-click='tournamentDropdownOpen = !tournamentDropdownOpen', ng-class='{"open": tournamentDropdownOpen}')
           a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='true') #[strong.text-success {{activeTournament().name}}] #[span.caret]
           ul.dropdown-menu
             li
-              a(ui-sref='tournaments.tournament') Overview
+              a(ui-sref='tournaments.tournament({slug: activeTournament().slug})') Overview
             li.divider(role='separator')
             li(ui-sref-active='active')
               a(ui-sref='tournaments.tournament.games({slug: activeTournament().slug})') Games
