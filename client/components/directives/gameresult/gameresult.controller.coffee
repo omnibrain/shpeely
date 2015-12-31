@@ -1,10 +1,18 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'GameResultCtrl', ($scope, Tournament, $timeout, $http) ->
+.controller 'GameResultCtrl', ($scope, Tournament, $timeout, $http, $window) ->
 
   $scope.chartLoading = true
   $scope.deleted = false
+
+  # the chart style is the inline style of the chart container before the chart has loaded.
+  # This is necessary, because there is a problem with highcharts where the width is not 
+  # and this causes a strange effect on mobile where the chart is overlapping the 
+  # screen for a short time. Wow I'm not good at explaining...
+  $scope.chartStyle =
+    width: $window.innerWidth - 50 + 'px'
+    display: 'none'
 
   loaded = false
 
@@ -62,6 +70,7 @@ angular.module 'boardgametournamentApp'
         options:
           chart:
             type: 'bar'
+            height: 240
           title:
             text: ''
           subtitle:
@@ -92,11 +101,11 @@ angular.module 'boardgametournamentApp'
           categories: players
           title:
             text: ''
-        size:
-          height: 230
-          width: 500
+        func: (c)->
+          $scope.chartLoading = false
+          $scope.chartStyle = {}
+          $timeout (-> c.reflow()), 0
       
-      $scope.chartLoading = false
 
   
   showChart($scope.gameresult)

@@ -20,9 +20,9 @@
           li(role='menuitem', ng-hide='ownRole != "admin"')
             a(href='#', ng-click='delete()') Delete
 
-      p.game-date.pull-right(style='margin-right: 10px;') {{gameresult.time | date:"short"}}
+      p.game-date.pull-right(style='margin-right: 10px;') {{gameresult.time | date:"mediumDate"}}
     .panel-body
-      highchart(config='gameresultChartConfig')
+      highchart.animated.animated-delay.ng-hide(ng-show='!chartLoading', ng-style='chartStyle', config='gameresultChartConfig')
 
 .loading-container.gameresult-container(ng-show='chartLoading')
   .loading
