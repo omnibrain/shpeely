@@ -1,8 +1,12 @@
 
 angular.module 'boardgametournamentApp'
-.controller 'ScoreChartCtrl', ($scope, $timeout) ->
+.controller 'ScoreChartCtrl', ($scope, $timeout, $window) ->
 
   $scope.chartLoading = true
+
+  $scope.scoreChartStyle =
+    width: $window.innerWidth - 50 + 'px'
+    display: 'none'
 
   createChart = (scores)->
     if not scores then return
@@ -36,8 +40,9 @@ angular.module 'boardgametournamentApp'
         title:
           text: 'Score'
       func: (c)->
-        $timeout (-> c.reflow()), 0
         $scope.chartLoading = false
+        $scope.scoreChartStyle = {}
+        $timeout (-> c.reflow()), 0
 
   $scope.$watch 'scores', createChart
   createChart($scope.scores)

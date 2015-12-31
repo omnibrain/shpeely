@@ -1,9 +1,13 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'TimeChartCtrl', ($scope, $timeout, $http, $sanitize, $state) ->
+.controller 'TimeChartCtrl', ($scope, $timeout, $http, $sanitize, $state, $window) ->
 
   $scope.chartLoading = true
+
+  $scope.timeChartStyle =
+    width: $window.innerWidth - 50 + 'px'
+    display: 'none'
 
   showHideAll = (show)->
     chart = $scope.timechartConfig.getHighcharts()
@@ -74,8 +78,9 @@ angular.module 'boardgametournamentApp'
           text: 'Score'
       series: timeSeries
       func: (c)->
-        $timeout (-> c.reflow()), 0
         $scope.chartLoading = false
+        $scope.timeChartStyle = {}
+        $timeout (-> c.reflow()), 0
 
   # create the chart
   $scope.$watch 'timeSeries', createChart

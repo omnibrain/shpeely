@@ -1,5 +1,5 @@
 .chart-container.timechart-container.animated.animated-delay.ng-hide(ng-hide='chartLoading')
-  highchart#timechart(config='timechartConfig')
+  highchart#timechart(ng-style='timeChartStyle', config='timechartConfig')
   .row
     .col-md-12.chart-controls
       button.btn.btn-sm.btn-primary(ng-click='hideAll()') Hide All
