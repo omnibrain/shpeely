@@ -11,7 +11,7 @@ angular.module 'boardgametournamentApp'
   # and this causes a strange effect on mobile where the chart is overlapping the 
   # screen for a short time. Wow I'm not good at explaining...
   $scope.chartStyle =
-    width: $window.innerWidth - 50 + 'px'
+    width: Math.min($window.innerWidth - 50, 400) + 'px'
     display: 'none'
 
   loaded = false
@@ -102,9 +102,14 @@ angular.module 'boardgametournamentApp'
           title:
             text: ''
         func: (c)->
-          $scope.chartLoading = false
           $scope.chartStyle = {}
-          $timeout (-> c.reflow()), 0
+          $timeout ->
+            $scope.chartLoading = false
+            c.reflow()
+          , 0
+          $timeout ->
+            $(window).resize()
+          , 1000
       
 
   

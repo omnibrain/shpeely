@@ -5,7 +5,7 @@
 .chart-container.gameresult-container(ng-hide='chartLoading', ng-if='!deleted')
   .panel.panel-default.panel-gameresult
     .panel-heading
-      h4 #[strong {{(gameresult.game.name | limitTo:38) + (gameresult.game.name.length > 50 ? "..." : "") }}] ({{gameresult.scores.length}} Players)
+      h4 #[strong {{gameresult.game.name | characters:30 }}] ({{gameresult.scores.length}} Players)
       .btn-group.pull-right(dropdown='', is-open='status.isopen')
         button#single-button.btn.btn-default.btn-xs(type='button', dropdown-toggle='', ng-disabled='disabled')
           | More...
