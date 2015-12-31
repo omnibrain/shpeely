@@ -1,9 +1,11 @@
 'use strict'
 
 angular.module 'boardgametournamentApp'
-.controller 'MainCtrl', ($scope, $http, Tournament) ->
+.controller 'MainCtrl', ($scope, $http, Tournament, Auth) ->
 
   $scope.allTournaments = []
+
+  $scope.isLoggedIn = Auth.isLoggedIn
 
   $scope.lead = _.sample [
     'Forget everything you thought was important. This is what counts now.',
