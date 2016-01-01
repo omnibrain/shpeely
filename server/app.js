@@ -7,6 +7,9 @@
 // Set default node environment to development
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
+var fs = require('fs');
+var path = require('path');
+
 var express = require('express');
 var mongoose = require('mongoose');
 var config = require('./config/environment');
@@ -22,7 +25,18 @@ if(process.env.MIGRATE_SPILI) { require('./config/spilimigration'); }
 
 // Setup server
 var app = express();
-var server = require('http').createServer(app);
+
+// Start HTTPS server if credentials are available
+var server;
+if(process.env.SSL_KEY && process.env.SSL_CERT) {
+  server = require('https').createServer({
+    key: fs.readFileSync(process.env.SSL_KEY),
+    cert: fs.readFileSync(process.env.SSL_CERT),
+  }, app);
+} else {
+  server = require('http').createServer(app);
+}
+
 require('./config/express')(app);
 require('./routes')(app);
 
