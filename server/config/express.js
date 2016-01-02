@@ -18,7 +18,6 @@ var passport = require('passport');
 var session = require('express-session');
 var mongoStore = require('connect-mongo')(session);
 var mongoose = require('mongoose');
-var forceSSL = require('express-force-ssl');
 
 module.exports = function(app) {
 
