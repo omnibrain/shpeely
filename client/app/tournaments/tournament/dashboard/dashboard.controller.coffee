@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .controller 'DashboardCtrl', ($scope, Tournament, $http) ->
 
   $scope.reverse = false

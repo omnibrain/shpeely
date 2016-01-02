@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .service 'Tournament', ($state, $http, Auth, $q, $stateParams)->
 
   activeTournament = null

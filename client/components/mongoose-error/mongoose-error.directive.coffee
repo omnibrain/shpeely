@@ -3,7 +3,7 @@
 ###
 Removes server error when user updates input
 ###
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .directive 'mongooseError', ->
   restrict: 'A'
   require: 'ngModel'

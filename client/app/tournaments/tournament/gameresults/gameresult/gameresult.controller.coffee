@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .controller 'GameresultCtrl', ($scope, GameResult, $stateParams, $http) ->
 
   GameResult.get {id: $stateParams.gameresult}, (gameresult)->

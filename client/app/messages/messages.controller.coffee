@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .controller 'MessagesCtrl', ($scope, $http, Message, $timeout) ->
 
   getMessages = ->

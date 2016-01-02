@@ -3,7 +3,7 @@
 describe 'Directive: bgginfo', ->
 
   # load the directive's module and view
-  beforeEach module 'boardgametournamentApp'
+  beforeEach module 'shpeelyApp'
   beforeEach module 'components/bgginfo/bgginfo.html'
   element = undefined
   scope = undefined

@@ -1,5 +1,5 @@
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .controller 'ScoreChartCtrl', ($scope, $timeout, $window) ->
 
   $scope.chartLoading = true

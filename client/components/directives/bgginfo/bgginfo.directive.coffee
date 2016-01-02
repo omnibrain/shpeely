@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .directive 'bgginfo', ->
   templateUrl: 'components/directives/bgginfo/bgginfo.html'
   restrict: 'E'

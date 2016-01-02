@@ -3,7 +3,7 @@
 describe 'Service: ActiveTournament', ->
 
   # load the service's module
-  beforeEach module 'boardgametournamentApp'
+  beforeEach module 'shpeelyApp'
 
   # instantiate service
   ActiveTournament = undefined

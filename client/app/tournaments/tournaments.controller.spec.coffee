@@ -3,7 +3,7 @@
 describe 'Controller: TournamentsCtrl', ->
 
   # load the controller's module
-  beforeEach module 'boardgametournamentApp'
+  beforeEach module 'shpeelyApp'
   TournamentsCtrl = undefined
   scope = undefined
 

@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .directive 'playerlink', ->
   templateUrl: 'components/directives/playerlink/playerlink.html'
   restrict: 'E'

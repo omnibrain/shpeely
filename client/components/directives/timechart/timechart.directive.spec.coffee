@@ -3,7 +3,7 @@
 describe 'Directive: scorechart', ->
 
   # load the directive's module and view
-  beforeEach module 'boardgametournamentApp'
+  beforeEach module 'shpeelyApp'
   beforeEach module 'components/directives/scorechart/scorechart.html'
   element = undefined
   scope = undefined

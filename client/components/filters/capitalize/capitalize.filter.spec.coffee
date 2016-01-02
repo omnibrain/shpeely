@@ -3,7 +3,7 @@
 describe 'Filter: capitalize', ->
 
   # load the filter's module
-  beforeEach module 'boardgametournamentApp'
+  beforeEach module 'shpeelyApp'
 
   # initialize a new instance of the filter before each test
   capitalize = undefined

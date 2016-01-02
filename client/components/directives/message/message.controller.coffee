@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .controller 'MessageCtrl', ($scope, Message) ->
 
   $scope.acceptMembershipRequest = ->

@@ -1,4 +1,4 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .controller 'PlayerlinkCtrl', ($scope) ->

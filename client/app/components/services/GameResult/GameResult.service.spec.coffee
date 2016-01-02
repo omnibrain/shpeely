@@ -3,7 +3,7 @@
 describe 'Service: GameResult', ->
 
   # load the service's module
-  beforeEach module 'boardgametournamentApp'
+  beforeEach module 'shpeelyApp'
 
   # instantiate service
   GameResult = undefined

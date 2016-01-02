@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .controller 'LoginCtrl', ($scope, Auth, $location, $window, Tournament) ->
   $scope.user = {}
   $scope.errors = {}

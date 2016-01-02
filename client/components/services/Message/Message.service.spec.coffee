@@ -3,7 +3,7 @@
 describe 'Service: Message', ->
 
   # load the service's module
-  beforeEach module 'boardgametournamentApp'
+  beforeEach module 'shpeelyApp'
 
   # instantiate service
   Message = undefined

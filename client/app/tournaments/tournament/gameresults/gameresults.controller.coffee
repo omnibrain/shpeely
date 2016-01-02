@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .controller 'GameresultsCtrl', ($scope, Tournament) ->
 
   $scope.limitTo = 10

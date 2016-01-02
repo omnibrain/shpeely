@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .controller 'GameResultCtrl', ($scope, Tournament, $timeout, $http, $window) ->
 
   $scope.chartLoading = true

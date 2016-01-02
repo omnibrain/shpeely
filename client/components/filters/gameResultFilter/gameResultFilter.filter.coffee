@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .filter 'gameResultFilter', ->
   (gameResults, search) ->
 

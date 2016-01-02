@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .controller 'TournamentCalloutCtrl', ($scope, Tournament, ngDialog, $http, Auth) ->
 
   $scope.claimablePlayers = _.filter $scope.tournament.members, (member)-> !member._user

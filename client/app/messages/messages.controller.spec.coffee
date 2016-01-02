@@ -3,7 +3,7 @@
 describe 'Controller: MessagesCtrl', ->
 
   # load the controller's module
-  beforeEach module 'boardgametournamentApp'
+  beforeEach module 'shpeelyApp'
   MessagesCtrl = undefined
   scope = undefined
 

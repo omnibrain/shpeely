@@ -3,7 +3,7 @@
 describe 'Controller: DashboardCtrl', ->
 
   # load the controller's module
-  beforeEach module 'boardgametournamentApp'
+  beforeEach module 'shpeelyApp'
   DashboardCtrl = undefined
   scope = undefined
 

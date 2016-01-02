@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .controller 'TournamentCtrl', ($scope, $stateParams, BggApi, $timeout, Auth, $http, Tournament) ->
 
   DEFAUL_NUM_PLAYERS = 4

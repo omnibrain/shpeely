@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .controller 'TimeChartCtrl', ($scope, $timeout, $http, $sanitize, $state, $window) ->
 
   $scope.chartLoading = true

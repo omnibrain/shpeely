@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .service 'BggApi', ($http, $q)->
 
   BASE_URL = '/api/bgg'

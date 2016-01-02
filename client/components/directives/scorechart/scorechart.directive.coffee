@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .directive 'scorechart', ->
   templateUrl: 'components/directives/scorechart/scorechart.html'
   restrict: 'EA'

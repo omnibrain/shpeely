@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .controller 'GameCtrl', ($scope, $http, $stateParams, BggApi, Tournament) ->
 
   bggid = Number($stateParams.bggid)

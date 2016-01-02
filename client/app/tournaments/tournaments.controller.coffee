@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .controller 'TournamentsCtrl', ($scope, $log, $http, Auth, Tournament, $state) ->
 
   $scope._ = _

@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module 'boardgametournamentApp'
+angular.module 'shpeelyApp'
 .controller 'GameResultEditCtrl', ($scope, GameResult, BggApi, $http, Tournament, $timeout, $state) ->
 
   # WARNING:  this controller is quite the hack. Basically

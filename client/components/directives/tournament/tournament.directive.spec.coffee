@@ -3,7 +3,7 @@
 describe 'Directive: tournament', ->
 
   # load the directive's module and view
-  beforeEach module 'boardgametournamentApp'
+  beforeEach module 'shpeelyApp'
   beforeEach module 'components/directives/tournament/tournament.html'
   element = undefined
   scope = undefined
