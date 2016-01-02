@@ -26,24 +26,37 @@ if(process.env.MIGRATE_SPILI) { require('./config/spilimigration'); }
 // Setup server
 var app = express();
 
+require('./config/express')(app);
+require('./routes')(app);
+
 // Start HTTPS server if credentials are available
 var server;
-if(process.env.SSL_KEY && process.env.SSL_CERT) {
+
+if(process.env.PROTOCOL == 'https') {
+
+  if(!process.env.SSL_KEY || !process.env.SSL_CERT) {
+    throw new Error('SSL_KEY and SSL_CERT need to be set when using https');
+    return;
+  }
+
   server = require('https').createServer({
     key: fs.readFileSync(process.env.SSL_KEY),
     cert: fs.readFileSync(process.env.SSL_CERT),
   }, app);
+
+  // set up http server that redirects all requests to the https server
+  require('http').createServer(app).listen(config.port);
+
 } else {
   server = require('http').createServer(app);
 }
 
-require('./config/express')(app);
-require('./routes')(app);
-
 // Start server
-server.listen(config.port, config.ip, function () {
-  console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
+var port = process.env.PROTOCOL == 'https' ? config.securePort : config.port;
+server.listen(port, config.ip, function () {
+  console.log('Express server listening on %d, in %s mode', port, app.get('env'));
 });
+
 
 // Expose app
 exports = module.exports = app;

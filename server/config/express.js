@@ -18,12 +18,28 @@ var passport = require('passport');
 var session = require('express-session');
 var mongoStore = require('connect-mongo')(session);
 var mongoose = require('mongoose');
+var forceSSL = require('express-force-ssl');
 
 module.exports = function(app) {
+
+  // redirect all http requests to https if protocol is https
+  if (process.env.PROTOCOL == 'https') {
+    app.use(function(req, res, next) {
+      if (!req.secure) {
+        var securePortString = config.securePort != 443 ? ':' + config.securePort : '';
+        var portString = config.port != 80 ? ':' + config.port : '';
+        var host = req.get('host').replace(new RegExp(portString), securePortString);
+        return res.redirect('https://' + host + req.url);
+      }
+      next();
+    });
+  }
+
   var env = app.get('env');
 
   app.set('views', config.root + '/server/views');
   app.set('view engine', 'jade');
+
   app.use(compression());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
@@ -55,4 +71,6 @@ module.exports = function(app) {
     app.use(morgan('dev'));
     app.use(errorHandler()); // Error handler - has to be last
   }
+
+  
 };
