@@ -28,5 +28,5 @@ module.exports = {
               'mongodb://localhost/boardgametournament'
   },
 
-  seedDB: true
+  seedDB: false
 };

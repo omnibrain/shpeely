@@ -3,21 +3,9 @@ div(ng-include='"components/navbar/navbar.html"')
   .row
     .col-sm-12
       h1 Login
-      p
-        | Accounts are reset on server restart from
-        code server/config/seed.js
-        | . Default account is
-        code test@test.com
-        | /
-        code test
-      p
-        | Admin account is
-        code admin@admin.com
-        | /
-        code admin
 
     .col-sm-12
-      form.form(name='form', ng-submit='login(form)', novalidate='')
+      form.form.login-form(name='form', ng-submit='login(form)', novalidate='')
         .form-group
           label Email
           input.form-control(type='text', name='email', ng-model='user.email')
@@ -31,11 +19,10 @@ div(ng-include='"components/navbar/navbar.html"')
           p.help-block {{ errors.other }}
 
         div
-          button.btn.btn-inverse.btn-login(type='submit')
+          button.btn.btn-primary.btn-login(type='submit')
             | Login
           = ' '
-          a.btn.btn-default.btn-register(href='/signup')
-            | Register
+        p.alternative-action Don't have an account yet? #[a(ui-sref='signup') Sign up here] .
 
         hr
 
