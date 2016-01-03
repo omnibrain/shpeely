@@ -149,7 +149,7 @@ BGGData.prototype.info = function (bggid, cb) {
       return cb(null, val);
     }
 
-    self.load(bggid, cb);
+    self.loadInfo(bggid, cb);
 
   });
 };
