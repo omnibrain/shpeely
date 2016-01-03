@@ -57,6 +57,7 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
         li(ng-show='unreadMessagesCount', ui-sref-active='active')
           a(ui-sref='messages')
             .fa.fa-envelope
+            | Messages
             .label.label-warning.message-count-label(ng-show='unreadMessagesCount', style='margin-left: 4px;') {{unreadMessagesCount}}
 
         // account dropdown
