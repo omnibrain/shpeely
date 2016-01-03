@@ -17,7 +17,8 @@ module.exports = function (grunt) {
     cdnify: 'grunt-google-cdn',
     protractor: 'grunt-protractor-runner',
     injector: 'grunt-asset-injector',
-    buildcontrol: 'grunt-build-control'
+    buildcontrol: 'grunt-build-control',
+    ngconstant: 'grunt-ng-constant'
   });
 
   // Time how long tasks take. Can help when optimizing build times
@@ -110,7 +111,8 @@ module.exports = function (grunt) {
         tasks: ['karma']
       },
       gruntfile: {
-        files: ['Gruntfile.js']
+        files: ['Gruntfile.js'],
+        tasks: ['ngconstant']
       },
       livereload: {
         files: [
@@ -606,6 +608,23 @@ module.exports = function (grunt) {
         }
       }
     },
+
+    // client configuration
+    ngconstant: {
+      options: {
+        name: 'client-config',
+        dest: '<%= yeoman.client %>/app/app.config.js',
+        constants: {
+          config: {
+            env: process.env.NODE_ENV || 'development',
+            recaptchaSitekey: process.env.RECAPTCHA_SITEKEY
+          }
+        }
+      },
+      default: {
+
+      }
+    }
   });
 
   // Used for delaying livereload until after server has restarted
@@ -626,11 +645,12 @@ module.exports = function (grunt) {
 
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
-      return grunt.task.run(['build', 'env:all', 'env:prod', 'express:prod', 'wait', 'open', 'express-keepalive']);
+      return grunt.task.run(['ngconstant', 'build', 'env:all', 'env:prod', 'express:prod', 'wait', 'open', 'express-keepalive']);
     }
 
     if (target === 'debug') {
       return grunt.task.run([
+        'ngconstant',
         'clean:server',
         'env:all',
         'injector:less', 
@@ -643,6 +663,7 @@ module.exports = function (grunt) {
     }
 
     grunt.task.run([
+      'ngconstant',
       'clean:server',
       'env:all',
       'injector:less', 
@@ -665,6 +686,7 @@ module.exports = function (grunt) {
   grunt.registerTask('test', function(target) {
     if (target === 'server') {
       return grunt.task.run([
+        'ngconstant',
         'env:all',
         'env:test',
         'mochaTest'
@@ -673,6 +695,7 @@ module.exports = function (grunt) {
 
     else if (target === 'client') {
       return grunt.task.run([
+        'ngconstant',
         'clean:server',
         'env:all',
         'injector:less', 
@@ -685,6 +708,7 @@ module.exports = function (grunt) {
 
     else if (target === 'e2e') {
       return grunt.task.run([
+        'ngconstant',
         'clean:server',
         'env:all',
         'env:test',
@@ -699,12 +723,14 @@ module.exports = function (grunt) {
     }
 
     else grunt.task.run([
+      'ngconstant',
       'test:server',
       'test:client'
     ]);
   });
 
   grunt.registerTask('build', [
+    'ngconstant',
     'clean:dist',
     'injector:less', 
     'concurrent:dist',
@@ -724,6 +750,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('default', [
+    'ngconstant',
     'newer:jshint',
     'test',
     'build'

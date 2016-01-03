@@ -51,7 +51,8 @@
 // VARIABLES
 @font-size-xs:         ceil((@font-size-small * 0.85)); // ~12px
 
-@alert-link-color: darken(@brand-warning, 20%);
+@alert-danger-link-color: darken(@brand-warning, 20%);
+@alert-info-link-color: darken(@brand-info, 25%);
 
 
 // GLOBAL STYLES
@@ -96,11 +97,20 @@
 	color: #fff;
 }
 
+// TODO: create mixin for this...
 .alert-warning {
 	a {
-		color: @alert-link-color;
+		color: @alert-danger-link-color;
 		&:hover {
-			color: darken(@alert-link-color, 5%);
+			color: darken(@alert-danger-link-color, 5%);
+		}
+	}
+}
+.alert-info {
+	a {
+		color: @alert-info-link-color;
+		&:hover {
+			color: darken(@alert-info-link-color, 10%);
 		}
 	}
 }

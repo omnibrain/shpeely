@@ -6,6 +6,8 @@ angular.module 'shpeelyApp'
   $scope._ = _
   $scope.user = Auth.getCurrentUser()
   $scope.isLoggedIn = Auth.isLoggedIn
+
+  Tournament.reload()
   $scope.tournaments = Tournament.getAll()
 
   $scope.$watch Tournament.getAll, (newValue, oldValue)->
@@ -21,5 +23,3 @@ angular.module 'shpeelyApp'
     Tournament.delete(tournament).then ->
       _.remove $scope.myTournaments, (t)-> t._id == tournament._id
 
-  $scope.connectToTournament = (tournament)->
-    # TODO

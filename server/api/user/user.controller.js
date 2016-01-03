@@ -10,6 +10,17 @@ var validationError = function(res, err) {
   return res.json(422, err);
 };
 
+var createUser = function(req, res) {
+  var newUser = new User(req.body);
+  newUser.provider = 'local';
+  newUser.role = 'user';
+  newUser.save(function(err, user) {
+    if (err) return validationError(res, err);
+    var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
+    res.json({token: token });
+  });
+};
+
 /**
  * Get list of users
  * restriction: 'admin'
@@ -21,17 +32,15 @@ exports.index = function(req, res) {
   });
 };
 
+
 /**
  * Creates a new user
  */
 exports.create = function (req, res, next) {
 
-  console.log('create user!');
-
   // validate recaptcha
-  if(config.recaptchaSecret) {
+  if(config.recaptchaSecret && config.recaptchaSitekey) {
 
-    console.log('sending response');
     var data = {
       secret: config.recaptchaSecret,
       response: req.body.recaptcha,
@@ -43,14 +52,7 @@ exports.create = function (req, res, next) {
       try {
         if(JSON.parse(body).success) {
           // success! Create user...
-          var newUser = new User(req.body);
-          newUser.provider = 'local';
-          newUser.role = 'user';
-          newUser.save(function(err, user) {
-            if (err) return validationError(res, err);
-            var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
-            res.json({token: token });
-          });
+          createUser(req, res);
         } else {
           console.log('Invalid captcha response was provided.');
           res.json(400, {err: 'Invalid captcha'});
@@ -59,8 +61,10 @@ exports.create = function (req, res, next) {
         res.json(500, {err: err});
       }
     });
+  } else {
+    // recaptcha is not configured -> proceed
+    createUser(req, res);
   }
-
 };
 
 /**

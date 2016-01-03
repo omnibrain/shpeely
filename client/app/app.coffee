@@ -1,6 +1,7 @@
 'use strict'
 
 angular.module 'shpeelyApp', [
+  'client-config'
   'ngCookies'
   'ngResource'
   'ngSanitize'

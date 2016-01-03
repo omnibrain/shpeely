@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module 'shpeelyApp'
-.controller 'SignupCtrl', ($scope, Auth, $location, $state, $window) ->
+.controller 'SignupCtrl', ($scope, Auth, $location, $state, $window, config) ->
 
   $scope.recaptchaResponse = null
   $scope.user = {}
@@ -38,8 +38,10 @@ angular.module 'shpeelyApp'
 
   # recaptcha stuff
   renderRecaptcha = ->
+    if not config.recaptchaSitekey
+      return
     widgetId = grecaptcha.render  'signup-recaptcha',
-      sitekey: '6LdwYBQTAAAAAJ2rs7s79PCAgcE_XKq3KsBy0Ec7'
+      sitekey: config.recaptchaSitekey
       callback: ->
         $scope.recaptchaResponse = grecaptcha.getResponse(widgetId)
 
