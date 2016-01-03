@@ -1,9 +1,9 @@
 div(ng-include='"components/navbar/navbar.html"')
 .container
   .row
-    .col-sm-12
+    .col-md-6.col-md-offset-3.col-sm-12
       h1 Sign up
-    .col-sm-12
+    .col-md-6.col-md-offset-3.col-sm-12
       form.form.signup-form(name='form', ng-submit='register(form)', novalidate='')
         .form-group(ng-class='{ "has-success": form.name.$valid && submitted, "has-error": form.name.$invalid && submitted }')
           label Name
@@ -35,18 +35,17 @@ div(ng-include='"components/navbar/navbar.html"')
         p.alternative-action Already have an account? #[a(ui-sref='signup') Login here] .
 
 
-        hr
+    .col-sm-12
 
-        div
-          a.btn.btn-facebook(href='', ng-click='loginOauth("facebook")')
-            i.fa.fa-facebook
-            |  Connect with Facebook
-          = ' '
-          a.btn.btn-google-plus(href='', ng-click='loginOauth("google")')
-            i.fa.fa-google-plus
-            |  Connect with Google+
-          = ' '
-          a.btn.btn-twitter(href='', ng-click='loginOauth("twitter")')
-            i.fa.fa-twitter
-            |  Connect with Twitter
-  hr
+      .social-logins
+        a.btn.btn-facebook(href='', ng-click='loginOauth("facebook")')
+          i.fa.fa-facebook
+          |  Login with Facebook
+        = ' '
+        a.btn.btn-google-plus(href='', ng-click='loginOauth("google")')
+          i.fa.fa-google-plus
+          |  Login with Google+
+        = ' '
+        a.btn.btn-twitter(href='', ng-click='loginOauth("twitter")')
+          i.fa.fa-twitter
+          |  Login with Twitter

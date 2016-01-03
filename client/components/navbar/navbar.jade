@@ -46,24 +46,36 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
 
       ul.nav.navbar-nav.navbar-right
 
+        // not logged in
         li(ng-hide='isLoggedIn()', ng-class='{active: isActive("/signup")}')
           a(href='/signup') Sign up
 
         li(ng-hide='isLoggedIn()', ng-class='{active: isActive("/login")}')
           a(href='/login') Login
 
-        li(ng-show='isLoggedIn()', ui-sref-active='active')
+        // logged in
+        li(ng-show='unreadMessagesCount', ui-sref-active='active')
           a(ui-sref='messages')
             .fa.fa-envelope
-            | Messages
             .label.label-warning.message-count-label(ng-show='unreadMessagesCount', style='margin-left: 4px;') {{unreadMessagesCount}}
 
-        li(ng-show='isLoggedIn()', ui-sref-active='active')
-          a(ui-sref='settings')
-            .fa.fa-gear
-            | Settings
+        // account dropdown
+        li.dropdown(ng-show='isLoggedIn()', ng-click='accountDropdownOpen = !accountDropdownOpen', ng-class='{"open": accountDropdownOpen}')
+          a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='true') {{getCurrentUser().name}} #[span.caret]
+          ul.dropdown-menu
 
-        li(ng-show='isLoggedIn()', ng-class='{active: isActive("/logout")}')
-          a(href='', ng-click='logout()')
-            .fa.fa-sign-out
-            | Logout
+            li(ui-sref-active='active')
+              a(ui-sref='messages')
+                .fa.fa-envelope
+                | Messages
+                .label.label-warning.message-count-label(ng-show='unreadMessagesCount', style='margin-left: 4px;') {{unreadMessagesCount}}
+
+            li(ui-sref-active='active')
+              a(ui-sref='settings')
+                .fa.fa-gear
+                | Settings
+
+            li(ng-class='{active: isActive("/logout")}')
+              a(href='', ng-click='logout()')
+                .fa.fa-sign-out
+                | Logout
