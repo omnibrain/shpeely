@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
 
 var Player = require('../player/player.model.js');
 var Tournament = require('../tournament/tournament.model.js');
-var bggdata = require('../../lib/bggdata.js');
+var bggdata = require('../../lib/bggdata/bggdata.js');
 var async = require('async');
 var _ = require('lodash')
 

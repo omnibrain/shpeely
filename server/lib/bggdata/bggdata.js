@@ -1,6 +1,7 @@
 var _ = require('lodash');
 
-var config = require('../config/environment');
+var config = require('../../config/environment');
+var BggDataModel = require('./bggdata.model.js');
 
 // Cache for responses from BGG
 var TTL = 3600 * 24 * 3 // cache for 7 days
@@ -39,6 +40,26 @@ function toObject(item, callback) {
 }
 
 BGGData.prototype.cache = cache;
+
+BGGData.prototype.startCacheUpdate = function() {
+
+  var self = this;
+
+  var fetchInterval = 60 * 1000; // 10s
+
+  var fetchData = function() {
+    // get the cached data that is the next to expire
+    BggDataModel.find({key: {$regex: '^info:'}}).sort('expire').limit(1).exec(function(err, bggdata) {
+      var bggid = bggdata[0].key.split(':')[1];
+      self.loadInfo(bggid, function(err, res) {
+        if(err) {console.error(err)}
+        setTimeout(fetchData, fetchInterval);
+      });
+    });
+  };
+
+  setTimeout(fetchData, fetchInterval);
+}
 
 BGGData.prototype.search = function (query, cb) {
 
@@ -81,43 +102,52 @@ BGGData.prototype.search = function (query, cb) {
 
 };
 
+var getCacheKey = function(bggid) {
+  return 'info:' + bggid;
+}
+
+BGGData.prototype.loadInfo = function (bggid, cb) {
+  //load from BBG
+  bgg('thing', {id:bggid, stats:true}).then(function(data){
+      if(!data) {
+        // no data returned...
+        cb(new Error("No data found on BGG for id " + bggid));
+      } else {
+        if(typeof data.items.item === 'string') {
+          // this is a bug of BGG
+          try {
+            data.items.item = JSON.parse(data.items.item);
+          } catch (e) {
+            cb(e);
+          }
+        }
+        // everything as expected
+        escapeKeys(data.items.item);
+        cache.set(getCacheKey(bggid), data.items.item, TTL, function(err, res) {
+          if(err) { return cb(err)}
+          toObject(res, cb);
+        });
+      }
+    }, function(err) {
+      console.error('BoardgameGeek API timeout')
+      cb(new Error('BoardgameGeek API timeout'));
+    });
+};
+
 BGGData.prototype.info = function (bggid, cb) {
+
+  var self = this;
+
 	if(!bggid) { return cb(new Error('bggid is not defined')) }
 
-  var cacheKey = 'info:' + bggid;
-
-  cache.get(cacheKey, function(err, val) {
+  cache.get(getCacheKey(bggid), function(err, val) {
 
     // found in cache
     if(val && typeof val === 'object') {
       return cb(null, val);
     }
 
-		//load from BBG
-		bgg('thing', {id:bggid, stats:true}).then(function(data){
-				if(!data) {
-					// no data returned...
-					cb(new Error("No data found on BGG for id " + bggid));
-				} else {
-          if(typeof data.items.item === 'string') {
-            // this is a bug of BGG
-            try {
-              data.items.item = JSON.parse(data.items.item);
-            } catch (e) {
-              cb(e);
-            }
-          }
-					// everything as expected
-          escapeKeys(data.items.item);
-          cache.set(cacheKey, data.items.item, TTL, function(err, res) {
-            if(err) { return cb(err)}
-            toObject(res, cb);
-          });
-				}
-			}, function(err) {
-        console.error('BoardgameGeek API timeout')
-        cb(new Error('BoardgameGeek API timeout'));
-			});
+    self.load(bggid, cb);
 
   });
 };
@@ -161,4 +191,8 @@ function escapeKeys(obj) {
     return true;
 }
 
-module.exports = new BGGData();
+console.log('start bggdata updates...');
+var bggdata = new BGGData();
+bggdata.startCacheUpdate();
+
+module.exports = bggdata;

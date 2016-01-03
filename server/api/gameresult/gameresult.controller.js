@@ -7,7 +7,7 @@ var Player = require('../player/player.model.js');
 
 var async = require('async');
 var _ = require('lodash');
-var bggdata = require('../../lib/bggdata.js')
+var bggdata = require('../../lib/bggdata/bggdata.js')
 
 // Get list of gameresults
 exports.index = function(req, res) {

@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var bggdata = require('../../lib/bggdata.js');
+var bggdata = require('../../lib/bggdata/bggdata.js');
 
 exports.search = function(req, res) {
 

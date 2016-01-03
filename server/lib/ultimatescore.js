@@ -13,7 +13,7 @@ var cache = new CachemanMongo(config.mongo.uri, {
   ttl: TTL,
 });
 
-var bggdata = require('./bggdata.js');
+var bggdata = require('./bggdata/bggdata.js');
 
 var UltimateScore = function () {};
 

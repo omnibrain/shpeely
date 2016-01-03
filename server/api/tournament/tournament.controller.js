@@ -8,7 +8,7 @@ var Gameresults = require('../gameresult/gameresult.model.js');
 var mongoose = require('mongoose');
 var async = require('async');
 
-var bggdata = require('../../lib/bggdata.js');
+var bggdata = require('../../lib/bggdata/bggdata.js');
 
 // find tournament by slug or id and polulate
 // the players
