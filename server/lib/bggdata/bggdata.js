@@ -50,11 +50,13 @@ BGGData.prototype.startCacheUpdate = function() {
   var fetchData = function() {
     // get the cached data that is the next to expire
     BggDataModel.find({key: {$regex: '^info:'}}).sort('expire').limit(1).exec(function(err, bggdata) {
-      var bggid = bggdata[0].key.split(':')[1];
-      self.loadInfo(bggid, function(err, res) {
-        if(err) {console.error(err)}
-        setTimeout(fetchData, fetchInterval);
-      });
+      if(bggdata.length) {
+        var bggid = bggdata[0].key.split(':')[1];
+        self.loadInfo(bggid, function(err, res) {
+          if(err) {console.error(err)}
+        });
+      }
+      setTimeout(fetchData, fetchInterval);
     });
   };
 
