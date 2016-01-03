@@ -617,7 +617,7 @@ module.exports = function (grunt) {
         constants: {
           config: {
             env: process.env.NODE_ENV || 'development',
-            recaptchaSitekey: process.env.RECAPTCHA_SITEKEY
+            recaptchaSitekey: process.env.RECAPTCHA_SITEKEY || process.env.BAMBOO_RECAPTCHA_SITEKEY
           }
         }
       },
