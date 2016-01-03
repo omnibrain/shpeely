@@ -29,6 +29,10 @@ div(ng-include='"components/navbar/navbar.html"')
           p.help-block(ng-show='form.password.$error.mongoose')
             | {{ errors.password }}
 
+        .form-group(ng-class='{ "has-error": recaptchaError && submitted }')
+          #signup-recaptcha
+          p.help-block(ng-show='recaptchaError') Please check the checkbox above to prove that you're not a robot. If you're a robot we sincerely apologize but we have a strict non-robot policy.
+
         div
           button.btn.btn-primary.btn-login(type='submit')
             | Sign up

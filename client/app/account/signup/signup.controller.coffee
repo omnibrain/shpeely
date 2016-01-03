@@ -1,11 +1,17 @@
 'use strict'
 
 angular.module 'shpeelyApp'
-.controller 'SignupCtrl', ($scope, Auth, $location, $window) ->
+.controller 'SignupCtrl', ($scope, Auth, $location, $state, $window) ->
+
+  $scope.recaptchaResponse = null
   $scope.user = {}
   $scope.errors = {}
   $scope.register = (form) ->
     $scope.submitted = true
+
+    if not $scope.recaptchaResponse
+      $scope.recaptchaError = true
+      return
 
     if form.$valid
       # Account created, redirect to home
@@ -13,9 +19,10 @@ angular.module 'shpeelyApp'
         name: $scope.user.name
         email: $scope.user.email
         password: $scope.user.password
+        recaptcha: $scope.recaptchaResponse
 
       .then ->
-        $location.path '/'
+        $state.go 'tournaments'
 
       .catch (err) ->
         err = err.data
@@ -28,3 +35,16 @@ angular.module 'shpeelyApp'
 
   $scope.loginOauth = (provider) ->
     $window.location.href = '/auth/' + provider
+
+  # recaptcha stuff
+  renderRecaptcha = ->
+    widgetId = grecaptcha.render  'signup-recaptcha',
+      sitekey: '6LdwYBQTAAAAAJ2rs7s79PCAgcE_XKq3KsBy0Ec7'
+      callback: ->
+        $scope.recaptchaResponse = grecaptcha.getResponse(widgetId)
+
+
+  if not $window.recaptchaReady
+    $window.onRecaptchaReady = renderRecaptcha
+  else
+    renderRecaptcha()

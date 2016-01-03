@@ -30,6 +30,8 @@ var all = {
     session: process.env.SESSION_SECRET || 'shpeely-secret'
   },
 
+  recaptchaSecret: process.env.RECAPTCHA_SECRET,
+
   // List of user roles
   userRoles: ['guest', 'user', 'admin'],
 

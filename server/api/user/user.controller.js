@@ -4,6 +4,7 @@ var User = require('./user.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
+var request = require('request');
 
 var validationError = function(res, err) {
   return res.json(422, err);
@@ -24,14 +25,42 @@ exports.index = function(req, res) {
  * Creates a new user
  */
 exports.create = function (req, res, next) {
-  var newUser = new User(req.body);
-  newUser.provider = 'local';
-  newUser.role = 'user';
-  newUser.save(function(err, user) {
-    if (err) return validationError(res, err);
-    var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
-    res.json({ token: token });
-  });
+
+  console.log('create user!');
+
+  // validate recaptcha
+  if(config.recaptchaSecret) {
+
+    console.log('sending response');
+    var data = {
+      secret: config.recaptchaSecret,
+      response: req.body.recaptcha,
+      remoteip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+    }
+
+    request.post({url: 'https://www.google.com/recaptcha/api/siteverify', form: data}, function(err, httpResponse, body) {
+
+      try {
+        if(JSON.parse(body).success) {
+          // success! Create user...
+          var newUser = new User(req.body);
+          newUser.provider = 'local';
+          newUser.role = 'user';
+          newUser.save(function(err, user) {
+            if (err) return validationError(res, err);
+            var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
+            res.json({token: token });
+          });
+        } else {
+          console.log('Invalid captcha response was provided.');
+          res.json(400, {err: 'Invalid captcha'});
+        }
+      } catch (err) {
+        res.json(500, {err: err});
+      }
+    });
+  }
+
 };
 
 /**

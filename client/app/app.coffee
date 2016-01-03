@@ -14,6 +14,7 @@ angular.module 'shpeelyApp', [
   'ngDialog'
   'truncate'
   'ui.checkbox' # bootstrap styled checkboxes
+  #'vcRecaptcha' # reCAPTCHA
 ]
 
 .config ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) ->

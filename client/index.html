@@ -21,6 +21,7 @@
     <!-- build:css({.tmp,client}) app/app.css -->
     <link rel="stylesheet" href="app/app.css">
       <!-- injector:css -->
+      <link rel="stylesheet" href="components/directives/client/bower_components/angular/angular-csp.css">
       <!-- endinjector -->
     <!-- endbuild -->
     <link href='https://fonts.googleapis.com/css?family=Raleway:400,700' rel='stylesheet' type='text/css'>
@@ -50,6 +51,8 @@
     <meta name="theme-color" content="#446280">
     <!--/favicons-->
 
+
+
   </head>
   <body ng-app="shpeelyApp">
     <!--[if lt IE 7]>
@@ -69,6 +72,17 @@
       ga('create', 'UA-71915158-1');
       ga('send', 'pageview');
     </script>
+
+    <!--reCAPTCHA-->
+    <script src="https://www.google.com/recaptcha/api.js?onload=recaptchaCallback&render=explicit" async defer></script>
+
+    <script type="text/javascript">
+      var recaptchaCallback = function () {
+        window.recaptchaReady = true;
+        if(window.onRecaptchaReady) {window.onRecaptchaReady();}
+      }
+    </script>
+    <!--/reCAPTCHA-->
 
     <!--[if lt IE 9]>
     <script src="bower_components/es5-shim/es5-shim.js"></script>
@@ -145,5 +159,7 @@
           <script src="components/services/Tournament/Tournament.js"></script>
           <!-- endinjector -->
         <!-- endbuild -->
+
+
 </body>
 </html>

@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module 'shpeelyApp'
-.controller 'LoginCtrl', ($scope, Auth, $location, $window, Tournament) ->
+.controller 'LoginCtrl', ($scope, Auth, $location, $state, $window, Tournament) ->
   $scope.user = {}
   $scope.errors = {}
   $scope.login = (form) ->
@@ -15,7 +15,7 @@ angular.module 'shpeelyApp'
 
       .then ->
         Tournament.reload()
-        $location.path '/'
+        $state.go 'tournaments'
 
       .catch (err) ->
         $scope.errors.other = err.message
