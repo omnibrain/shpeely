@@ -31,12 +31,11 @@ var app = express();
 require('./config/express')(app);
 require('./routes')(app);
 
-if(cluster.isMaster) {
-  var numWorkers = require('os').cpus().length;
+if(cluster.isMaster && config.numCpus > 1) {
 
-  console.log('Master cluster setting up ' + numWorkers + ' workers...');
+  console.log('Master cluster setting up ' + config.numCpus + ' workers...');
 
-  for(var i = 0; i < numWorkers; i++) {
+  for(var i = 0; i < config.numCpus; i++) {
     cluster.fork();
   }
 

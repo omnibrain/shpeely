@@ -151,8 +151,6 @@ GameresultSchema.statics.gamePlayerStats = function(player, cb) {
 	this.aggregate(pipeline, function(err, gamePlayerStats){
 		if(err) { cb(err); return; }
 
-    console.log(gamePlayerStats[0]);
-
     async.map(gamePlayerStats, function(stats, callback) {
       // remove id and populate players
       delete stats._id; 
@@ -432,19 +430,31 @@ GameresultSchema.statics.gameStats = function(query, cb) {
 // helpers
 function populatePlayerKeys(obj, callback) {
 
-  async.map(_.pairs(obj), function(pair, callback) {
+  var ids = _.map(Object.keys(obj), mongoose.Types.ObjectId);
+  var values = _.values(obj);
 
-    Player.findById(pair[0], function(err, player) {
-      if(err) return callback(err);
-      callback(null, {
-        player: player,
-        value: pair[1],
-      });
-    });
-
-  }, function(err, res) {
-    callback(err, res);
+  mapIds(ids, function(err, docs) {
+    callback(null, _.map(docs, function(doc, i) {
+      return {
+        player: doc,
+        value: values[i]
+      };
+    }));
   });
+
+  //async.map(_.pairs(obj), function(pair, callback) {
+
+    //Player.findById(pair[0], function(err, player) {
+      //if(err) return callback(err);
+      //callback(null, {
+        //player: player,
+        //value: pair[1],
+      //});
+    //});
+
+  //}, function(err, res) {
+    //callback(err, res);
+  //});
 }
 
 function getPlayers(games) {
@@ -467,6 +477,42 @@ function getGames(games) {
 
 function sameGameKey(bggid, numPlayers) {
   return numPlayers + 'players_' + bggid;
+}
+
+function mapIds(ids, callback) {
+
+  // see http://stackoverflow.com/questions/22797768/does-mongodbs-in-clause-guarantee-order/22800784#22800784
+     
+  var stack = [];
+
+  for (var i = ids.length - 1; i > 0; i--) {
+
+      var rec = {
+          "$cond": [
+              { "$eq": [ "$_id", ids[i-1] ] },
+              i
+          ]
+      };
+
+      if ( stack.length == 0 ) {
+          rec["$cond"].push( i+1 );
+      } else {
+          var lval = stack.pop();
+          rec["$cond"].push( lval );
+      }
+
+      stack.push( rec );
+
+  }
+
+  var pipeline = [
+      { "$match": { "_id": { "$in": ids } }},
+      { "$project": { "name": 1, "_user": 1, "weight": stack[0] }},
+      { "$sort": { "weight": 1 } },
+      { "$project": { "name": 1, "_user": 1}},
+  ];
+
+  Player.aggregate(pipeline, callback);
 }
 
 module.exports = mongoose.model('Gameresult', GameresultSchema);
