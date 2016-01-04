@@ -1,5 +1,6 @@
 var _ = require('lodash');
 
+var os = require('os');
 var config = require('../../config/environment');
 var BggDataModel = require('./bggdata.model.js');
 
@@ -45,7 +46,7 @@ BGGData.prototype.startCacheUpdate = function() {
 
   var self = this;
 
-  var fetchInterval = 60 * 1000; // 10s
+  var fetchInterval = Math.round(60 * 1000 * os.cpus().length * (Math.random() + 1)); // 120-60s
 
   var fetchData = function() {
     // get the cached data that is the next to expire
