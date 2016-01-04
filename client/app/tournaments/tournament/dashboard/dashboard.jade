@@ -5,33 +5,34 @@
   .row
     .col-md-12
       h4 Connected Users
-      table.table.table-hover.table-striped.table-condensed.table-sortable.user-table
-        thead
-          tr
-            th(ng-repeat='column in columns')
-              a(href='#', ng-click='sort(column)')
-                {{column.name}} #[span.fa(ng-show='column.name == activeColumn.name', ng-class='{"fa-angle-up": !reverse && column.name == activeColumn.name, "fa-angle-down": reverse && column.name == activeColumn.name}')]
-        tbody
-          tr(ng-repeat='user in users')
-            td
-              playerlink(player='user.player.name')
-            td
-              .label(ng-class='{"label-danger": user.player.role == "admin", "label-info": user.player.role == "member"}') {{user.player.role | capitalize}}
-            td {{user.name}}
-            td {{user.email}}
-            td.action-buttons
-              .btn-group(dropdown='', is-open='status.isopen')
-                button#user-management-dropdown.btn.btn-default.btn-xs(type='button', dropdown-toggle='', ng-disabled='disabled')
-                  | Actions...
-                  span.caret
-                ul.dropdown-menu(role='menu', aria-labelledby='user-management-dropdown')
-                  li(role='menuitem')
-                    a(href='#', ng-click='disconnect(user)') Disconnect from Tournament
-                  li(role='menuitem', ng-show='user.player.role != "admin"')
-                    a(href='#', ng-click='promote(user)') Promote to Admin
-                  li(role='menuitem', ng-show='user.player.role != "member"')
-                    a(href='#', ng-click='demote(user)') Demote to Member
+      .table-responsive
+        table.table.table-hover.table-striped.table-condensed.table-sortable.user-table
+          thead
+            tr
+              th(ng-repeat='column in columns')
+                a(href='#', ng-click='sort(column)')
+                  {{column.name}} #[span.fa(ng-show='column.name == activeColumn.name', ng-class='{"fa-angle-up": !reverse && column.name == activeColumn.name, "fa-angle-down": reverse && column.name == activeColumn.name}')]
+          tbody
+            tr(ng-repeat='user in users')
+              td
+                playerlink(player='user.player.name')
+              td
+                .label(ng-class='{"label-danger": user.player.role == "admin", "label-info": user.player.role == "member"}') {{user.player.role | capitalize}}
+              td {{user.name}}
+              td {{user.email}}
+              td.action-buttons
+                .btn-group(dropdown='', is-open='status.isopen')
+                  button#user-management-dropdown.btn.btn-default.btn-xs(type='button', dropdown-toggle='', ng-disabled='disabled')
+                    | Actions...
+                    span.caret
+                  ul.dropdown-menu(role='menu', aria-labelledby='user-management-dropdown')
+                    li(role='menuitem')
+                      a(href='#', ng-click='disconnect(user)') Disconnect from Tournament
+                    li(role='menuitem', ng-show='user.player.role != "admin"')
+                      a(href='#', ng-click='promote(user)') Promote to Admin
+                    li(role='menuitem', ng-show='user.player.role != "member"')
+                      a(href='#', ng-click='demote(user)') Demote to Member
 
-              //-button.btn.btn-xs.btn-danger(ng-click='disconnect(user)') Disconnect from Tournament
-              //-button.btn.btn-xs.btn-success(ng-show='user.player.role != "admin"', ng-click='promote(user)') Promote to Admin
-              //-button.btn.btn-xs.btn-warning(ng-show='user.player.role != "member"', ng-click='demote(user)') Demote to Member
+                //-button.btn.btn-xs.btn-danger(ng-click='disconnect(user)') Disconnect from Tournament
+                //-button.btn.btn-xs.btn-success(ng-show='user.player.role != "admin"', ng-click='promote(user)') Promote to Admin
+                //-button.btn.btn-xs.btn-warning(ng-show='user.player.role != "member"', ng-click='demote(user)') Demote to Member

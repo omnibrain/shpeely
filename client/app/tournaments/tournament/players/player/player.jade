@@ -12,50 +12,53 @@
         p.loading-text Loading Player Stats...
   .row(ng-show='player')
     .col-md-12
-      table.table.table-condensed.table-striped
-        thead
-          tr
-            th Total Games Played
-            th Total Wins
-            th Total Losses
-            th Total Win Ratio
-            th Total Lose Ratio
-        tbody
-          tr
-            td {{player.games}}
-            td {{player.wins}}
-            td {{player.losses}}
-            td {{player.winRatio | percentage:0}}
-            td {{player.loseRatio | percentage:0}}
+      .table-responsive
+        table.table.table-condensed.table-striped
+          thead
+            tr
+              th Total Games Played
+              th Total Wins
+              th Total Losses
+              th Total Win Ratio
+              th Total Lose Ratio
+          tbody
+            tr
+              td {{player.games}}
+              td {{player.wins}}
+              td {{player.losses}}
+              td {{player.winRatio | percentage:0}}
+              td {{player.loseRatio | percentage:0}}
   .row
     .col-md-6(ng-if='highscores.length')
       h3 Highscores
-      table.table.table-condensed.table-striped
-        thead
-          tr
-            th Game
-            th Players
-            th Score
-        tbody
-          tr(ng-repeat='highscore in highscores | orderBy:"game.name"')
-            td
-              gamelink(bggid='highscore.game.id', name='highscore.game.name')
-            td {{highscore.players}}
-            td {{highscore.score}}
+      .table-responsive
+        table.table.table-condensed.table-striped
+          thead
+            tr
+              th Game
+              th Players
+              th Score
+          tbody
+            tr(ng-repeat='highscore in highscores | orderBy:"game.name"')
+              td
+                gamelink(bggid='highscore.game.id', name='highscore.game.name')
+              td {{highscore.players}}
+              td {{highscore.score}}
     .col-md-6(ng-if='highscores.length')
       h3 Lowscores
-      table.table.table-condensed.table-striped
-        thead
-          tr
-            th Game
-            th Players
-            th Score
-        tbody
-          tr(ng-repeat='lowscore in lowscores | orderBy:"game.name"')
-            td
-              gamelink(bggid='lowscore.game.id', name='lowscore.game.name')
-            td {{lowscore.players}}
-            td {{lowscore.score}}
+      .table-responsive
+        table.table.table-condensed.table-striped
+          thead
+            tr
+              th Game
+              th Players
+              th Score
+          tbody
+            tr(ng-repeat='lowscore in lowscores | orderBy:"game.name"')
+              td
+                gamelink(bggid='lowscore.game.id', name='lowscore.game.name')
+              td {{lowscore.players}}
+              td {{lowscore.score}}
   .row
     .col-md-12
       h3 Played Games
@@ -66,18 +69,19 @@
         p.loading-text Loading Player Stats...
   .row.ng-hide(ng-show='gamePlayerStats')
     .col-md-12
-      table.table.table-hover.table-striped.table-condensed.table-sortable
-        thead
-          tr
-            th(ng-repeat='column in columns')
-              a(href='#', ng-click='sort(column)')
-                {{column.name}} #[span.fa(ng-show='column.name == activeColumn.name', ng-class='{"fa-angle-up": !reverse && column.name == activeColumn.name, "fa-angle-down": reverse && column.name == activeColumn.name}')]
-        tbody
-          tr(ng-repeat='stat in gamePlayerStats | orderBy:activeColumn.sortKey:reverse')
-            td
-              gamelink(bggid='stat.game.id', name='stat.game.name')
-            td {{stat.players}}
-            td {{stat.games}}
-            td {{stat.highscore}}
-            td {{stat.average | number:2}}
-            td {{stat.lowscore}}
+      .table-responsive
+        table.table.table-hover.table-striped.table-condensed.table-sortable
+          thead
+            tr
+              th(ng-repeat='column in columns')
+                a(href='#', ng-click='sort(column)')
+                  {{column.name}} #[span.fa(ng-show='column.name == activeColumn.name', ng-class='{"fa-angle-up": !reverse && column.name == activeColumn.name, "fa-angle-down": reverse && column.name == activeColumn.name}')]
+          tbody
+            tr(ng-repeat='stat in gamePlayerStats | orderBy:activeColumn.sortKey:reverse')
+              td
+                gamelink(bggid='stat.game.id', name='stat.game.name')
+              td {{stat.players}}
+              td {{stat.games}}
+              td {{stat.highscore}}
+              td {{stat.average | number:2}}
+              td {{stat.lowscore}}

@@ -12,8 +12,9 @@ ui-view
         .loading(ng-if='!gameResultScores')
           span.loading-spinner
           p.loading-text Loading Scores...
-        table.table.table-condensed.table-striped.table-hover(ng-show='gameResultScores')
-          tr(ng-repeat='score in gameResultScores | orderBy:"score.score"')
-            td
-              playerlink(player='score.player.name')
-            td(ng-bind='score.score', ng-class='{"text-danger":score.score < 0, "text-success": score.score > 0}')
+        .table-responsive
+          table.table.table-condensed.table-striped.table-hover(ng-show='gameResultScores')
+            tr(ng-repeat='score in gameResultScores | orderBy:"score.score"')
+              td
+                playerlink(player='score.player.name')
+              td(ng-bind='score.score', ng-class='{"text-danger":score.score < 0, "text-success": score.score > 0}')

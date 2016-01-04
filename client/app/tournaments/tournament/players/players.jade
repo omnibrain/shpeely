@@ -10,21 +10,22 @@ ui-view
           p.loading-text Loading Players...
     .row.ng-hide.animated(ng-show='playerStats')
       .col-md-12
-        table.table.table-hover.table-striped.table-condensed.table-sortable
-          thead
-            tr
-              th(ng-repeat='column in columns')
-                a(href='#', ng-click='sort(column)')
-                  {{column.name}} #[span.fa(ng-show='column.name == activeColumn.name', ng-class='{"fa-angle-up": !reverse && column.name == activeColumn.name, "fa-angle-down": reverse && column.name == activeColumn.name}')]
-          tbody
-            tr(ng-repeat='stat in playerStats | orderBy:activeColumn.sortKey:reverse')
-              td
-                playerlink(player='stat.player.name')
-              td {{stat.games}}
-              td {{stat.winRatio * 100 | number:2}}%
-              td {{stat.loseRatio * 100 | number:2}}%
-              td {{stat.wins}}
-              td {{stat.losses}}
+        .table-responsive
+          table.table.table-hover.table-striped.table-condensed.table-sortable
+            thead
+              tr
+                th(ng-repeat='column in columns')
+                  a(href='#', ng-click='sort(column)')
+                    {{column.name}} #[span.fa(ng-show='column.name == activeColumn.name', ng-class='{"fa-angle-up": !reverse && column.name == activeColumn.name, "fa-angle-down": reverse && column.name == activeColumn.name}')]
+            tbody
+              tr(ng-repeat='stat in playerStats | orderBy:activeColumn.sortKey:reverse')
+                td
+                  playerlink(player='stat.player.name')
+                td {{stat.games}}
+                td {{stat.winRatio * 100 | number:2}}%
+                td {{stat.loseRatio * 100 | number:2}}%
+                td {{stat.wins}}
+                td {{stat.losses}}
 
 
 

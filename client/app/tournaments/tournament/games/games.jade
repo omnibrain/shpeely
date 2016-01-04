@@ -10,27 +10,28 @@ ui-view
           p.loading-text Loading Games...
     .row.ng-hide.animated(ng-show='gameStats')
       .col-md-12
-        table.table.table-hover.table-striped.table-condensed.table-sortable
-          thead
-            tr
-              th(ng-repeat='column in columns')
-                a(href='#', ng-click='sort(column)')
-                  {{column.name}} #[span.fa(ng-show='column.name == activeColumn.name', ng-class='{"fa-angle-up": !reverse && column.name == activeColumn.name, "fa-angle-down": reverse && column.name == activeColumn.name}')]
-          tbody
-            tr(ng-repeat='stat in gameStats | orderBy:activeColumn.sortKey:reverse')
-              td
-                gamelink(bggid='stat.game.id', name='stat.game.name')
-              td {{stat.players}}
-              td {{stat.totalGames}}
-              td
-                playerlink(player='stat.highscore.player.name')
-                | ({{stat.highscore.score}})
-              td {{stat.averageScore | number:2}}
-              td
-                playerlink(player='stat.lowscore.player.name')
-                | ({{stat.lowscore.score}})
-              td
-                playerlink(player='stat.playerWithHighestWinRatio.name')
+        .table-responsive
+          table.table.table-hover.table-striped.table-condensed.table-sortable
+            thead
+              tr
+                th(ng-repeat='column in columns')
+                  a(href='#', ng-click='sort(column)')
+                    {{column.name}} #[span.fa(ng-show='column.name == activeColumn.name', ng-class='{"fa-angle-up": !reverse && column.name == activeColumn.name, "fa-angle-down": reverse && column.name == activeColumn.name}')]
+            tbody
+              tr(ng-repeat='stat in gameStats | orderBy:activeColumn.sortKey:reverse')
+                td
+                  gamelink(bggid='stat.game.id', name='stat.game.name')
+                td {{stat.players}}
+                td {{stat.totalGames}}
+                td
+                  playerlink(player='stat.highscore.player.name')
+                  | ({{stat.highscore.score}})
+                td {{stat.averageScore | number:2}}
+                td
+                  playerlink(player='stat.lowscore.player.name')
+                  | ({{stat.lowscore.score}})
+                td
+                  playerlink(player='stat.playerWithHighestWinRatio.name')
 
 
 
