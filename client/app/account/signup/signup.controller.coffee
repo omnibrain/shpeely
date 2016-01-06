@@ -9,7 +9,7 @@ angular.module 'shpeelyApp'
   $scope.register = (form) ->
     $scope.submitted = true
 
-    if not $scope.recaptchaResponse
+    if (not $scope.recaptchaResponse) and config.recaptchaSitekey
       $scope.recaptchaError = true
       return
 

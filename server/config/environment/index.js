@@ -44,6 +44,8 @@ var all = {
     }
   },
 
+  numCpus: process.env.NUM_CPUS || require('os').cpus().length,
+
   facebook: {
     clientID:     process.env.FACEBOOK_ID || 'id',
     clientSecret: process.env.FACEBOOK_SECRET || 'secret',
