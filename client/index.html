@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <base href="/">
     <title>Shpeely</title>
-    <meta name="description" content="Keep track of your boardgame scores and compare your performance with other players">
+    <meta name="description" content="Keep track of your board game scores and compare your performance with other players">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(client) app/vendor.css -->
@@ -58,9 +58,15 @@
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
+    <div class="page-wrap">
 
-    <!-- Add your site or application content here -->
-    <div ui-view=""></div>
+      <div ng-include="'components/partials/navbar/navbar.html'"></div>
+
+      <div ui-view=""></div>
+
+    </div>
+
+    <footer class="footer", ng-include="'components/partials/footer/footer.html'"> </footer>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <script>
@@ -124,7 +130,6 @@
           <script src="app/account/settings/settings.js"></script>
           <script src="app/account/signup/signup.js"></script>
           <script src="app/admin/admin.js"></script>
-          <script src="app/components/services/GameResult/GameResult.js"></script>
           <script src="app/main/main.js"></script>
           <script src="app/messages/messages.js"></script>
           <script src="app/playground/playground.js"></script>
@@ -152,8 +157,10 @@
           <script src="components/filters/gameResultFilter/gameResultFilter.js"></script>
           <script src="components/modal/modal.js"></script>
           <script src="components/mongoose-error/mongoose-error.js"></script>
-          <script src="components/navbar/navbar.js"></script>
+          <script src="components/partials/footer/footer.js"></script>
+          <script src="components/partials/navbar/navbar.js"></script>
           <script src="components/services/BoardgameGeek/BoardgameGeek.js"></script>
+          <script src="components/services/GameResult/GameResult.js"></script>
           <script src="components/services/Message/Message.js"></script>
           <script src="components/services/Player/Player.js"></script>
           <script src="components/services/Tournament/Tournament.js"></script>

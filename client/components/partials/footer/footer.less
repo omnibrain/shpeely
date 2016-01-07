@@ -1,0 +1,27 @@
+
+.page-wrap {
+	padding-bottom: 30px;
+	min-height: 100%;
+	/* equal to footer height */
+	margin-bottom: -@footer-height;
+}
+.page-wrap:after {
+	content: "";
+	display: block;
+}
+.footer, .page-wrap:after {
+	height: @footer-height;
+}
+
+// this class is absically just a copy of the bootstrap navbar.
+// Lazy, but it works...
+.footer {
+	.navbar {
+		.navbar;
+		margin-bottom: 0;
+	}
+	.nav;
+	background: @brand-primary;
+	text-align: center;
+	color: white;
+}
