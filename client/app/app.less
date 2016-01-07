@@ -21,6 +21,7 @@
 @import 'main/main.less';
 @import 'messages/messages.less';
 @import 'playground/playground.less';
+@import 'support/support.less';
 @import 'tournaments/tournament/dashboard/dashboard.less';
 @import 'tournaments/tournament/gameresults/gameresult/edit/edit.less';
 @import 'tournaments/tournament/gameresults/gameresult/gameresult.less';
@@ -40,6 +41,9 @@
 @import 'directives/timechart/timechart.less';
 @import 'directives/tournament/tournament.less';
 @import 'modal/modal.less';
+@import 'partials/footer/footer.less';
+@import 'partials/navbar/navbar.less';
+@import 'styles/accordion.less';
 @import 'styles/animate/animate.less';
 @import 'styles/bootswatch-flatly/variables.less';
 @import 'styles/callouts/callouts.less';
@@ -132,4 +136,9 @@
 		font-family: FontAwesome;
 		content: '\f00c';
 	}
+}
+
+// accordion
+accordion * {
+	outline: 0 !important;
 }
