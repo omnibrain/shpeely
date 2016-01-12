@@ -1,5 +1,3 @@
-div(ng-include='"components/navbar/navbar.html"')
-
 header#banner.hero-unit(ng-hide='isLoggedIn()')
   .container
     img.trophy(src='assets/images/trophy2.svg', alt='Shpeely Logo')
@@ -42,4 +40,3 @@ header#banner.hero-unit(ng-hide='isLoggedIn()')
         h4 No Tournaments found
         p Sorry, no tournaments found with "{{query}}" in the name. Try something else... 
         p ... or show #[a(href='#', ng-click='foundTournaments = null') show recent tournaments] 
-

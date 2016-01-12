@@ -15,6 +15,15 @@
     padding: 0.2em 0;
 }
 
+
+// VARIABLES
+@font-size-xs:         ceil((@font-size-small * 0.85)); // ~12px
+
+@alert-danger-link-color: darken(@brand-warning, 20%);
+@alert-info-link-color: darken(@brand-info, 25%);
+
+@footer-height: 80px;
+
 // injector
 @import 'account/login/login.less';
 @import 'admin/admin.less';
@@ -49,17 +58,14 @@
 @import 'styles/callouts/callouts.less';
 @import 'styles/dialogs/dialogs.less';
 @import 'styles/loading/loading.less';
-@import 'styles/navbar/navbar.less';
 // endinjector
-
-// VARIABLES
-@font-size-xs:         ceil((@font-size-small * 0.85)); // ~12px
-
-@alert-danger-link-color: darken(@brand-warning, 20%);
-@alert-info-link-color: darken(@brand-info, 25%);
 
 
 // GLOBAL STYLES
+html, body {
+	height: 100%;
+}
+
 .mbot {
 	margin-bottom: 20px;
 }
