@@ -4,24 +4,31 @@
       h3 Support
   .row
     .col-md-12
-      h4 FAQ
-  .row
-    .col-md-12
+      h4 General FAQ
 
       accordion(close-others='true')
         accordion-group
           accordion-heading
-            | Title
-          | Content here...
+            | The website is very slow. Why?
+          | Because this website is currently hosted on the cheapest available server. If you want this website to be faster, please consider making a small donation. 100% of all donations are used to improve this website.
+
+      h4 Scoring System FAQ
+
+      accordion(close-others='true')
         accordion-group
           accordion-heading
-            | Title
-          | Content here...
+            | How does the scoring system work?
+          p In short: You will gain points when you are above the average score of a certain game and you will lose points when you're not.
+          p How many points you gain/lose depends on:
+          ol
+            li The difference between your score and the average
+            li The standard deviation of all scores
+            li The BoardGameGeek "weight" of the game (how long does it take to play the game, how complex is the game, etc...)
         accordion-group
           accordion-heading
-            | Title
-          | Content here...
+            | Are the scores somehow weighted?
+          p Yes, the BoardGameGeek "weight" of the game is used to weight the scores. This means that e.g. a win in a rather simple game such as "Ticket to Ride" is awarded with far less points than a win in a very complex board game such as "Through the Ages".
         accordion-group
           accordion-heading
-            | Title
-          | Content here...
+            | Are the scores somehow weighted?
+          p Yes, the BoardGameGeek weight of the game is used to weight the scores. This means that e.g. a win in a rather simple game such as "Ticket to Ride" is awarded with far less points than a win in a very complex board game such as "Through the Ages". 
