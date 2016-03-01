@@ -7,7 +7,7 @@
     "bgg": "^1.0.0",
     "body-parser": "~1.5.0",
     "cacheman": "^2.0.5",
-    "cacheman-mongo": "^1.0.1",
+    "cacheman-mongo": "1.0.3",
     "composable-middleware": "^0.3.0",
     "compression": "~1.0.1",
     "compute-stdev": "^1.0.0",
