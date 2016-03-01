@@ -150,7 +150,7 @@ BGGData.prototype.info = function (bggid, cb) {
       return cb(null, val);
     }
 
-    self.loadInfo(bggid, cb);
+    BGGData.prototype.loadInfo(bggid, cb);
 
   });
 };

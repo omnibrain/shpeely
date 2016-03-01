@@ -33,18 +33,18 @@ exports.timeseries = function(req, res) {
     ultimatescore.timeSeries(gameResults, function(err, scores) {
 
       // populate players
-      async.map(scores, function(score, callback) {
+      async.map(scores.series, function(score, callback) {
 
         Player.findById(score.player, function(err, player) {
           if(err) return callback(err);
           return callback(null, {name: player.name, data: score.data});
         });
 
-      }, function(err, scoresPopulated) {
+      }, function(err, seriesPopulated) {
         if(err) return handleError(res, err);
-        return res.json(scoresPopulated);
+        scores.series = seriesPopulated;
+        return res.json(scores);
       });
-
     });
   });
 };

@@ -36,7 +36,8 @@ angular.module 'shpeelyApp'
           useHTML: true
           formatter: ->
             # load game result...
-            $http.get("/api/gameresults/#{this.points[0].point.gameresult}").then (res)->
+            gameresultMeta = timeSeries.meta[this.x - 1]
+            $http.get("/api/gameresults/#{gameresultMeta.gameresult}").then (res)->
               gameresult = res.data
               tooltipSelector = "#tooltip_#{res.data._id}"
               game = $sanitize(gameresult.game.name)
@@ -47,7 +48,7 @@ angular.module 'shpeelyApp'
               html = "<b>#{game}</b><br>#{players.join('<br>')}"
               angular.element(tooltipSelector).removeClass('loading-spinner').html(html)
 
-            header = "<b>#{moment(this.points[0].point.time).format('LL')}<br><br></b><div class='loading-spinner' id='tooltip_#{this.points[0].point.gameresult}'></div><br><b>Ranking:</b>"
+            header = "<b>#{moment(gameresultMeta.time).format('LL')}<br><br></b><div class='loading-spinner' id='tooltip_#{gameresultMeta.gameresult}'></div><br><b>Ranking:</b>"
             points = _.sortBy(this.points, (point)-> -point.point.y)
             points = _.reduce(points, ((memo, point)->
               player = "#{point.series.name}: #{point.y}<br>"
@@ -76,7 +77,7 @@ angular.module 'shpeelyApp'
       yAxis:
         title:
           text: 'Score'
-      series: timeSeries
+      series: timeSeries.series
       func: (c)->
         $scope.chartLoading = false
         $scope.timeChartStyle = {}

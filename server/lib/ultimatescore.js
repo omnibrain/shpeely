@@ -23,6 +23,14 @@ UltimateScore.prototype.cache = cache;
 UltimateScore.prototype.timeSeries = function (allResults, cb) {
 	var self = this;
 
+  // gather meta data of the results
+  var meta = _.map(allResults, function(result) {
+    return {
+      time: result.time.getTime(),
+      gameresult: result._id,
+    };
+  });
+
 	// sort the results by time
 	allResults = _.sortBy(allResults, function (result) {
 		return result.time;
@@ -74,8 +82,8 @@ UltimateScore.prototype.timeSeries = function (allResults, cb) {
 					var tick = {
 						y: score.score,
 						x: index,
-						time: time.getTime(),
-            gameresult: gameresult._id,
+						//time: time.getTime(),
+            //gameresult: gameresult._id,
 					};
 					players[score.player].push(tick);
 				}
@@ -91,7 +99,7 @@ UltimateScore.prototype.timeSeries = function (allResults, cb) {
 			};
 		});
 
-		cb(null, series);
+		cb(null, {series: series, meta: meta});
 	});
 };
 
