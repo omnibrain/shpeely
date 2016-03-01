@@ -10,6 +10,7 @@ var CachemanMongo = require('cacheman-mongo');
 
 // Simple wrapper for BGG api
 var cache = new CachemanMongo(config.mongo.uri, {
+  collection: 'gamestats',
   ttl: TTL,
 });
 

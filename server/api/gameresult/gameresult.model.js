@@ -16,7 +16,7 @@ var config = require('../../config/environment');
 var TTL = 3600 * 24 * 7 // cache for 7 days
 var CachemanMongo = require('cacheman-mongo');
 var cache = new CachemanMongo(config.mongo.uri, {
-  collection: 'stats'
+  collection: 'gamestats'
 });
 
 
