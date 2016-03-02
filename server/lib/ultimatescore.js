@@ -24,12 +24,15 @@ UltimateScore.prototype.timeSeries = function (allResults, cb) {
 	var self = this;
 
   // gather meta data of the results
-  var meta = _.map(allResults, function(result) {
-    return {
-      time: result.time.getTime(),
-      gameresult: result._id,
-    };
-  });
+  var meta = _.chain(allResults)
+    .sortBy('time')
+    .map(function(result) {
+      return {
+        time: result.time.getTime(),
+        gameresult: result._id,
+      };
+    })
+    .value();
 
 	// sort the results by time
 	allResults = _.sortBy(allResults, function (result) {

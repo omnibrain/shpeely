@@ -12,11 +12,12 @@ angular.module 'shpeelyApp'
     if not scores then return
 
     data = _.chain scores
-      .pluck 'score'
+      .map 'score'
       .map (score) -> {color: (if score < 0 then '#E74C3C' else '#18BC9C'), y: score}
       .value()
 
-    players = _.pluck(scores, 'player')
+    players = _.map(scores, 'player')
+    console.log players
 
     $scope.scorechartConfig =
       options:
@@ -35,7 +36,7 @@ angular.module 'shpeelyApp'
         data: data
       } ]
       xAxis:
-        categories: _.chain(scores).pluck('player').pluck('name').value()
+        categories: _.chain(scores).map('player').map('name').value()
       yAxis:
         title:
           text: 'Score'

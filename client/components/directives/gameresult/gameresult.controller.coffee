@@ -62,7 +62,7 @@ angular.module 'shpeelyApp'
 
       gameresult = _.sortBy gameresult, (item) -> -item.y
 
-      players = _.pluck gameresult, 'name'
+      players = _.map gameresult, 'name'
       scores = _.map gameresult, (item) -> { y: item.y, color: item.color }
 
       #create chart
