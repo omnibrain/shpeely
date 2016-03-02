@@ -3,6 +3,25 @@
 angular.module 'shpeelyApp'
 .controller 'TimeChartCtrl', ($scope, $timeout, $http, $sanitize, $state, $window) ->
 
+  chart = null
+
+  # initialize time span selection dropdown
+  currentMoment = moment()
+  $scope.timespanOptions = [
+    { name: "Year #{currentMoment.format('YYYY')}",   date: moment().startOf('year').toDate() }
+    { name: "#{currentMoment.format('MMMM YYYY')}",   date: moment().startOf('month').toDate() }
+    { name: "Past Year",   date: moment().subtract(1, 'year').toDate() }
+    { name: "Past 6 Month",   date: moment().subtract(6, 'month').toDate() }
+    { name: "Past 30 Days",   date: moment().subtract(30, 'days').toDate() }
+    { name: "Past 7 Days",   date: moment().subtract(7, 'days').toDate() }
+    { name: "All Time",   date: new Date(0), bold: true}
+  ]
+
+  $scope.selectTimespan = (index)->
+    $scope.selectedTimespan = index
+    createChart($scope.timeSeries)
+  $scope.selectedTimespan = 0
+
   $scope.chartLoading = true
 
   $scope.timeChartStyle =
@@ -10,7 +29,8 @@ angular.module 'shpeelyApp'
     display: 'none'
 
   showHideAll = (show)->
-    chart = $scope.timechartConfig.getHighcharts()
+    window.timechartConfig = $scope.timechartConfig
+    #chart = $scope.timechartConfig.getHighcharts()
     _.each chart.series, (serie)->
       serie.setVisible show, false
     chart.redraw()
@@ -18,27 +38,19 @@ angular.module 'shpeelyApp'
   $scope.showAll = -> showHideAll(true)
   $scope.hideAll = -> showHideAll(false)
 
-  # FOR TESTING
-  $scope.fromTime = new Date('2015/6')
-
   createChart = (timeSeries)->
 
     if not timeSeries then return
 
-    console.log timeSeries.meta
+    timeSeries = angular.copy timeSeries
+    fromTime = $scope.timespanOptions[$scope.selectedTimespan].date
 
-    if $scope.fromTime
-      firstIndex = _.findIndex timeSeries.meta, (result, i)->
-        result.time > $scope.fromTime.getTime()
+    # unless the starting time is 1970 we need to "cut off" all data before
+    # the selected time.
+    if fromTime.getTime()
+      firstIndex = _.findIndex timeSeries.meta, (result, i)-> result.time > fromTime.getTime()
+      if firstIndex < 0 then firstIndex = timeSeries.series[0].data.length
       reverseIndex = timeSeries.meta.length - firstIndex
-
-      # start from firstIndex - 1 and subtract score from firstIndex -1
-      console.log new Date(timeSeries.meta[firstIndex - 1].time)
-      console.log new Date(timeSeries.meta[firstIndex].time)
-      console.log new Date(timeSeries.meta[firstIndex + 1].time)
-
-      console.log "reverse index:", reverseIndex
-      console.log "first index", firstIndex
 
       # transform the scores of each serie
       _.each timeSeries.series, (serie)->
@@ -55,8 +67,6 @@ angular.module 'shpeelyApp'
 
         # drop the 0 points
         serie.data = _.dropWhile serie.data, ['y', 0]
-
-      console.log timeSeries.series
       
 
     $scope.timechartConfig =
@@ -73,7 +83,6 @@ angular.module 'shpeelyApp'
           useHTML: true
           formatter: ->
             # load game result...
-            console.log "load game result of game with index #{this.x}"
             gameresultMeta = timeSeries.meta[this.x - 1]
             $http.get("/api/gameresults/#{gameresultMeta.gameresult}").then (res)->
               gameresult = res.data
@@ -120,6 +129,7 @@ angular.module 'shpeelyApp'
         $scope.chartLoading = false
         $scope.timeChartStyle = {}
         $timeout (-> c.reflow()), 0
+        chart = c
 
   # create the chart
   $scope.$watch 'timeSeries', createChart

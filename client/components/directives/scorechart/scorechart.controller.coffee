@@ -17,7 +17,6 @@ angular.module 'shpeelyApp'
       .value()
 
     players = _.map(scores, 'player')
-    console.log players
 
     $scope.scorechartConfig =
       options:
