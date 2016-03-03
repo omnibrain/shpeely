@@ -11,3 +11,9 @@ angular.module 'shpeelyApp'
     game: ''
     player: ''
     numberOfPlayers: ''
+
+  $scope.test = ->
+    console.log "mkay"
+
+  $scope.changeLimit = (newLimit)->
+    $scope.limitTo = newLimit

@@ -16,7 +16,15 @@ ui-view
           input.form-control(ng-model-options='{debounce: debounce}', ng-model='filter.numberOfPlayers', type='number', placeholder='Enter Number of Players...')
         .col-md-3
           label Max Results To Display
-          input.form-control(ng-model='limitTo', type='number', placeholder='Enter Max Number of Results...')
+          //-input.form-control(ng-model='limitTo', type='number', placeholder='Enter Max Number of Results...')
+          .block
+            .btn-group(dropdown='', is-open='status.isopen')
+              button#single-button.btn.btn-default(type='button', dropdown-toggle='', ng-disabled='disabled')
+                | {{limitTo}}
+                span.caret
+              ul.dropdown-menu(role='menu', aria-labelledby='single-button')
+                li(role='menuitem', ng-repeat='limit in [5,10,20,30]', ng-click='changeLimit(limit)')
+                  a(href='#') {{limit}}
 
     .row
       .col-md-6(ng-repeat='gameresult in gameResults | gameResultFilter:filter | limitTo:(limitTo || 10)')
