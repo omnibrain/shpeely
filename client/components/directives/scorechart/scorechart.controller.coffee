@@ -8,15 +8,38 @@ angular.module 'shpeelyApp'
     width: $window.innerWidth - 50 + 'px'
     display: 'none'
 
-  createChart = (scores)->
-    if not scores then return
+  fromTime = null
+  $scope.changeTimespan = (newFromTime)->
+    fromTime = newFromTime
+    createChart $scope.timeSeries
 
-    data = _.chain scores
+  createChart = (timeSeries)->
+    if !(fromTime and timeSeries) then return
+
+    firstIndex = _.findIndex timeSeries.meta, (result, i)-> result.time > fromTime.getTime()
+    if firstIndex < 0 then firstIndex = timeSeries.series[0].data.length
+
+    reverseIndex = timeSeries.meta.length - firstIndex
+
+    data = _.map timeSeries.series, (serie)->
+      subtract = 0
+      if serie.data.length > reverseIndex
+        subtract = serie.data[(serie.data.length - reverseIndex) - 1].y
+
+      score: (_.last serie.data).y - subtract
+      player:
+        name: serie.name
+
+    data = _.chain(data)
+      .filter (e)-> e.score
+      .sortBy (e)-> -e.score
+      .value()
+
+    players = _.map data, 'player.name'
+    data = _.chain data
       .map 'score'
       .map (score) -> {color: (if score < 0 then '#E74C3C' else '#18BC9C'), y: score}
       .value()
-
-    players = _.map(scores, 'player')
 
     $scope.scorechartConfig =
       options:
@@ -35,7 +58,7 @@ angular.module 'shpeelyApp'
         data: data
       } ]
       xAxis:
-        categories: _.chain(scores).map('player').map('name').value()
+        categories: players
       yAxis:
         title:
           text: 'Score'
@@ -44,5 +67,5 @@ angular.module 'shpeelyApp'
         $scope.scoreChartStyle = {}
         $timeout (-> c.reflow()), 0
 
-  $scope.$watch 'scores', createChart
-  createChart($scope.scores)
+  $scope.$watch 'timeSeries', createChart
+  createChart($scope.timeSeries)

@@ -21,7 +21,6 @@ angular.module 'shpeelyApp'
 
     scope.selectTimespan = (index)->
       scope.selectedTimespan = scope.timespanOptions[index].name
-      console.log "change!"
       scope.onChange(fromTime: scope.timespanOptions[index].date)
 
     # initial selection

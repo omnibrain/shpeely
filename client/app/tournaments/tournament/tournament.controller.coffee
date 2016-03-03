@@ -62,7 +62,7 @@ angular.module 'shpeelyApp'
   # child states of this state.
   loadData = ->
     loadTournament($stateParams.slug)
-    loadScores()
+    #loadScores()
     loadTimeSeries()
     loadLatestGameResults()
     loadGameStats()

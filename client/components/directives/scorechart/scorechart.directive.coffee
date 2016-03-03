@@ -6,4 +6,4 @@ angular.module 'shpeelyApp'
   restrict: 'EA'
   controller: 'ScoreChartCtrl'
   scope:
-    scores: '='
+    timeSeries: '='
