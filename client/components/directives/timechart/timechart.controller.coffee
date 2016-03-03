@@ -110,8 +110,9 @@ angular.module 'shpeelyApp'
             point:
               events:
                 click: (e)->
+                  console.log this.x
                   $state.go '.gameresults.gameresult',
-                    gameresult: this.gameresult
+                    gameresult: timeSeries.meta[this.x - 1].gameresult
           line:
             marker:
               enabled: false
