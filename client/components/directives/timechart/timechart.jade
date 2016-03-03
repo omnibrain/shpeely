@@ -1,11 +1,5 @@
 .chart-controls
-  .btn-group(dropdown='', is-open='status.isopen')
-    button#single-button.btn.btn-sm.btn-primary(type='button', dropdown-toggle='', ng-disabled='disabled')
-      | {{timespanOptions[selectedTimespan].name}}
-      span.caret
-    ul.dropdown-menu(role='menu', aria-labelledby='single-button')
-      li(ng-repeat='option in timespanOptions')
-        a(href='#', ng-class='{"text-strong": option.bold}', ng-click='selectTimespan($index)') {{option.name}}
+  timespanselect(on-change='changeTimespan(fromTime)')
 .chart-container.timechart-container.animated.animated-delay.ng-hide(ng-hide='chartLoading')
   highchart#timechart(ng-style='timeChartStyle', config='timechartConfig')
 .loading-container.timechart-container(ng-show='chartLoading')
