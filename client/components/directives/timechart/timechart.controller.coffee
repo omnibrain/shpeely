@@ -56,6 +56,11 @@ angular.module 'shpeelyApp'
         serie.data = _.dropWhile serie.data, ['y', 0]
       
 
+    timeSeries.series = _.chain timeSeries.series
+      .filter (e)-> e.data.length
+      .sortBy (e)-> -_.last(e.data).y
+      .value()
+
     $scope.timechartConfig =
       options:
         chart:
