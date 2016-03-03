@@ -1,6 +1,6 @@
 .chart-controls
   .btn-group(dropdown='', is-open='status.isopen')
-    button#single-button.btn.btn-primary(type='button', dropdown-toggle='', ng-disabled='disabled')
+    button#single-button.btn.btn-sm.btn-primary(type='button', dropdown-toggle='', ng-disabled='disabled')
       | {{timespanOptions[selectedTimespan].name}}
       span.caret
     ul.dropdown-menu(role='menu', aria-labelledby='single-button')
