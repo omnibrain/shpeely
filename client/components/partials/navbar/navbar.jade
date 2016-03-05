@@ -64,9 +64,9 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
             .label.label-warning.message-count-label(ng-show='unreadMessagesCount', style='margin-left: 4px;') {{unreadMessagesCount}}
 
         // account dropdown
-        li.dropdown(ng-show='isLoggedIn()', ng-click='accountDropdownOpen = !accountDropdownOpen', ng-class='{"open": accountDropdownOpen}')
-          a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='true') {{getCurrentUser().name}} #[span.caret]
-          ul.dropdown-menu
+        li(dropdown='', ng-show='isLoggedIn()', on-toggle='toggled(open)')
+          a#user-dropdown(href='', dropdown-toggle='') {{getCurrentUser().name}} #[span.caret]
+          ul.dropdown-menu(aria-labelledby='user-dropdown')
 
             li(ui-sref-active='active')
               a(ui-sref='messages')
