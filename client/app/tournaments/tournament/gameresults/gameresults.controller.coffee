@@ -12,13 +12,16 @@ angular.module 'shpeelyApp'
     players: null
     numberOfPlayers: null
 
-  $scope.test = ->
-    console.log "mkay"
+  $scope.resetFilter = -> $scope.filter = {}
 
-  $scope.changeLimit = (newLimit)->
-    $scope.limitTo = newLimit
+  $scope.changeLimit = (newLimit)-> $scope.limitTo = newLimit
 
-  
+  $scope.gameSelectizeConfig =
+    valueField: 'game',
+    labelField: 'game',
+    searchField: 'game',
+    placeholder: 'Search for Game',
+    maxItems: 1
 
   $scope.playersSelectizeConfig =
     valueField: 'name',
@@ -27,11 +30,6 @@ angular.module 'shpeelyApp'
     placeholder: 'Search for Players',
 
   $scope.numPlayerOptions = ({value: i, label: i} for i in (_.range 1, 11))
-
-  #$scope.$watch 'players', (players)->
-    #if players and players.length
-    #$scope.players - 
-
   $scope.numPlayerSelectizeConfig =
     valueField: 'value',
     labelField: 'label',
@@ -48,3 +46,12 @@ angular.module 'shpeelyApp'
       .sort()
       .value()
     $scope.numPlayerOptions = ({value: i, label: i} for i in numPlayerSet)
+
+  $scope.$watch 'gameStats', (stats)->
+    if not stats then return
+    $scope.gameOptions = _.chain stats
+      .map 'game.name'
+      .uniq()
+      .sort()
+      .map (game)-> {game: game}
+      .value()

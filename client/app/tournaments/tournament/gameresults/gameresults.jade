@@ -5,20 +5,18 @@ ui-view
         h3 Game Results
     .row.mbot
       form
-        .col-md-3
+        .col-md-4
           label Game
-          input.form-control(ng-model-options='{debounce: debounce}', ng-model='filter.game', placeholder='Search for Game...')
-        .col-md-3
+          //-input.form-control(ng-model-options='{debounce: debounce}', ng-model='filter.game', placeholder='Search for Game...')
+          selectize(config='gameSelectizeConfig', options='gameOptions', ng-model='filter.game')
+        .col-md-4
           label Players
-          //-input.form-control(ng-model-options='{debounce: debounce}', ng-model='filter.player', placeholder='Search for Player...')
           selectize(config='playersSelectizeConfig', options='players', ng-model='filter.players')
-        .col-md-3
+        .col-md-2.col-xs-8
           label Number of Players
-          //-input.form-control(ng-model-options='{debounce: debounce}', ng-model='filter.numberOfPlayers', type='number', placeholder='Enter Number of Players...')
           selectize(config='numPlayerSelectizeConfig', options='numPlayerOptions', ng-model='filter.numberOfPlayers')
-        .col-md-3.text-right
-          label Max Results To Display
-          //-input.form-control(ng-model='limitTo', type='number', placeholder='Enter Max Number of Results...')
+        .col-md-2.col-xs-4.text-right
+          label Max Results
           .block
             .btn-group(dropdown='', is-open='status.isopen')
               button#single-button.btn.btn-primary(type='button', dropdown-toggle='', ng-disabled='disabled')
@@ -29,6 +27,11 @@ ui-view
                   a(href='#') {{limit}}
 
     .row
-      .col-md-6(ng-repeat='gameresult in gameResults | gameResultFilter:filter | limitTo:(limitTo || 10)')
+      .col-md-6(ng-repeat='gameresult in filteredResults = (gameResults | gameResultFilter:filter | limitTo:(limitTo || 10))')
         gameresult(gameresult='gameresult')
+    .row.ng-hide(ng-show='filteredResults && !filteredResults.length')
+      .col-md-12
+        alert(close='alertClosed = true', type='info')
+          p No game results found with this search criteria.
+          P Do you want to #[a(href='#' ng-click='resetFilter()') reset the search parameters]?
 
