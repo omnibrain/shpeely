@@ -7,12 +7,12 @@
       h4 FAQ
 
       accordion(close-others='true')
-        accordion-group
+        accordion-group(is-open='false')
           accordion-heading
             | The website is very slow. Why?
           | Because this website is currently hosted on the cheapest available server. If you want this website to be faster, please consider #[a(ui-sref='donate') making a small donation]. 100% of all donations are used to improve this website.
 
-        accordion-group
+        accordion-group(is-open='false')
           accordion-heading
             | How does the scoring system work?
           p In short: You will gain points when you are above the average score of a certain game and you will lose points when you're not.
@@ -29,12 +29,12 @@
               img(src='https://latex.codecogs.com/gif.latex?\\frac{S_{p,r,g,n}&space;-&space;\\mu_{g,n}}{\\sigma_{g,n}}&space;*&space;w_g', title='\\frac{S_{p,r,g,n} - \\mu_{g,n}}{\\sigma_{g,n}} * w_g')
           p ... where capital #[code S] is the score of a player #[code p] in an end result #[code r] of a board game #[code g] with the number of players #[code n], #[code &mu;] and #[code &sigma;] are the average score and the standard deviation of all results of the game #[code g] with number of players #[code n], and #[code w] is the BoardGameGeek weight of the game #[code g].
 
-        accordion-group
+        accordion-group(is-open='false')
           accordion-heading
             | I ended a game above average but I still lost points. Why?
           p This happens if you played very badly in previous games and the last result increased the average score of the game. It basically means that you retrospecitvely get an even worse score for your past bad performance, because the average score increased. On the bright side: This can also happen the other way around: If you played very well in previous games and the average score decreased with the last game result, you will retrospectively earn even more points for your past good performances.
 
-        accordion-group
+        accordion-group(is-open='false')
           accordion-heading
             | What if I have any other question?
           p Then please send us a message at #[a(href='mailto:info@shpeely.com') info@shpeely.com] or on any social media platform.
