@@ -9,7 +9,7 @@ angular.module 'shpeelyApp'
     # filter game 
     if search.game and search.game.length
       result = _.filter result, (gameResult)->
-        gameResult.game.name.toLowerCase().indexOf(search.game.toLowerCase()) > -1
+        gameResult.game.name == search.game
 
     if search.numberOfPlayers and !isNaN(search.numberOfPlayers)
       result = _.filter result, (gameResult)->
