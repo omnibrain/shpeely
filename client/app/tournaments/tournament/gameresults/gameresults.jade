@@ -9,21 +9,23 @@ ui-view
           label Game
           input.form-control(ng-model-options='{debounce: debounce}', ng-model='filter.game', placeholder='Search for Game...')
         .col-md-3
-          label Player
-          input.form-control(ng-model-options='{debounce: debounce}', ng-model='filter.player', placeholder='Search for Player...')
+          label Players
+          //-input.form-control(ng-model-options='{debounce: debounce}', ng-model='filter.player', placeholder='Search for Player...')
+          selectize(config='playersSelectizeConfig', options='players', ng-model='filter.players')
         .col-md-3
           label Number of Players
-          input.form-control(ng-model-options='{debounce: debounce}', ng-model='filter.numberOfPlayers', type='number', placeholder='Enter Number of Players...')
-        .col-md-3
+          //-input.form-control(ng-model-options='{debounce: debounce}', ng-model='filter.numberOfPlayers', type='number', placeholder='Enter Number of Players...')
+          selectize(config='numPlayerSelectizeConfig', options='numPlayerOptions', ng-model='filter.numberOfPlayers')
+        .col-md-3.text-right
           label Max Results To Display
           //-input.form-control(ng-model='limitTo', type='number', placeholder='Enter Max Number of Results...')
           .block
             .btn-group(dropdown='', is-open='status.isopen')
-              button#single-button.btn.btn-default(type='button', dropdown-toggle='', ng-disabled='disabled')
+              button#single-button.btn.btn-primary(type='button', dropdown-toggle='', ng-disabled='disabled')
                 | {{limitTo}}
                 span.caret
-              ul.dropdown-menu(role='menu', aria-labelledby='single-button')
-                li(role='menuitem', ng-repeat='limit in [5,10,20,30]', ng-click='changeLimit(limit)')
+              ul.dropdown-menu.number-dropdown(role='menu', aria-labelledby='single-button')
+                li.text-center(role='menuitem', ng-repeat='limit in [5,10,20,30]', ng-click='changeLimit(limit)')
                   a(href='#') {{limit}}
 
     .row

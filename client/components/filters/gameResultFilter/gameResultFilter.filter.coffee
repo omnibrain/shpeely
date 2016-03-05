@@ -16,10 +16,9 @@ angular.module 'shpeelyApp'
         gameResult.scores.length == Number(search.numberOfPlayers)
 
     # filter player
-    if search.player and search.player.length
+    if search.players and search.players.length
       result = _.filter result, (gameResult)->
-        found = _.find gameResult.scores, (score)->
-          score.player.name.toLowerCase().indexOf(search.player.toLowerCase()) > -1
-        !!found
+        players = _.map gameResult.scores, 'player.name'
+        (_.intersection players, search.players).length == search.players.length
 
     return result
