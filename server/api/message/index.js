@@ -14,8 +14,8 @@ router.get('/', auth.isAuthenticated(), controller.index);
 router.get('/count', auth.isAuthenticated(), controller.count);
 router.get('/:id', controller.show);
 router.get('/:id', controller.show);
-router.post('/', controller.create);
-router.post('/:id', controller.update);
-router.delete('/:id', controller.destroy);
+//router.post('/', controller.create);
+//router.post('/:id', controller.update);
+//router.delete('/:id', controller.destroy);
 
 module.exports = router;

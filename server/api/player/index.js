@@ -12,8 +12,8 @@ router.post('/', controller.create);
 router.post('/disconnect', auth.isAuthenticated(), controller.disconnect);
 router.post('/promote', auth.isAuthenticated(), controller.promote);
 router.post('/demote', auth.isAuthenticated(), controller.demote);
-router.put('/:id', controller.update);
-router.patch('/:id', controller.update);
-router.delete('/:id', controller.destroy);
+//router.put('/:id', controller.update);
+//router.patch('/:id', controller.update);
+//router.delete('/:id', controller.destroy);
 
 module.exports = router;
