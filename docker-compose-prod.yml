@@ -1,0 +1,45 @@
+
+shpeely:
+        image: lustigsbusi.ch:5000/shpeely:0.0.0
+        restart: always
+        ports:
+                - "443:443"
+                - "80:80"
+        links:
+                - mongodb
+        volumes:
+                - ./shpeely.key:/shpeely.key
+                - ./shpeely.crt:/shpeely.crt
+        environment:
+                PROTOCOL: https
+                SSL_KEY: /shpeely.key
+                SSL_CERT: /shpeely.crt
+                MONGODB_HOST: mongodb
+                DOMAIN: shpeely.com
+                SESSION_SECRET: ODQ4ZTZmMTMxZDk0MmRiYWQzYWZiNTgyNTczZTRiNzNkOWRmOGQ1ZTU2YjA1ZWE4
+                RECAPTCHA_SECRET: 6LdwYBQTAAAAABSlUk7HZS7Uy_IUFEsYbfCblU4Q
+                RECAPTCHA_SITEKEY: 6LdwYBQTAAAAAJ2rs7s79PCAgcE_XKq3KsBy0Ec7
+                
+                # OAuth
+                FACEBOOK_ID: 982039645213438
+                FACEBOOK_SECRET: 3e2dd6b364aa42b905fde562f79ce4a8
+                
+                GOOGLE_ID: 491686528293-9bignedlfgr7a2aa03i807utldg7rhpm.apps.googleusercontent.com
+                GOOGLE_SECRET: vt8CzOIetXvsq4pL2jwh-3HU
+
+                TWITTER_ID: uFRhCJLmH1hD6YGYcm3zms2TB
+                TWITTER_SECRET: 4W5em8VFTHKQp02mxsXF2EEYeGubOGGuD8rT7ixM2rY1K4w4h1 
+
+
+mongodb:
+        image: mongo:3.2
+        volumes_from:
+                - shpeely-data
+
+shpeely-data:
+        command: /bin/echo "Shpeely Data Container"
+        image: mongo:3.2
+        volumes:
+                - /data/db
+
+

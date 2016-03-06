@@ -18,6 +18,8 @@ angular.module 'shpeelyApp'
 
   $scope.bgginfo = null
 
+  toArray = (obj)-> if _.isArray obj then obj else [obj]
+
   loadTournament = (slug)->
     $http.get("/api/tournaments/#{slug}").then (res)->
       tournament = res.data
@@ -33,17 +35,17 @@ angular.module 'shpeelyApp'
 
   loadLatestGameResults = ->
     Tournament.getGameResults().then (gameResults)->
-      $scope.gameResults = gameResults
+      $scope.gameResults = toArray gameResults
       gameResults
 
   loadGameStats = ->
     Tournament.getGameStats().then (gameStats)->
-      $scope.gameStats = gameStats
+      $scope.gameStats = toArray gameStats
       gameStats
 
   loadPlayerStats = ->
     Tournament.getPlayerStats().then (playerStats)->
-      $scope.playerStats = playerStats
+      $scope.playerStats = toArray playerStats
       playerStats
 
   loadScores = ->

@@ -23,4 +23,3 @@ angular.module 'shpeelyApp'
 
 
 
-
