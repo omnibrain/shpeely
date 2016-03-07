@@ -22,7 +22,10 @@ Before the installation, make sure you have the following dependencies installed
 
 The following environment variables can be set:
 
+
+
 Variable | Value | Default
+---------|---------|---------
 PROTOCOL | ```https``` or ```http```. If set to https, SSL_CERT and SSL_KEY are required. | http
 SSL_KEY | the SSL key file | undefinded
 SSL_CERT | the SSL certificate file | undefined
