@@ -1,0 +1,42 @@
+
+shpeely:
+        build: .
+        ports:
+                - "80:80"
+                #- "443:443"
+        links:
+                - mongodb
+        environment:
+                MONGODB_HOST: mongodb
+
+                # more configurations:
+                #PROTOCOL: <https/http>
+                #SSL_KEY: </keyfile.key>
+                #SSL_CERT: </certfile.crt>
+                #DOMAIN: <example.com>
+                #SESSION_SECRET: change-me-for-production
+                #RECAPTCHA_SECRET: <secret>
+                #RECAPTCHA_SITEKEY: <sitekey>
+                
+                ## OAuth
+                #FACEBOOK_ID: <id>
+                #FACEBOOK_SECRET: <secret>
+                
+                #GOOGLE_ID: <id>
+                #GOOGLE_SECRET: <secret>
+
+                #TWITTER_ID: <id>
+                #TWITTER_SECRET: <secret>
+
+mongodb:
+        image: mongo:3.2
+        volumes_from:
+                - shpeely-data
+
+shpeely-data:
+        command: /bin/echo "Shpeely Data Container"
+        image: mongo:3.2
+        volumes:
+                - /data/db
+
+
