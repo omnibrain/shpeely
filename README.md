@@ -1,5 +1,7 @@
 ## Shpeely
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/omnibrain/shpeely.svg)](https://greenkeeper.io/)
+
 #### Keep track of your board game scores and compare your performance with other players
 
 This is the complete code of the web site that is currently running at [shpeely.com](https://shpeely.com).
